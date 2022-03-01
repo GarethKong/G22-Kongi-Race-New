@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Back_Island_Fog",
+    "texture": "08c4dd80-c64d-419a-aa39-483bba0b4c33",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      1,
+      128
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      1,
+      128
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Btn_play_w_friend",
+    "texture": "a0b47497-9b22-4f1e-95f7-1b03cb331752",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      320,
+      100
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      320,
+      100
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

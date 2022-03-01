@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Back_Island_Best",
+    "texture": "81c09e64-dcf0-4e0d-9ac8-1b9490a451d7",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      241,
+      98
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      241,
+      98
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

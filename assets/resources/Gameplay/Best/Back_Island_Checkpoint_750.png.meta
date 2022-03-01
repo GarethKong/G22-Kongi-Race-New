@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "1ad0f2ce-4ee5-4c3b-804e-c832895d54d6",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 117,
+  "height": 65,
+  "platformSettings": {},
+  "subMetas": {
+    "Back_Island_Checkpoint_750": {
+      "ver": "1.0.6",
+      "uuid": "66f99447-c06a-495c-859e-98b5a8718c8e",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "1ad0f2ce-4ee5-4c3b-804e-c832895d54d6",
+      "trimType": "custom",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 117,
+      "height": 65,
+      "rawWidth": 117,
+      "rawHeight": 65,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

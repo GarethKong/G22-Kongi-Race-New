@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Back_Gradient_9",
+    "texture": "ae40cf85-c3f2-4cb4-8b19-578a8623dedd",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      1,
+      128
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      1,
+      128
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

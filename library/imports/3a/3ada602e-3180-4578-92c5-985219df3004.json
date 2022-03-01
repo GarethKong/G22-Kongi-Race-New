@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Back_Island_Checkpoint_500",
+    "texture": "bdf1c935-9edf-4d69-ae03-4cda227cf092",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      117,
+      65
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      117,
+      65
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

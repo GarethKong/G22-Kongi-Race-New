@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "08c4dd80-c64d-419a-aa39-483bba0b4c33",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 1,
+  "height": 128,
+  "platformSettings": {},
+  "subMetas": {
+    "Back_Island_Fog": {
+      "ver": "1.0.6",
+      "uuid": "eb73a136-e584-4b3a-acf7-82c4cf18a759",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "08c4dd80-c64d-419a-aa39-483bba0b4c33",
+      "trimType": "custom",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 1,
+      "height": 128,
+      "rawWidth": 1,
+      "rawHeight": 128,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

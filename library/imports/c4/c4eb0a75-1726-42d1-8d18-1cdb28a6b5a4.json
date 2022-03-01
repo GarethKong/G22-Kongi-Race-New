@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "Hero_Part_Saturn2",
+    "texture": "a03be3e2-398e-4716-9929-69962a2b8056",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      227,
+      85
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      227,
+      85
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
