@@ -39,6 +39,11 @@ export default class SoundManager extends cc.Component
         this.BackgroundSource.resume();
     }
 
+    public PlayBackgroundMusic(): void
+    {
+        this.BackgroundSource.play();
+    }
+
     public ChangeBackgroundMusic(newBackgroundMusic: cc.AudioClip): void
     {
         this.BackgroundSource.clip = newBackgroundMusic;

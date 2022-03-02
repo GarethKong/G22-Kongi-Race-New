@@ -1,4 +1,4 @@
-import FBConfig from "./FBConfig";
+import FBConfig from "../Config/FBConfig";
 import Component = cc.Component;
 import ccclass = cc._decorator.ccclass;
 import SoundManager from "../Ultilities/SoundManager";

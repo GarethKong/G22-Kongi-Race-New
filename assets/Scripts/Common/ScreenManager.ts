@@ -4,11 +4,13 @@ import ccclass = cc._decorator.ccclass;
 
 export const DlgConfig = {
     "EndGame": 0,
+    "ConfirmDlg": 1,
 };
 
 export const ScreenConfig = {
     "Game": 0,
     "Home": 1,
+    "Shop": 2,
 };
 
 @ccclass
@@ -48,8 +50,8 @@ export default class ScreenManager extends cc.Component {
     }
 
 
-    onShowDlgByName(name: number): void {
+    onShowDlgByName(name: number): cc.Node {
         let prefab = this.dlgPrefabsList[name];
-        DialogManager.instance.showDlg(prefab, this.uiRoot);
+        return DialogManager.instance.showDlg(prefab, this.uiRoot);
     }
 }
