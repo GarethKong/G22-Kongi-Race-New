@@ -36,7 +36,7 @@ export default class DialogManager extends cc.Component {
      * @param {*父节点} parent
      * @param {*坐标} pos
      */
-    showDlg(prefab, parent, pos = cc.v2(0, 0)) {
+    showDlg(prefab, parent, pos = cc.v2(0, 0)) : cc.Node{
 
         if (this.dlgList.length == 0) {
             this.setAntiContactLayerActive(true);
