@@ -6,31 +6,38 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import GameManager from "../Gameplay/GameManager";
+import DialogManager from "../Common/DialogManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class EndGamePopup extends cc.Component
-{
-    @property(cc.Node)
-    private tryAgainButton: cc.Node = null;
+export default class EndGamePopup extends cc.Component {
+
     @property(cc.Label)
-    private scoreLabel: cc.Label = null;
+    scoreLabel: cc.Label = null;
 
-    protected start(): void
-    {
-        this.tryAgainButton.on('click', this.TryAgain, this);
-        this.node.active = false;
+    @property(cc.Button)
+    btnTryAgain: cc.Button = null;
+
+    @property(cc.Button)
+    btnContinues: cc.Button = null;
+
+    start(): void {
+        this.btnTryAgain.node.on('click', this.TryAgain, this);
+        this.btnContinues.node.on('click', this.Continues, this);
     }
 
-    private TryAgain(): void
-    {
+    private TryAgain(): void {
+        DialogManager._ins.removeDlg(this.node);
         GameManager.Instance.StartNewGame();
-        this.node.active = false;
     }
 
-    public ShowEndGamePopup(): void
-    {
+    private Continues(): void {
+        DialogManager._ins.removeDlg(this.node);
+        GameManager.Instance.StartNewGame();
+    }
+
+    public ShowEndGamePopup(): void {
         this.node.active = true;
         this.scoreLabel.string = GameManager.Instance.CurrentScore.toString();
     }

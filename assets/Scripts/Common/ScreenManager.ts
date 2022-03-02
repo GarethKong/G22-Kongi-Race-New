@@ -2,12 +2,8 @@ import DialogManager from "./DialogManager";
 import property = cc._decorator.property;
 import ccclass = cc._decorator.ccclass;
 
-const DlgNameConfig = {
-    "Setting": 0,
-    "Setting2": 1,
-    "LoseDlg": 2,
-    "Summary": 3,
-    "Complete": 4
+export const DlgConfig = {
+    "EndGame": 0,
 };
 
 export const ScreenConfig = {
@@ -52,10 +48,8 @@ export default class ScreenManager extends cc.Component {
     }
 
 
-    onShowDlgByName(name: string): void {
-        // Common.playAudioEffect(AudioEffectID.ClickBtn, false);
-        let a = DlgNameConfig[name]
-        let prefab = this.dlgPrefabsList[a];
+    onShowDlgByName(name: number): void {
+        let prefab = this.dlgPrefabsList[name];
         DialogManager.instance.showDlg(prefab, this.uiRoot);
     }
 }

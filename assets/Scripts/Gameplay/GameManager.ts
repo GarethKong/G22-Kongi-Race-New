@@ -5,11 +5,11 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import EndGamePopup from "../Popup/EndGamePopup";
 import NumberUltilities from "../Ultilities/NumberUltilities";
 import SimplePool from "../Ultilities/SimplePool";
 import BlockScript, {BlockMoveType} from "./BlockScript";
 import PlayerScript from "./PlayerScript";
+import ScreenManager, {DlgConfig} from "../Common/ScreenManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -48,9 +48,6 @@ export default class GameManager extends cc.Component
         this.TapNode.on(cc.Node.EventType.TOUCH_START, this.Landing, this);
     }
 
-
-
-
     /**
      * Đáp xuống đất
      */
@@ -61,9 +58,6 @@ export default class GameManager extends cc.Component
         this.KongiNode.Landing();
     }
 
-
-    @property(EndGamePopup)
-    private endGamePopup: EndGamePopup = null;
     /**
      * Rút cọc, GameOver
      */
@@ -78,7 +72,7 @@ export default class GameManager extends cc.Component
             }, i * 0.05);
         }
 
-        this.scheduleOnce(() => {this.endGamePopup.ShowEndGamePopup();}, this.BlockList.length * 0.05 + 1);
+        this.scheduleOnce(() => {ScreenManager.instance.onShowDlgByName(DlgConfig.EndGame)}, this.BlockList.length * 0.05 + 1);
     }
 
     /**
@@ -130,7 +124,7 @@ export default class GameManager extends cc.Component
             this.SpawnBlock();
         }
         this.ScoreLabel.string = this.CurrentScore.toString();
-        
+
 
     }
     //#endregion GAMEPLAY

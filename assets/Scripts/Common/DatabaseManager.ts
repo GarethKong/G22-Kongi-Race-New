@@ -1,5 +1,6 @@
 import GameState from "./GameState";
 import ccclass = cc._decorator.ccclass;
+import FBGlobal from "../facebook/FBGlobal";
 
 @ccclass
 export default class DatabaseManager extends cc.Component {
@@ -26,6 +27,7 @@ export default class DatabaseManager extends cc.Component {
         let dataString = null;
         dataString = cc.sys.localStorage.getItem("FlipperBall_PlayerData");
         this.initPlayerData(dataString);
+        FBGlobal.instance.getFBScore();
     }
 
     static initPlayerData(dataString) {
