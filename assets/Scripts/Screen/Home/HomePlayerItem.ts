@@ -1,5 +1,6 @@
 import player = FBInstant.player;
 import assetManager = cc.assetManager;
+import HomePlayerScript from "./HomePlayerScript";
 
 const {ccclass, property} = cc._decorator;
 
@@ -39,16 +40,17 @@ export default class HomePlayerItem extends cc.Component {
         // this.pathNode.zIndex = - 1;
     }
 
-    init(data: PlayerConnectedData, index: number, inviteFriendCb: any): void {
+    init(index: number, data: PlayerConnectedData, inviteFriendCb: any): void {
         this.playerIndex = index;
         this.currentPlayer = data;
-
-        this.updateItem(data);
+        this.updateItem(this.currentPlayer);
     }
 
-    updateItem(data:  PlayerConnectedData): void {
+    updateItem(data: PlayerConnectedData): void {
         let that = this;
-        this.lblName.string = data.name;
+        if (data.name != "" && data.name != undefined) {
+            this.lblName.string = data.name;
+        }
         if (data.avatar != "" && data.avatar != undefined) {
             cc.loader.load({url: data.avatar, type: 'png'}, function (err, img) {
                 if (err) {

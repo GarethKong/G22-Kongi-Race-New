@@ -281,4 +281,21 @@ export default class FBGlobal extends Component {
                 console.log("Save scrore ranking error" + error);
             });
     }
+
+    //4. GET PLAYER CONNECTED SECTION
+    // getConnectedPlayersInfo - Get a list info user connect to player
+    public getConnectedPlayersInfo(onSuccessCallback: any) {
+        console.log("getConnectedPlayersInfo");
+        FBInstant.player.getConnectedPlayersAsync()
+            .then(function (players: FBInstant.ConnectedPlayer[]) {
+                console.log("TEST" + players.map(function (player) {
+                    console.log("id" + player.getID() + "photo" + player.getPhoto() + "name" + player.getName());
+                    // return {
+                    //     id: player.getID(),
+                    //     name: player.getName(),
+                    // }
+                }));
+                onSuccessCallback(players);
+            });
+    }
 }

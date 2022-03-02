@@ -2266,7 +2266,7 @@
       "__id__": 44
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 46
@@ -2275,12 +2275,12 @@
     "_prefab": {
       "__id__": 47
     },
-    "_opacity": 210,
+    "_opacity": 6,
     "_color": {
       "__type__": "cc.Color",
-      "r": 202,
-      "g": 202,
-      "b": 202,
+      "r": 25,
+      "g": 17,
+      "b": 124,
       "a": 255
     },
     "_contentSize": {
@@ -3226,8 +3226,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 700,
-      "height": 350
+      "width": 720,
+      "height": 420
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3275,7 +3275,7 @@
         "__id__": 71
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 74
@@ -3301,7 +3301,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 700,
-      "height": 12
+      "height": 11.999999999999886
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3313,7 +3313,7 @@
       "ctor": "Float64Array",
       "array": [
         354.75,
-        -160.998,
+        -193.91000000000003,
         0,
         0,
         0,
@@ -3529,7 +3529,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 700,
-      "height": 350
+      "height": 400
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3597,7 +3597,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 700,
-      "height": 350
+      "height": 400
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3684,8 +3684,8 @@
     "_alignFlags": 37,
     "_left": 350.07654921020657,
     "_right": -4.75,
-    "_top": 329.998,
-    "_bottom": 8.002000000000024,
+    "_top": 397.9100000000001,
+    "_bottom": 10.090000000000046,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -3786,7 +3786,7 @@
       "__id__": 68
     },
     "_enabled": true,
-    "spacing": 0,
+    "spacing": 20,
     "spawnCount": 10,
     "bufferZone": 700,
     "svLevel": {

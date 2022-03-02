@@ -4,7 +4,22 @@ import HomePlayerItem from "./HomePlayerItem";
 import FBGlobal from "../../facebook/FBGlobal";
 import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
+import FBConfig from "../../facebook/FBConfig";
 
+
+export class PlayerConnectedData {
+    playerID: number = 0;
+    name: string = "";
+    avatar: string = "";
+    isSelf: boolean = false;
+
+    constructor(playerID: number, avatar: string, name: string, isSelf: boolean) {
+        this.playerID = playerID;
+        this.name = name;
+        this.avatar = avatar;
+        this.isSelf = isSelf;
+    }
+}
 
 @ccclass
 export default class HomePlayerScript extends cc.Component {
@@ -35,7 +50,9 @@ export default class HomePlayerScript extends cc.Component {
 
     isDraw: boolean = false;
 
-    itemTemplate: cc.Node = null
+    itemTemplate: cc.Node = null;
+
+    listPlayerConnected: PlayerConnectedData[] = null;
 
 
     static _ins: HomePlayerScript;
@@ -58,15 +75,50 @@ export default class HomePlayerScript extends cc.Component {
         this.loadData();
     }
 
-
-    loadData() {
+    loadData(): void {
         let self = this;
+        console.log('BINH Goi r nhe hehe');
+        this.initialize(function (entries: any) {
+            self.content.removeAllChildren();
+            this.listPlayerConnected = self.convertDateToPlayer(entries);
+            self.listRankSize = this.listPlayerConnected.length;
+            self.updateRankingUIView(this.listPlayerConnected);
+        });
+    }
+
+    convertDateToPlayer(datas): PlayerConnectedData[] {
         let listData = [];
-        for (let i = 0; i < 30; i++) {
-            listData.push(i);
+        if (datas.length == 0) {
+        } else {
+            for (let i = 0; i < datas.length; i++) {
+                let rank = datas[i].getID();
+                let name = datas[i].getName();
+                let avatar = datas[i].getPhoto();
+                let player = new PlayerConnectedData(rank, avatar, name, name == FBConfig.fbName);
+                listData.push(player);
+            }
         }
-        self.listRankSize = listData.length;
-        self.updateRankingUIView(listData);
+        //Add them chinh nguoi choi vao random index cua array
+        let indexCurrentPlayer = Math.floor(Math.random() * listData.length);
+        listData.splice(indexCurrentPlayer, 0, new PlayerConnectedData(indexCurrentPlayer, FBConfig.fbPhoto, FBConfig.fbName, true));
+        return listData;
+    }
+
+    initialize(callback: any): void {
+        if (typeof FBInstant === 'undefined') {
+            callback([]);
+            return;
+        }
+        FBGlobal.instance.getConnectedPlayersInfo(function (players: FBInstant.ConnectedPlayer[]) {
+            if (players) {
+                if (callback) {
+                    callback(players)
+                    console.log('callback already');
+                }
+            } else {
+                console.log(' no entries');
+            }
+        });
     }
 
     updateRankingUIView(entries) {
@@ -76,7 +128,7 @@ export default class HomePlayerScript extends cc.Component {
             var item = cc.instantiate(this.itemPrefab);
             this.content.addChild(item);
             item.setPosition(item.width * (0.5 + i) + this.spacing * (i + 1), 0);
-           //BINH TODO item.getComponent(HomePlayerItem).init(i + 1, self.inviteFriend.bind(this));
+            item.getComponent(HomePlayerItem).init(i, entries[i], self.inviteFriend.bind(this));
             this.items.push(item);
             console.log('Size list la' + this.items.length + 'height' + this.content.height);
         }
@@ -111,7 +163,7 @@ export default class HomePlayerScript extends cc.Component {
                     items[i].x = items[i].x - offset;
                     let item = items[i].getComponent(HomePlayerItem);
                     let itemId = item.playerIndex - items.length; // update item id
-                    //BINH TODO item.updateItem(itemId);
+                    item.updateItem(this.listPlayerConnected[itemId]);
                     console.log('BINH: update item left', this.lastContentPosX);
                 }
             } else {
@@ -122,7 +174,7 @@ export default class HomePlayerScript extends cc.Component {
                     items[i].x = items[i].x + offset;
                     let item = items[i].getComponent(HomePlayerItem);
                     let itemId = item.playerIndex + items.length;
-                    //BINH TODO item.updateItem(itemId);
+                    item.updateItem(this.listPlayerConnected[itemId]);
                     console.log('BINH: update item right', this.lastContentPosX);
                 }
             }

@@ -43,7 +43,11 @@ export default class ScreenManager extends cc.Component {
     onShowScreenByName(name: number) {
         for (let i = 0; i < Object.keys(ScreenConfig).length; i++) {
             let currentNode = this.screenList[i];
-            currentNode.active = i == name;
+            if (i == ScreenConfig.Game) {
+                currentNode.active = true;
+            } else {
+                currentNode.active = i == name;
+            }
         }
     }
 
