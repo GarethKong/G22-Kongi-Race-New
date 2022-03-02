@@ -32,6 +32,9 @@ export default class HomeScript extends cc.Component {
         this.btnSound.node.on('click', this.onBtnSetting, this);
         this.btnRanking.node.on('click', this.onBtnRanking, this);
         this.btnShop.node.on('click', this.onBtnShop, this);
+        DatabaseManager.loadPlayerData(function () {
+            console.log("Loaded facebook name+ avatar");
+        });
     }
 
     onEnable() {

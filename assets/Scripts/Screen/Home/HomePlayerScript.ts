@@ -80,9 +80,9 @@ export default class HomePlayerScript extends cc.Component {
         console.log('BINH Goi r nhe hehe');
         this.initialize(function (entries: any) {
             self.content.removeAllChildren();
-            this.listPlayerConnected = self.convertDateToPlayer(entries);
-            self.listRankSize = this.listPlayerConnected.length;
-            self.updateRankingUIView(this.listPlayerConnected);
+            self.listPlayerConnected = self.convertDateToPlayer(entries);
+            self.listRankSize = self.listPlayerConnected.length;
+            self.updateRankingUIView(self.listPlayerConnected);
         });
     }
 
@@ -124,7 +124,7 @@ export default class HomePlayerScript extends cc.Component {
     updateRankingUIView(entries) {
         let self = this;
         this.content.width = entries.length * (this.itemTemplate.width + this.spacing) + this.spacing; // get total content height
-        for (let i = 0; i < this.spawnCount; ++i) { // spawn items, we only need to do this once
+        for (let i = 0; i < entries.length; ++i) { // spawn items, we only need to do this once
             var item = cc.instantiate(this.itemPrefab);
             this.content.addChild(item);
             item.setPosition(item.width * (0.5 + i) + this.spacing * (i + 1), 0);
