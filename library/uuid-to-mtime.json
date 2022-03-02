@@ -540,8 +540,8 @@
     "relativePath": "Prefabs/Home"
   },
   "b91f0077-d388-46d0-8ded-5a929f5f4fbe": {
-    "asset": 1646130055805,
-    "meta": 1646130395175,
+    "asset": 1646132382262,
+    "meta": 1646183924987,
     "relativePath": "Scripts/Common"
   },
   "883cb481-94ca-4493-8fef-a50e276c3550": {
@@ -565,8 +565,8 @@
     "relativePath": "Scripts/Ultilities"
   },
   "95f0f354-8956-4076-86c5-67028e391150": {
-    "asset": 1646129155744,
-    "meta": 1646130395179,
+    "asset": 1646132511854,
+    "meta": 1646183924987,
     "relativePath": "Scripts/facebook"
   },
   "b3db7673-c14a-46d1-a517-64a19e9ee6e8": {
@@ -595,8 +595,8 @@
     "relativePath": "resources/fonts"
   },
   "c6277ba5-856c-4a31-959e-2c4a5bc05f4e": {
-    "asset": 1646135474315,
-    "meta": 1646135474323,
+    "asset": 1646135639398,
+    "meta": 1646135639404,
     "relativePath": "Gameplay.fire"
   },
   "bbbf7d94-2c36-4a05-bce9-5566fabe4db7": {
@@ -685,8 +685,8 @@
     "relativePath": "Scripts/Popup/EndGamePopup.ts"
   },
   "65939da5-f3ea-4c7e-a8e6-12d2e2ea3da7": {
-    "asset": 1646130595803,
-    "meta": 1646131124138,
+    "asset": 1646135405548,
+    "meta": 1646183924988,
     "relativePath": "Scripts/Screen/Home"
   },
   "2d8b0065-3859-4c44-9b14-373fc3a9a56a": {

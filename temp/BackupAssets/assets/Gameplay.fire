@@ -3123,7 +3123,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "HomeLevelUI",
+    "_name": "HomePlayerUI",
     "_objFlags": 0,
     "_parent": {
       "__id__": 67
@@ -3191,7 +3191,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "scrollbarListLevel",
+    "_name": "scrollbarListPlayer",
     "_objFlags": 0,
     "_parent": {
       "__id__": 68
@@ -3779,24 +3779,26 @@
     "sync": false
   },
   {
-    "__type__": "86e1bGJ8whN0q72gkxgIkd9",
+    "__type__": "83bbd29eaFN5IyvKggA16m9",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 68
     },
     "_enabled": true,
-    "spacing": 50,
+    "spacing": 0,
     "spawnCount": 10,
-    "bufferZone": 1200,
+    "bufferZone": 700,
     "svLevel": {
       "__id__": 75
     },
     "content": {
       "__id__": 77
     },
-    "itemPrefab": null,
-    "_id": "aegW14SElDCbTJ1NW12ybv"
+    "itemPrefab": {
+      "__uuid__": "2d8b0065-3859-4c44-9b14-373fc3a9a56a"
+    },
+    "_id": "c1d7pQlENF4qolLg8ahO83"
   },
   {
     "__type__": "cc.PrefabInfo",
