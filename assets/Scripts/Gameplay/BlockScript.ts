@@ -32,9 +32,9 @@ export default class BlockScript extends cc.Component
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
         if (this.node.position.y < -1500) SimplePool.instance.Despawn(this.node);
 
-        if(this.WaitForLanding == false)
+        if (this.WaitForLanding == false)
         {
-            this.CollisionWithPlayer();
+            this.AutoCollisionWithPlayer();
         }
     }
 
@@ -44,7 +44,7 @@ export default class BlockScript extends cc.Component
     {
         if (isDelayForEnable)
         {
-            this.scheduleOnce(() => {this.IsActiveForCollision = true;}, 0.3);
+            this.scheduleOnce(() => {this.IsActiveForCollision = true;}, 0.1);
         }
         else
         {
@@ -103,25 +103,32 @@ export default class BlockScript extends cc.Component
 
     //#region CHECK COLLSION
     public WaitForLanding: boolean = false; // TRUE nếu như người chơi đang tap vào màn hình => block ở update để chờ ở đây
-    public CollisionWithPlayer()
+    public AutoCollisionWithPlayer()
     {
         if (this.IsActiveForCollision == false) return;
         if (this.SqrDistanceFromTargetToHorizontalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockHeight * 0.5, 2))
         {
-            if (this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
-            {
-                GameManager.Instance.SetNextBlock();
-                GameManager.Instance.PushUpKongi(this.node.angle);
-                this.MoveDownWhenHitPlayer();
-                SoundManager.Instance.PlayHitSound();
-            }
-            else
-            {
-                this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
-                SoundManager.Instance.PlayGameOverSound();
-            }
-            this.IsActiveForCollision = false;
+            this.CheckCollisionOnTopBlock();
         }
+    }
+
+
+    public CheckCollisionOnTopBlock()
+    {
+        let sqrDistanceToVerticalAxix = this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node);
+        if (sqrDistanceToVerticalAxix <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
+        {
+            GameManager.Instance.SetNextBlock();
+            GameManager.Instance.PushUpKongi(this.node.angle);
+            this.MoveDownWhenHitPlayer();
+            SoundManager.Instance.PlayHitSound();
+        }
+        else
+        {
+            this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
+            SoundManager.Instance.PlayGameOverSound();
+        }
+        this.IsActiveForCollision = false;
     }
     /**
      * khoảng cách từ node (target) tới đường thẳng ax + by + c = 0
