@@ -3,13 +3,13 @@ import ccclass = cc._decorator.ccclass;
 import FBGlobal from "../facebook/FBGlobal";
 
 @ccclass
-export default class DatabaseManager extends cc.Component {
+export default class DatabaseManager {
 
     static lastScore = 0;
     static bestScore = 0;
     static totalCoin = 0;
     static numberPlayed = 0;
-    static skin = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    static skin = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     static savePlayerData(): void {
         let data = {
@@ -21,23 +21,23 @@ export default class DatabaseManager extends cc.Component {
         };
 
         let dataString = JSON.stringify(data);
-        console.log("FlipperBall_PlayerData-savePlayerData:" + dataString);
-        cc.sys.localStorage.setItem("FlipperBall_PlayerData", dataString);
+        console.log("KongiRace_PlayerData-savePlayerData:" + dataString);
+        cc.sys.localStorage.setItem("KongiRace_PlayerData", dataString);
     }
 
     static loadPlayerData(callback): void {
         let dataString = null;
-        dataString = cc.sys.localStorage.getItem("FlipperBall_PlayerData");
+        dataString = cc.sys.localStorage.getItem("KongiRace_PlayerData");
         this.initPlayerData(dataString);
         FBGlobal.instance.getFBScore();
     }
 
     static initPlayerData(dataString) {
         if (dataString != null && dataString != "{}" && typeof (dataString) == "string" && dataString.length > 0) {
-            console.log("FlipperBall_PlayerData-loadPlayerData:" + dataString);
+            console.log("KongiRace_PlayerData-loadPlayerData:" + dataString);
             this.parseDataLocal(dataString);
         } else {
-            console.log("FlipperBall_PlayerData-loadPlayerData-NoDataReset");
+            console.log("KongiRace_PlayerData-loadPlayerData-NoDataReset");
             this.resetPlayerData();
         }
     }
@@ -60,7 +60,7 @@ export default class DatabaseManager extends cc.Component {
         if (skin != null) {
             this.skin = skin;
         } else {
-            this.skin = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.skin = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
         let totalCoin = data.totalCoin;
         if (totalCoin != null) {
@@ -136,8 +136,9 @@ export default class DatabaseManager extends cc.Component {
         return this.numberPlayed;
     }
 
-    static setSkin(skin_id, value) {
-        this.skin[skin_id] = value;
+    static setSkin(value) {
+        this.skin[0] = value;
+        this.skin[value] = 1;
         this.savePlayerData();
     }
 

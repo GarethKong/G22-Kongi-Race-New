@@ -2,27 +2,33 @@ import ItemShopScript from "./ItemShopScript";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import SoundManager from "../../Ultilities/SoundManager";
 import DatabaseManager from "../../Common/DatabaseManager";
+import GameConfig from "../../Config/GameConfig";
+import CustomEventManager from "../../Ultilities/CustomEventManager";
 
 const {ccclass, property} = cc._decorator;
 
-const TOTAL_ITEM = 10;
 
 @ccclass
 export default class ShopScript extends cc.Component {
-
-
     @property(cc.Prefab)
-    itemPrefab: cc.Prefab = null;
+    private itemPrefab: cc.Prefab = null;
     @property(cc.Button)
-    btnBack: cc.Button = null;
-
+    private btnBack: cc.Button = null;
     @property(cc.Node)
-    content: cc.Node = null;
+    private content: cc.Node = null;
+    @property(cc.Label)
+    private lblCoins: cc.Label = null;
+    @property(cc.Label)
+    private lblUnlockStatus: cc.Label = null;
 
-    shopItemList = [];
-    selectedItem: cc.Node = null;
+    @property({displayName: 'spacing'})
+    public spacing: number = 0; // space between each item
 
-    static chosenItem: number;
+    private shopItemList = [];
+    private selectedItem: cc.Node = null;
+    private itemTemplate: cc.Node = null
+
+    private chosenItem: number;
 
     static _ins: ShopScript;
 
@@ -34,6 +40,10 @@ export default class ShopScript extends cc.Component {
         ShopScript._ins = this;
         let _this = this;
         this.btnBack.node.on('click', this.onBackBtnClick, this);
+        GameConfig.SKINS = DatabaseManager.getSkin();
+        this.scheduleOnce(() => {
+            CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateShopItemEvent, _this.updateInfoCoins, _this);
+        }, 0.1);
         this.loadData();
     }
 
@@ -42,30 +52,40 @@ export default class ShopScript extends cc.Component {
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
     }
 
-
-    start() {
-        console.log("chosenItem", ShopScript.chosenItem);
-        // GameConfig.achievement = Common.getAchievements();
-    }
-
     loadData() {
-        ShopScript.chosenItem[0] = DatabaseManager.getSkin()[0];
+        this.chosenItem = DatabaseManager.getSkin()[0];
         this.content.removeAllChildren();
-        for (let itemId = 1; itemId <= TOTAL_ITEM; itemId++) {
+        this.itemTemplate = cc.instantiate(this.itemPrefab);
+
+        for (let itemId = 1; itemId <= GameConfig.TOTAL_ITEM_SHOP; itemId++) {
             let node = cc.instantiate(this.itemPrefab);
             let item = node.getComponent(ItemShopScript);
             item.initItem(itemId);
-            node.parent = this.content;
+            this.content.addChild(node);
+            node.setPosition(0, -node.height * (0.5 + itemId) - this.spacing * (itemId + 1));
             this.shopItemList.push(item);
         }
-        this.content.height = Math.ceil(TOTAL_ITEM / 3) * this.node.height;
+        this.content.height = Math.ceil(GameConfig.TOTAL_ITEM_SHOP / 3) * (this.itemTemplate.height + this.spacing);
+        this.updateInfoCoins(0);
     }
 
-    updateUnchosenItem(itemId) {
-        let listItems = this.content.children;
-        for (let a = 0; a < listItems.length; a++) {
-            let item = listItems[a].getComponent(ItemShopScript);
-            item.lockNode.active = itemId == a + 1;
+    updateInfoCoins(itemId: number) {
+        if (itemId != 0) {
+            GameConfig.SKINS = DatabaseManager.getSkin();
+            this.shopItemList[itemId - 1].reloadItem();
         }
+        this.lblCoins.string = DatabaseManager.getTotalCoin() + "";
+        this.lblUnlockStatus.string = this.getNumberItemUnlock() + "/" + GameConfig.TOTAL_ITEM_SHOP;
+    }
+
+    getNumberItemUnlock(): number {
+        let skins = DatabaseManager.getSkin();
+        let count = 0;
+        for (let i = 1; i < skins.length; i++) {
+            if (skins[i] != 0) {
+                count += 1;
+            }
+        }
+        return count;
     }
 }

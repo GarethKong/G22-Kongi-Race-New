@@ -9,6 +9,8 @@ import ShopScript from "./ShopScript";
 import DatabaseManager from "../../Common/DatabaseManager";
 import ScreenManager, {DlgConfig} from "../../Common/ScreenManager";
 import ConfirmDlg from "./UnlockingScript";
+import GameConfig from "../../Config/GameConfig";
+import CustomEventManager from "../../Ultilities/CustomEventManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -16,39 +18,48 @@ const {ccclass, property} = cc._decorator;
 export default class ItemShopScript extends cc.Component {
 
     @property(cc.Sprite)
-    itemSprite: cc.Sprite = null;
+    private itemSprite: cc.Sprite = null;
 
     @property(cc.Node)
     lockNode: cc.Node = null;
 
-    isUnlocked: boolean = false;
+    isLocked: boolean = false;
     id: number = 0;
-
-    // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
         this.node.on('click', this.onClick, this);
-
     }
 
     initItem(id) {
+        let that = this;
         this.id = id;
-        this.isUnlocked = DatabaseManager.skin[id] == 0;
-        this.lockNode.active = this.isUnlocked;
+        this.isLocked = GameConfig.SKINS[id] == 0;
+        this.lockNode.active = this.isLocked;
+        cc.loader.loadRes("Character/" + (id), cc.SpriteFrame, function (err, spriteFrame) {
+            that.itemSprite.spriteFrame = spriteFrame;
+            that.itemSprite.node.height = GameConfig.IMAGE_SIZE_SHOP_ITEM;
+            that.itemSprite.node.width = GameConfig.IMAGE_SIZE_SHOP_ITEM;
+        });
     }
 
     onClick(event) {
-        if (this.lockNode.active) return;
-        if (this.isUnlocked) {
-            let dlg = ScreenManager.instance.onShowDlgByName(DlgConfig.ConfirmDlg);
-            dlg.getComponent(ConfirmDlg).init(this.id);
+        if (this.isLocked) {
+            if (DatabaseManager.getTotalCoin() < 200) {
+                return;
+            } else {
+                DatabaseManager.setSkin(this.id);
+                DatabaseManager.addMoreCoin(-200);
+                CustomEventManager.Instance.PostEventWithParam_1(CustomEventManager.Instance.UpdateShopItemEvent, this.id);
+                // this.lockNode.active = false;
+                // this.reloadItem();
+            }
         } else {
-            ShopScript.chosenItem[0] = this.id;
-            console.log("chosen item", ShopScript.chosenItem);
-            DatabaseManager.setSkin(0, this.id);
-            ShopScript._ins.updateUnchosenItem(this.id);
+            DatabaseManager.setSkin(this.id);
         }
     }
 
-    // update (dt) {}
+    reloadItem() {
+        this.isLocked = GameConfig.SKINS[this.id] == 0;
+        this.lockNode.active = this.isLocked;
+    }
 }

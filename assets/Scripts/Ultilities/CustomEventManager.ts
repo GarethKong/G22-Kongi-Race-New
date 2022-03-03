@@ -25,7 +25,7 @@ export default class CustomEventManager extends cc.Component
     UpdateCoinEvent: string = "UpdateCoinEvent";
     UpdateItemEvent: string = "UpdateItemEvent";
     UpdateLifeEvent: string = "UpdateLifeEvent";
-
+    UpdateShopItemEvent: string = "UpdateShopItemEvent";
 
     PostEvent(eventString: string): void
     {

@@ -89,7 +89,7 @@ export default class PlayerScript extends cc.Component
     private LandOnBlock()
     {
         this.IsLanding = false;
-        GameManager.Instance.BlockList[0].CollisionWithPlayer();
+        GameManager.Instance.BlockList[0].CheckCollisionOnTopBlock();
     }
 
     public ResetNewGame(): void
