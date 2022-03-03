@@ -4,7 +4,7 @@ import HomePlayerItem from "./HomePlayerItem";
 import FBGlobal from "../../facebook/FBGlobal";
 import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
-import FBConfig from "../../facebook/FBConfig";
+import FBConfig from "../../Config/FBConfig";
 
 
 export class PlayerConnectedData {

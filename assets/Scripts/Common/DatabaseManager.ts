@@ -9,12 +9,14 @@ export default class DatabaseManager extends cc.Component {
     static bestScore = 0;
     static totalCoin = 0;
     static numberPlayed = 0;
+    static skin = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     static savePlayerData(): void {
         let data = {
             lastScore: this.lastScore,
             bestScore: this.bestScore,
             totalCoin: this.totalCoin,
+            skin: this.skin,
             numberPlayed: this.numberPlayed,
         };
 
@@ -53,6 +55,12 @@ export default class DatabaseManager extends cc.Component {
             this.bestScore = bestScore;
         } else {
             this.bestScore = 0;
+        }
+        let skin = data.skin;
+        if (skin != null) {
+            this.skin = skin;
+        } else {
+            this.skin = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
         let totalCoin = data.totalCoin;
         if (totalCoin != null) {
@@ -127,4 +135,14 @@ export default class DatabaseManager extends cc.Component {
     static getTotalTimePlayed(): number {
         return this.numberPlayed;
     }
+
+    static setSkin(skin_id, value) {
+        this.skin[skin_id] = value;
+        this.savePlayerData();
+    }
+
+    static getSkin() {
+        return this.skin;
+    }
+
 }
