@@ -10,6 +10,7 @@ import SimplePool from "../Ultilities/SimplePool";
 import BlockScript, {BlockMoveType} from "./BlockScript";
 import PlayerScript from "./PlayerScript";
 import ScreenManager, {DlgConfig} from "../Common/ScreenManager";
+import SpawnDataConfig, {BlockInfo} from "./SpawnDataConfig";
 
 const {ccclass, property} = cc._decorator;
 
@@ -32,9 +33,7 @@ export default class GameManager extends cc.Component
     private MaxFlyingTime: number = 1.2;
     private Gravity: number = 0;
     @property
-    public LandingVelocity: number = 500;
-    @property
-    private CanvasWidth: number = 1080;
+    public CanvasWidth: number = 720;
 
     protected onLoad(): void
     {
@@ -80,7 +79,7 @@ export default class GameManager extends cc.Component
      */
     public SetNextBlock(): void
     {
-        for (let i = 0; i < this.BlockList.length; i++)
+        for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
         }
@@ -90,8 +89,6 @@ export default class GameManager extends cc.Component
         this.BlockList.splice(0, 1);
         this.SpawnBlock();
         this.BlockList[0].EnableForCollision(true);
-
-
     }
 
     public PushUpKongi(pushUpAngle: number): void
@@ -112,6 +109,7 @@ export default class GameManager extends cc.Component
     public IsPauseGame: boolean = false;
     public StartNewGame(): void
     {
+        SpawnDataConfig.ResetForNewGame();
         this.BlockList = [];
         this.KongiNode.ResetNewGame();
         this.IsPauseGame = true;
@@ -124,40 +122,28 @@ export default class GameManager extends cc.Component
             this.SpawnBlock();
         }
         this.ScoreLabel.string = this.CurrentScore.toString();
-
-
     }
     //#endregion GAMEPLAY
     //#region SPAWN BLOCKS
     @property(cc.Node)
     private BlockContainer: cc.Node = null;
 
-    private StepAngle: number = 2.5
-    private MaxAngleMultiplier: number = 10;
 
     private CurrentSpawnedBlock: BlockScript = null;
     private CurrentBlockAngle: number;
     private CurrentBlockWidth: number;
     private CurrentBlockPosition: cc.Vec3;
-    private CurrentBlockYOffset: number;
     private CurrentBlockIndex: number = 0;//index của block được thêm vào danh sách, block càng về sau thì phải càng gần với background color
-    private BlockList: BlockScript[] = [];
+    public BlockList: BlockScript[] = [];
 
     private SpawnFirstBlock(): void
     {
+        this.CurrentBlockIndex = 0;
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
-        this.CurrentSpawnedBlock.SetBlockInfo(1080, 0, BlockMoveType.Static, cc.v3(0, -480), this.CurrentBlockIndex, 0); // 480 tùy chỉnh sau
+        this.CurrentSpawnedBlock.SetBlockInfo(this.CanvasWidth, 0, BlockMoveType.Static,
+            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex);
         this.CurrentSpawnedBlock.EnableForCollision(false)
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
-
-
-        this.CurrentBlockIndex++;
-
-        this.CurrentBlockAngle = NumberUltilities.GetRandomIntNumber(1, this.MaxAngleMultiplier + 1) * NumberUltilities.GetRandomSign() * this.StepAngle;
-        this.CurrentBlockWidth = 800;
-        this.CurrentBlockPosition = cc.v3(0, -360); // 360 tùy chỉnh sau
-        this.CurrentBlockYOffset = -120;
-
         this.BlockList.push(this.CurrentSpawnedBlock);
     }
     /**
@@ -165,62 +151,30 @@ export default class GameManager extends cc.Component
      */
     private SpawnBlock(): void
     {
+        this.CalculateNextBlockState();
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
-        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentBlockYOffset);
+        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex);
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.CurrentSpawnedBlock.node.setSiblingIndex(0);
-
-        this.CalculateNextBlockState();
-        this.CurrentBlockIndex++;
-
         this.BlockList.push(this.CurrentSpawnedBlock);
     }
 
 
     private CalculateNextBlockState(): void
     {
-        let playerVelocityX = -this.MaxVelocity * Math.sin(2 * this.CurrentBlockAngle * Math.PI / 180);
-        let maxFlyingRange = playerVelocityX * this.MaxFlyingTime;
-        let deltaBetweenTwoBlock = maxFlyingRange * NumberUltilities.GetRandomFloatNumber(0.3, 0.7);
-
-        if (this.CurrentBlockIndex < 5)
+        this.CurrentBlockIndex++;
+        var nextBlockConfig: BlockInfo = SpawnDataConfig.GetNextSpawnInfo();
+        if (this.CurrentBlockIndex >= SpawnDataConfig.BonusYForBlockIndex.length)
         {
-            this.CurrentBlockPosition = cc.v3(cc.misc.clampf(this.CurrentBlockPosition.x + deltaBetweenTwoBlock, -324, 324),
-                this.CurrentBlockPosition.y + 120);
-            this.CurrentBlockYOffset = -120;
-        }
-        else
-        {
-            this.CurrentBlockPosition = cc.v3(cc.misc.clampf(this.CurrentBlockPosition.x + deltaBetweenTwoBlock, -324, 324),
-                this.CurrentBlockPosition.y + 30);
-            this.CurrentBlockYOffset = -30;
+            console.log("ko the xay ra, check bug");
         }
 
+        this.CurrentBlockPosition = cc.v3(nextBlockConfig.PositionX,
+            SpawnDataConfig.PositionYForFirstBlocks[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.PositionYForFirstBlocks.length - 1)] +
+            SpawnDataConfig.BonusYForBlockIndex[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.BonusYForBlockIndex.length - 1)]);
 
-        this.CurrentBlockWidth = cc.misc.clampf(Math.abs(maxFlyingRange) * NumberUltilities.GetRandomFloatNumber(0.3, 0.7), 288, 540);
-
-        if (this.CurrentBlockAngle > 0)
-        {
-            if (this.CurrentBlockPosition.x + playerVelocityX * this.MaxFlyingTime < -this.CanvasWidth / 2)
-            {
-                this.CurrentBlockAngle = -NumberUltilities.GetRandomIntNumber(1, this.MaxAngleMultiplier + 1) * this.StepAngle;
-            }
-            else
-            {
-                this.CurrentBlockAngle = NumberUltilities.GetRandomIntNumber(1, this.MaxAngleMultiplier + 1) * this.StepAngle;
-            }
-        }
-        else
-        {
-            if (this.CurrentBlockPosition.x + playerVelocityX * this.MaxFlyingTime > this.CanvasWidth / 2)
-            {
-                this.CurrentBlockAngle = NumberUltilities.GetRandomIntNumber(1, this.MaxAngleMultiplier + 1) * this.StepAngle;
-            }
-            else
-            {
-                this.CurrentBlockAngle = -NumberUltilities.GetRandomIntNumber(1, this.MaxAngleMultiplier + 1) * this.StepAngle;
-            }
-        }
+        this.CurrentBlockWidth = NumberUltilities.GetRandomFloatNumber(nextBlockConfig.MinWidth, nextBlockConfig.MaxWidth);
+        this.CurrentBlockAngle = nextBlockConfig.Angle;
     }
     //#endregion SPAWN BLOCKS
 

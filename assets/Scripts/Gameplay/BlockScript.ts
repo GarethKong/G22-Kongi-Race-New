@@ -9,6 +9,7 @@ import CustomEventManager from "../Ultilities/CustomEventManager";
 import SimplePool from "../Ultilities/SimplePool";
 import SoundManager from "../Ultilities/SoundManager";
 import GameManager from "./GameManager";
+import SpawnDataConfig from "./SpawnDataConfig";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,9 +23,6 @@ export default class BlockScript extends cc.Component
     private mistBefore: cc.Node = null;
     @property(cc.Node)
     private CenterNode: cc.Node = null;
-
-    private YOffset: number = 0;
-
     private IsActiveForCollision: boolean = false;
 
 
@@ -32,38 +30,15 @@ export default class BlockScript extends cc.Component
     protected update(dt: number): void
     {
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
-
         if (this.node.position.y < -1500) SimplePool.instance.Despawn(this.node);
-        if (this.IsActiveForCollision == false) return;
 
-        if (this.SqrDistanceFromTargetToHorizontalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockHeight * 0.5, 2))
+        if(this.WaitForLanding == false)
         {
-            if (this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
-            {
-                GameManager.Instance.SetNextBlock();
-                GameManager.Instance.PushUpKongi(this.node.angle);
-                this.MoveDownWhenHitPlayer();
-                SoundManager.Instance.PlayHitSound();
-            }
-            else
-            {
-                this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
-                SoundManager.Instance.PlayGameOverSound();
-
-                // let distanceHorizontal = this.SqrDistanceFromTargetToHorizontalLine(GameManager.Instance.KongiNode.node);
-                // let distanceVertical = this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node);
-                // this.node.color = cc.Color.GREEN;
-                // console.log(this.node.position);
-                // console.log("horizontal: " + distanceHorizontal);
-                // console.log("vertical: " + distanceVertical);
-                // console.log("Width: " + this.BlockWidth);
-                // console.log("Kongi Radius: " + GameManager.Instance.KongiRadius);
-                // console.log(GameManager.Instance.KongiNode.node.position);
-                // cc.game.pause();
-            }
-            this.IsActiveForCollision = false;
+            this.CollisionWithPlayer();
         }
     }
+
+
 
     public EnableForCollision(isDelayForEnable: boolean)
     {
@@ -75,41 +50,39 @@ export default class BlockScript extends cc.Component
         {
             this.IsActiveForCollision = true;
         }
-
     }
 
-    private ColorIndex: number = 0;
+    private BlockIndex: number = 0;
     public ChangeStateToNextIndex(changeDuration: number): void
     {
         // chuyển màu về gần với màu gốc
-        if (this.ColorIndex > 0)
+        if (this.BlockIndex > 0)
         {
-            this.ColorIndex--;
+            this.BlockIndex--;
             cc.tween(this.node).to(changeDuration, {
-                color: GameManager.Instance.ColorList[this.ColorIndex]
-                , scale: GameManager.Instance.ScaleList[this.ColorIndex]
+                color: GameManager.Instance.ColorList[this.BlockIndex]
+                , scale: GameManager.Instance.ScaleList[this.BlockIndex]
             }).start();
-            cc.tween(this.node).by(changeDuration, {position: cc.v3(0, this.YOffset, 0)}).start();
+            cc.tween(this.node).by(changeDuration, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
         }
     }
 
     //#region INIT BLOCK
-    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, colorIndex: number, yOffset: number): void
+    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number): void
     {
-        console.log(colorIndex);
         this.node.position = position;
         this.BlockWidth = blockWidth;
         this.node.width = blockWidth;
         this.node.angle = startAngle;
         this.mistBefore.width = blockWidth;
-        this.YOffset = yOffset;
 
-        this.ColorIndex = colorIndex;
-        this.node.color = GameManager.Instance.ColorList[this.ColorIndex];
-        this.node.scale = GameManager.Instance.ScaleList[this.ColorIndex];
+        this.BlockIndex = blockIndex;
+        this.node.color = GameManager.Instance.ColorList[this.BlockIndex];
+        this.node.scale = GameManager.Instance.ScaleList[this.BlockIndex];
 
         this.Velocity = cc.Vec3.ZERO; // tùy move type
         this.IsActiveForCollision = false;
+        this.WaitForLanding = false;
 
     }
     //#endregion INIT BLOCK
@@ -129,6 +102,27 @@ export default class BlockScript extends cc.Component
     //#endregion  MOVE BLOCK
 
     //#region CHECK COLLSION
+    public WaitForLanding: boolean = false; // TRUE nếu như người chơi đang tap vào màn hình => block ở update để chờ ở đây
+    public CollisionWithPlayer()
+    {
+        if (this.IsActiveForCollision == false) return;
+        if (this.SqrDistanceFromTargetToHorizontalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockHeight * 0.5, 2))
+        {
+            if (this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node) <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
+            {
+                GameManager.Instance.SetNextBlock();
+                GameManager.Instance.PushUpKongi(this.node.angle);
+                this.MoveDownWhenHitPlayer();
+                SoundManager.Instance.PlayHitSound();
+            }
+            else
+            {
+                this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
+                SoundManager.Instance.PlayGameOverSound();
+            }
+            this.IsActiveForCollision = false;
+        }
+    }
     /**
      * khoảng cách từ node (target) tới đường thẳng ax + by + c = 0
      */
