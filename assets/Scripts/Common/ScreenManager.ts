@@ -1,6 +1,7 @@
 import DialogManager from "./DialogManager";
 import property = cc._decorator.property;
 import ccclass = cc._decorator.ccclass;
+import DatabaseManager from "./DatabaseManager";
 
 export const DlgConfig = {
     "EndGame": 0,
@@ -31,6 +32,10 @@ export default class ScreenManager extends cc.Component {
     }
 
     onLoad() {
+        DatabaseManager.loadPlayerData(function () {
+            console.log("Loaded facebook name+ avatar");
+        });
+        //DatabaseManager.addMoreCoin(999);
         ScreenManager._ins = this;
     }
 
