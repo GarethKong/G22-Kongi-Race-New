@@ -77,7 +77,6 @@ export default class HomePlayerScript extends cc.Component {
 
     loadData(): void {
         let self = this;
-        console.log('BINH Goi r nhe hehe');
         this.initialize(function (entries: any) {
             self.content.removeAllChildren();
             self.listPlayerConnected = self.convertDateToPlayer(entries);
@@ -130,9 +129,8 @@ export default class HomePlayerScript extends cc.Component {
             item.setPosition(item.width * (0.5 + i) + this.spacing * (i + 1), 0);
             item.getComponent(HomePlayerItem).init(i, entries[i], self.inviteFriend.bind(this));
             this.items.push(item);
-            console.log('Size list la' + this.items.length + 'height' + this.content.height);
+            //console.log('Size list la' + this.items.length + 'height' + this.content.height);
         }
-        console.log("already comehere3");
         this.scrollToFixedPosition();
     }
 

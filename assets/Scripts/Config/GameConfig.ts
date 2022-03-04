@@ -1,6 +1,7 @@
 import ccclass = cc._decorator.ccclass;
 
 export default class GameConfig {
+    static REVIVE_COUNT_DOWN = 6;
     static TOTAL_ITEM_SHOP = 21;
     static IMAGE_SIZE_SHOP_ITEM = 80;
     static SKINS = [];

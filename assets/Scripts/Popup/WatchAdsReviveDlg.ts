@@ -7,29 +7,34 @@
 
 import GameManager from "../Gameplay/GameManager";
 import DialogManager from "../Common/DialogManager";
+import LoadingUI from "../component/LoadingUI";
+import ScreenManager, {ScreenConfig} from "../Common/ScreenManager";
+import EndGameScript from "../Screen/End/EndGameScript";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class EndGamePopup extends cc.Component {
+export default class WatchAdsReviveDlg extends cc.Component {
 
     @property(cc.Label)
     scoreLabel: cc.Label = null;
 
     @property(cc.Button)
-    btnTryAgain: cc.Button = null;
+    btnNoThanks: cc.Button = null;
 
     @property(cc.Button)
     btnContinues: cc.Button = null;
 
     start(): void {
-        this.btnTryAgain.node.on('click', this.TryAgain, this);
+        this.btnNoThanks.node.on('click', this.NoThanks, this);
         this.btnContinues.node.on('click', this.Continues, this);
+        LoadingUI._ins.startTimer();
     }
 
-    private TryAgain(): void {
+    private NoThanks(): void {
         DialogManager._ins.removeDlg(this.node);
-        GameManager.Instance.StartNewGame();
+        ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
+        EndGameScript.instance.loadData();
     }
 
     private Continues(): void {
