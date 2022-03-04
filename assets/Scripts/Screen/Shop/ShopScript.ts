@@ -4,6 +4,7 @@ import SoundManager from "../../Ultilities/SoundManager";
 import DatabaseManager from "../../Common/DatabaseManager";
 import GameConfig from "../../Config/GameConfig";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
+import GameManager from "../../Gameplay/GameManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -42,8 +43,8 @@ export default class ShopScript extends cc.Component {
         this.btnBack.node.on('click', this.onBackBtnClick, this);
         GameConfig.SKINS = DatabaseManager.getSkin();
         this.scheduleOnce(() => {
-            CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateShopItemEvent, _this.updateInfoCoins, _this);
-        }, 0.1);
+            CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateShopItemEvent, _this.updateShopItem, _this);
+        }, 0.01);
         this.loadData();
     }
 
@@ -52,7 +53,7 @@ export default class ShopScript extends cc.Component {
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
     }
 
-    loadData() {
+    loadData(): void {
         this.chosenItem = DatabaseManager.getSkin()[0];
         this.content.removeAllChildren();
         this.itemTemplate = cc.instantiate(this.itemPrefab);
@@ -66,16 +67,17 @@ export default class ShopScript extends cc.Component {
             this.shopItemList.push(item);
         }
         this.content.height = Math.ceil(GameConfig.TOTAL_ITEM_SHOP / 3) * (this.itemTemplate.height + this.spacing);
-        this.updateInfoCoins(0);
-    }
-
-    updateInfoCoins(itemId: number) {
-        if (itemId != 0) {
-            GameConfig.SKINS = DatabaseManager.getSkin();
-            this.shopItemList[itemId - 1].reloadItem();
-        }
         this.lblCoins.string = DatabaseManager.getTotalCoin() + "";
         this.lblUnlockStatus.string = this.getNumberItemUnlock() + "/" + GameConfig.TOTAL_ITEM_SHOP;
+    }
+
+    updateShopItem(itemId: number): void {
+        console.log("Receive event done");
+        GameConfig.SKINS = DatabaseManager.getSkin();
+        this.shopItemList[itemId - 1].reloadItem();
+        this.lblCoins.string = DatabaseManager.getTotalCoin() + "";
+        this.lblUnlockStatus.string = this.getNumberItemUnlock() + "/" + GameConfig.TOTAL_ITEM_SHOP;
+        GameManager.Instance.ChangeCharacter(itemId);
     }
 
     getNumberItemUnlock(): number {

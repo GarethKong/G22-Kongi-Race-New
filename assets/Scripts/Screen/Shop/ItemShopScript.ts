@@ -5,12 +5,10 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import ShopScript from "./ShopScript";
 import DatabaseManager from "../../Common/DatabaseManager";
-import ScreenManager, {DlgConfig} from "../../Common/ScreenManager";
-import ConfirmDlg from "./UnlockingScript";
 import GameConfig from "../../Config/GameConfig";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
+import Utilities from "../../Ultilities/Utilities";
 
 const {ccclass, property} = cc._decorator;
 
@@ -35,7 +33,7 @@ export default class ItemShopScript extends cc.Component {
         this.id = id;
         this.isLocked = GameConfig.SKINS[id] == 0;
         this.lockNode.active = this.isLocked;
-        cc.loader.loadRes("Character/" + (id), cc.SpriteFrame, function (err, spriteFrame) {
+        cc.loader.loadRes("Character/" + (GameConfig.listImageSource[id]), cc.SpriteFrame, function (err, spriteFrame) {
             that.itemSprite.spriteFrame = spriteFrame;
             that.itemSprite.node.height = GameConfig.IMAGE_SIZE_SHOP_ITEM;
             that.itemSprite.node.width = GameConfig.IMAGE_SIZE_SHOP_ITEM;
@@ -43,6 +41,10 @@ export default class ItemShopScript extends cc.Component {
     }
 
     onClick(event) {
+        if (!Utilities.checkInterval()) {
+            return;
+        }
+        Utilities.setLastTime();
         if (this.isLocked) {
             if (DatabaseManager.getTotalCoin() < 200) {
                 return;
@@ -50,11 +52,13 @@ export default class ItemShopScript extends cc.Component {
                 DatabaseManager.setSkin(this.id);
                 DatabaseManager.addMoreCoin(-200);
                 CustomEventManager.Instance.PostEventWithParam_1(CustomEventManager.Instance.UpdateShopItemEvent, this.id);
+                console.log("Send event done")
                 // this.lockNode.active = false;
                 // this.reloadItem();
             }
         } else {
             DatabaseManager.setSkin(this.id);
+            CustomEventManager.Instance.PostEventWithParam_1(CustomEventManager.Instance.UpdateShopItemEvent, this.id);
         }
     }
 
