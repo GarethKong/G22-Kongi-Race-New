@@ -1,6 +1,7 @@
 import GameState from "./GameState";
-import ccclass = cc._decorator.ccclass;
 import FBGlobal from "../facebook/FBGlobal";
+import GameConfig from "../Config/GameConfig";
+import ccclass = cc._decorator.ccclass;
 
 @ccclass
 export default class DatabaseManager {
@@ -9,7 +10,10 @@ export default class DatabaseManager {
     static bestScore = 0;
     static totalCoin = 0;
     static numberPlayed = 0;
-    static skin = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    //Array of current skins index 0 is what character selected, 21 next item is status of current
+    //Size skin is 22
+    static skin = [];
 
     static savePlayerData(): void {
         let data = {
@@ -60,7 +64,7 @@ export default class DatabaseManager {
         if (skin != null) {
             this.skin = skin;
         } else {
-            this.skin = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.initSkinShop();
         }
         let totalCoin = data.totalCoin;
         if (totalCoin != null) {
@@ -76,10 +80,21 @@ export default class DatabaseManager {
         }
     }
 
+    static initSkinShop() {
+        this.skin = [];
+        //Selection 1, active 1, 20 in-active
+        this.skin.push(1);
+        this.skin.push(1);
+        for (let i = 0; i < GameConfig.TOTAL_ITEM_SHOP - 1; i++) {
+            this.skin.push(0);
+        }
+    }
+
     static resetPlayerData(): void {
         this.bestScore = 0;
         this.numberPlayed = 0;
         this.totalCoin = 0;
+        this.initSkinShop();
         this.savePlayerData();
     }
 
@@ -116,9 +131,7 @@ export default class DatabaseManager {
     }
 
     static addMoreCoin(num): void {
-        let currentCoin = Number(cc.sys.localStorage.getItem('numberTotalCoin')) + num;
-        cc.sys.localStorage.setItem('numberTotalCoin', currentCoin);
-        this.totalCoin = currentCoin;
+        this.totalCoin = this.totalCoin + num;
         this.savePlayerData();
     }
 
