@@ -211,4 +211,10 @@ export default class GameManager extends cc.Component
 
     //#endregion SCALE TỪNG BLOCK THEO INDEX
 
+    //#region SHOP REGION
+    public ChangeCharacter(characterIndex: number)
+    {
+
+    }
+    //#endregion SHOP REGION
 }
