@@ -78,6 +78,7 @@ export default class ShopScript extends cc.Component {
         this.lblCoins.string = DatabaseManager.getTotalCoin() + "";
         this.lblUnlockStatus.string = this.getNumberItemUnlock() + "/" + GameConfig.TOTAL_ITEM_SHOP;
         GameManager.Instance.ChangeCharacter(itemId);
+        ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
     }
 
     getNumberItemUnlock(): number {

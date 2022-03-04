@@ -4,7 +4,7 @@ import ccclass = cc._decorator.ccclass;
 import DatabaseManager from "./DatabaseManager";
 
 export const DlgConfig = {
-    "EndGame": 0,
+    "WatchAdsToRevive": 0,
     "ConfirmDlg": 1,
 };
 
@@ -12,6 +12,7 @@ export const ScreenConfig = {
     "Game": 0,
     "Home": 1,
     "Shop": 2,
+    "EndGame": 3,
 };
 
 @ccclass
