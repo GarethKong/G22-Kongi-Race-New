@@ -8,7 +8,7 @@ export default class GameDataConfig
     /**
      * 
      */
-    static SpawnConfigCount: number = 1;
+    static SpawnConfigCount: number = 2;
     /**
      * Offset Y cho các block, dùng để di chuyển khi dịch chuyển index (ví dụ block 1 => block 0 thì dịch xuống 40 pixel)
      */
@@ -30,65 +30,129 @@ export default class GameDataConfig
     /**
      * Index của block trong list đang được lấy, nếu đạt mốc cuối thì random list tiếp theo
      */
-    private static CurrentSpawnIndex: number = 100;
+    private static CurrentSpawnIndex: number = 0;
     private static SpawnList = {
+        // 4 tường nghiêng vào nhau
         0: {
             BlockInfo: [
                 {
-                    Angle: 0,
+                    Angle: 5,
                     PositionX: 0,
                     MinWidth: 350,
-                    MaxWidth: 600,
+                    MaxWidth: 450,
                 },
                 {
-                    Angle: 0,
-                    PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 600,
+                    Angle: -10,
+                    PositionX: -200,
+                    MinWidth: 200,
+                    MaxWidth: 400,
                 },
                 {
-                    Angle: 0,
-                    PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 600,
+                    Angle: 10,
+                    PositionX: 200,
+                    MinWidth: 200,
+                    MaxWidth: 400,
                 },
                 {
-                    Angle: 0,
-                    PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 600,
-                },
-                {
-                    Angle: 0,
-                    PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 600,
-                },
-                {
-                    Angle: 0,
-                    PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 600,
-                },
+                    Angle: -10,
+                    PositionX: -200,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                }
             ]
-        }
+        },
+        // đi S ngược
+        1: {
+            BlockInfo: [
+                {
+                    Angle: -2.5,
+                    PositionX: 0,
+                    MinWidth: 350,
+                    MaxWidth: 450,
+                },
+                {
+                    Angle: -2.5,
+                    PositionX: 80,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 2.5,
+                    PositionX: 120,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 5,
+                    PositionX: 0,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 2.5,
+                    PositionX: -80,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -2.5,
+                    PositionX: -160,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -2.5,
+                    PositionX: -80,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                }
+            ]
+        },
+        // 9 tường nghiêng vào nhau
+        2: {
+            BlockInfo: [
+                {
+                    Angle: 5,
+                    PositionX: 0,
+                    MinWidth: 300,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -10,
+                    PositionX: -200,
+                    MinWidth: 300,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 10,
+                    PositionX: 200,
+                    MinWidth: 300,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -10,
+                    PositionX: -200,
+                    MinWidth: 300,
+                    MaxWidth: 400,
+                }
+            ]
+        },
     }
 
     static GetNextSpawnInfo(): BlockInfo
     {
         this.CurrentSpawnIndex++;
-        if (this.CurrentSpawnIndex >= this.SpawnList[this.CurrentSpawnListIndex].BlockInfo.length)
+        if (this.CurrentSpawnIndex > this.SpawnList[this.CurrentSpawnListIndex].BlockInfo.length)
         {
             this.CurrentSpawnListIndex = NumberUltilities.GetRandomIntNumber(0, this.SpawnConfigCount);
             this.CurrentSpawnIndex = 1;
         }
-
         return this.SpawnList[this.CurrentSpawnListIndex].BlockInfo[this.CurrentSpawnIndex - 1];
     }
 
     static ResetForNewGame()
     {
-        this.CurrentSpawnIndex = 100;
+        this.CurrentSpawnIndex = 0;
     }
 }
 

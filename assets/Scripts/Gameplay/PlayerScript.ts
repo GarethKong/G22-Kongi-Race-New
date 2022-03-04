@@ -77,7 +77,7 @@ export default class PlayerScript extends cc.Component
         }
         else
         {
-            cc.tween(this.node).to(0.05, {position: hitPosition})
+            cc.tween(this.node).to(0.04, {position: hitPosition})
                 .call(() =>
                 {
                     this.LandOnBlock();

@@ -44,7 +44,7 @@ export default class BlockScript extends cc.Component
     {
         if (isDelayForEnable)
         {
-            this.scheduleOnce(() => {this.IsActiveForCollision = true;}, 0.1);
+            this.scheduleOnce(() => {this.IsActiveForCollision = true;}, 0.3);
         }
         else
         {
