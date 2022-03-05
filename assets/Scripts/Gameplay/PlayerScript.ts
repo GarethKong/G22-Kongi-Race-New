@@ -26,6 +26,9 @@ export default class PlayerScript extends cc.Component
     {
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
+
+        
+
         // if(GameManager.Instance.IsPauseGame) return;
         this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt));
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
