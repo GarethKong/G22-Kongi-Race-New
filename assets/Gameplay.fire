@@ -548,7 +548,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "cb71695d-ac1f-43a9-82d3-5e154cdfeee7"
+      "__uuid__": "3ad23f02-d0a4-4916-b222-f94337ccc9ea"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1577,7 +1577,7 @@
     "BlockPrefab": {
       "__uuid__": "bbbf7d94-2c36-4a05-bce9-5566fabe4db7"
     },
-    "MaxBlockQty": 10,
+    "MaxBlockQty": 6,
     "MaxVelocity": 1600,
     "MaxFlyingTime": 1.2,
     "CanvasWidth": 720,

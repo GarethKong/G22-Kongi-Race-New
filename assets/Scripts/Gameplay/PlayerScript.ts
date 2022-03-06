@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import BlockScript from "./BlockScript";
 import GameManager from "./GameManager";
 
 const {ccclass, property} = cc._decorator;
@@ -58,7 +59,6 @@ export default class PlayerScript extends cc.Component
      */
     public Jump(pushUpAngle: number, pushUpVelocity: number, gravity: number): void
     {
-        console.log("Jump");
         let pushUpAngleInRadian: number = pushUpAngle * Math.PI / 180;
         this.Velocity = cc.v3(pushUpVelocity * -Math.sin(2 * pushUpAngleInRadian), pushUpVelocity * Math.cos(2 * pushUpAngleInRadian));
         this.Gravity = gravity;
@@ -73,19 +73,27 @@ export default class PlayerScript extends cc.Component
 
         let hitPosition: cc.Vec3 = this.GetCollistionPos();
 
-        if (Math.abs(this.node.position.y - hitPosition.y) < 50)
+        if(Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x)> 100)
         {
-            this.node.position = hitPosition;
-            this.LandOnBlock();
+            // DEAD
         }
         else
         {
-            cc.tween(this.node).to(0.04, {position: hitPosition})
-                .call(() =>
-                {
-                    this.LandOnBlock();
-                })
-                .start();
+            // ALIVE
+            if (Math.abs(this.node.position.y - hitPosition.y) < 50)
+            {
+                this.node.position = hitPosition;
+                this.LandOnBlock();
+            }
+            else
+            {
+                cc.tween(this.node).to(0.04, {position: hitPosition})
+                    .call(() =>
+                    {
+                        this.LandOnBlock();
+                    })
+                    .start();
+            }
         }
     }
 

@@ -22,7 +22,11 @@ export default class BlockScript extends cc.Component
     @property(cc.Node)
     private mistBefore: cc.Node = null;
     @property(cc.Node)
+    private blockNode: cc.Node = null;
+    @property(cc.Node)
     private CenterNode: cc.Node = null;
+    @property(cc.Node)
+    private diamondNode: cc.Node = null;
     private IsActiveForCollision: boolean = false;
 
 
@@ -60,9 +64,14 @@ export default class BlockScript extends cc.Component
         {
             this.BlockIndex--;
             cc.tween(this.node).to(changeDuration, {
-                color: GameManager.Instance.ColorList[this.BlockIndex]
-                , scale: GameManager.Instance.ScaleList[this.BlockIndex]
+                scale: GameManager.Instance.ScaleList[this.BlockIndex]
             }).start();
+
+
+            cc.tween(this.blockNode).to(changeDuration, {
+                color: GameManager.Instance.ColorList[this.BlockIndex]
+            }).start();
+
             cc.tween(this.node).by(changeDuration, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
         }
     }
@@ -72,12 +81,13 @@ export default class BlockScript extends cc.Component
     {
         this.node.position = position;
         this.BlockWidth = blockWidth;
-        this.node.width = blockWidth;
+        this.blockNode.width = blockWidth;
+        this.mistBefore.width = blockWidth;
         this.node.angle = startAngle;
         this.mistBefore.width = blockWidth;
 
         this.BlockIndex = blockIndex;
-        this.node.color = GameManager.Instance.ColorList[this.BlockIndex];
+        this.blockNode.color = GameManager.Instance.ColorList[this.BlockIndex];
         this.node.scale = GameManager.Instance.ScaleList[this.BlockIndex];
 
         this.Velocity = cc.Vec3.ZERO; // tùy move type
