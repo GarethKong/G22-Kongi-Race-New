@@ -3363,7 +3363,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -200,
+        -554.4,
         0,
         0,
         0,
@@ -3430,7 +3430,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -527.855,
+        0,
         0,
         0,
         0,
@@ -3583,13 +3583,13 @@
     "_left": 0,
     "_right": 0,
     "_top": 0,
-    "_bottom": 640,
+    "_bottom": 0.17,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
     "_isAbsRight": true,
     "_isAbsTop": true,
-    "_isAbsBottom": true,
+    "_isAbsBottom": false,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
@@ -4531,7 +4531,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "lblNumberStar",
+    "_name": "lblNumberDiamonds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 97
@@ -6193,6 +6193,9 @@
     },
     "lblLastScore": {
       "__id__": 108
+    },
+    "lblDiamonds": {
+      "__id__": 104
     },
     "content": {
       "__id__": 120

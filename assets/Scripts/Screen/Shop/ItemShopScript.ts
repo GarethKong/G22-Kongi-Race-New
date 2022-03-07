@@ -9,6 +9,7 @@ import DatabaseManager from "../../Common/DatabaseManager";
 import GameConfig from "../../Config/GameConfig";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import Utilities from "../../Ultilities/Utilities";
+import SpriteFrame = cc.SpriteFrame;
 
 const {ccclass, property} = cc._decorator;
 
@@ -33,10 +34,10 @@ export default class ItemShopScript extends cc.Component {
         this.id = id;
         this.isLocked = GameConfig.SKINS[id] == 0;
         this.lockNode.active = this.isLocked;
-        cc.loader.loadRes("Character/" + (GameConfig.listImageSource[id]), cc.SpriteFrame, function (err, spriteFrame) {
+        cc.resources.load("Character/" + (GameConfig.listImageSource[id]), cc.SpriteFrame, function (err, spriteFrame: SpriteFrame) {
             that.itemSprite.spriteFrame = spriteFrame;
-            that.itemSprite.node.height = GameConfig.IMAGE_SIZE_SHOP_ITEM;
-            that.itemSprite.node.width = GameConfig.IMAGE_SIZE_SHOP_ITEM;
+            that.itemSprite.node.scaleX = 0.5;
+            that.itemSprite.node.scaleY = 0.5;
         });
     }
 

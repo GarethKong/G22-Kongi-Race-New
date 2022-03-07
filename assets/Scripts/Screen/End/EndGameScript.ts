@@ -41,6 +41,9 @@ export default class EndGameScript extends cc.Component {
     @property(cc.Label)
     private lblLastScore: cc.Label = null!;
 
+    @property(cc.Label)
+    private lblDiamonds: cc.Label = null!;
+
     @property(cc.Node)
     private content: cc.Node = null!;
 
@@ -77,10 +80,6 @@ export default class EndGameScript extends cc.Component {
         return this._ins || new EndGameScript;
     }
 
-    start() {
-        this.loadData();
-    }
-
     onLoad() {
         this.btnClose.node.on('click', this.onClose, this);
         this.btnShare.node.on('click', this.onShare, this);
@@ -97,6 +96,7 @@ export default class EndGameScript extends cc.Component {
     loadData(): void {
         let self = this;
         console.log('BINH Goi r nhe hehe');
+        DatabaseManager.saveScore();
         this.initialize(function (entries: any) {
             self.content.removeAllChildren();
             let listData = self.convertDateToPlayer(entries);
@@ -104,6 +104,7 @@ export default class EndGameScript extends cc.Component {
             self.updateRankingUIView(listData);
         });
         this.lblLastScore.string = DatabaseManager.getLastScore() + "";
+        this.lblDiamonds.string = DatabaseManager.getTotalCoin() + "";
     }
 
     inviteFriend(playerID: number, isSelf: boolean): void {

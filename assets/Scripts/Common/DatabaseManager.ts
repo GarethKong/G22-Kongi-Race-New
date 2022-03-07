@@ -2,6 +2,8 @@ import GameState from "./GameState";
 import FBGlobal from "../facebook/FBGlobal";
 import GameConfig from "../Config/GameConfig";
 import ccclass = cc._decorator.ccclass;
+import GameManager from "../Gameplay/GameManager";
+import CustomEventManager from "../Ultilities/CustomEventManager";
 
 @ccclass
 export default class DatabaseManager {
@@ -27,13 +29,18 @@ export default class DatabaseManager {
         let dataString = JSON.stringify(data);
         console.log("KongiRace_PlayerData-savePlayerData:" + dataString);
         cc.sys.localStorage.setItem("KongiRace_PlayerData", dataString);
+        FBGlobal.instance.saveFBData(dataString);
     }
 
     static loadPlayerData(callback): void {
-        let dataString = null;
-        dataString = cc.sys.localStorage.getItem("KongiRace_PlayerData");
-        this.initPlayerData(dataString);
-        FBGlobal.instance.getFBScore();
+        let self = this;
+        // let dataString = null;
+        // dataString = cc.sys.localStorage.getItem("KongiRace_PlayerData");
+        FBGlobal.instance.getFBScore(function (objectJson) {
+            console.log("Parse local data" + objectJson);
+            self.initPlayerData(objectJson);
+            callback();
+        });
     }
 
     static initPlayerData(dataString) {
@@ -47,32 +54,34 @@ export default class DatabaseManager {
     }
 
     static parseDataLocal(dataString: string): void {
-        let data = JSON.parse(dataString);
-        let lastScore = data.lastScore;
+        let converted = JSON.parse(dataString);
+        let lastScore = converted['lastScore'];
         if (lastScore != null) {
             this.lastScore = lastScore;
         } else {
             this.lastScore = 0;
         }
-        let bestScore = data.bestScore;
+        let bestScore = converted['bestScore'];
         if (bestScore != null) {
             this.bestScore = bestScore;
         } else {
             this.bestScore = 0;
         }
-        let skin = data.skin;
+        console.log("Check best score" + bestScore);
+
+        let skin = converted['skin'];
         if (skin != null) {
             this.skin = skin;
         } else {
             this.initSkinShop();
         }
-        let totalCoin = data.totalCoin;
+        let totalCoin = converted['totalCoin'];
         if (totalCoin != null) {
             this.totalCoin = totalCoin;
         } else {
             this.totalCoin = 0;
         }
-        let numberPlayed = data.numberPlayed;
+        let numberPlayed = converted['numberPlayed'];
         if (numberPlayed != null) {
             this.numberPlayed = numberPlayed;
         } else {
@@ -99,11 +108,12 @@ export default class DatabaseManager {
     }
 
     static saveScore() {
-        let score = GameState.currentScore;
+        let score = GameManager.Instance.CurrentScore;
         if (score > this.bestScore) {
             this.setBestScore(score);
         }
         this.setLastScore(score);
+        CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.UpdateScoreEvent);
     }
 
     static setLastScore(score: number) {
@@ -133,6 +143,7 @@ export default class DatabaseManager {
     static addMoreCoin(num): void {
         this.totalCoin = this.totalCoin + num;
         this.savePlayerData();
+        CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.UpdateCoinEvent);
     }
 
     static getTotalCoin(): number {

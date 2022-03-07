@@ -114,9 +114,9 @@ export default class ProgressBarEx extends cc.Component {
             this._percent = cc.misc.clamp01(percent);
             this.bar.progress = this._percent;
         }
-        // if (percent==0){
-        //     ComboUI._ins.resetComboToOne();
-        // }
+        if (percent == 0) {
+            LoadingUI._ins.gameOverHandle();
+        }
     }
 
     displayTime(timeToDisplay: number) {

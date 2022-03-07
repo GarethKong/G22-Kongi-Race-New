@@ -11,6 +11,8 @@ import BlockScript, {BlockMoveType} from "./BlockScript";
 import PlayerScript from "./PlayerScript";
 import ScreenManager, {DlgConfig, ScreenConfig} from "../Common/ScreenManager";
 import SpawnDataConfig, {BlockInfo} from "./SpawnDataConfig";
+import GameState from "../Common/GameState";
+import EndGameScript from "../Screen/End/EndGameScript";
 
 const {ccclass, property} = cc._decorator;
 
@@ -70,13 +72,22 @@ export default class GameManager extends cc.Component
                 this.BlockList[i].OnGameOver();
             }, i * 0.05);
         }
-
-        this.scheduleOnce(() =>
-        {
-            ScreenManager.instance.onShowDlgByName(DlgConfig.WatchAdsToRevive)
-            // ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
-            // EndGameDlg.instance.loadData();
-        }, this.BlockList.length * 0.05 + 1);
+        if(GameState.isRevived != true){
+            if(GameState.isShowingRevive){
+                return;
+            }
+            GameState.isShowingRevive = true;
+            this.scheduleOnce(() =>
+            {
+                ScreenManager.instance.onShowDlgByName(DlgConfig.WatchAdsToRevive);
+            }, this.BlockList.length * 0.05 + 1);
+        }else{
+            this.scheduleOnce(() =>
+            {
+                ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
+                EndGameScript.instance.loadData();
+            }, this.BlockList.length * 0.05 + 1);
+        }
     }
 
     /**
@@ -126,6 +137,8 @@ export default class GameManager extends cc.Component
             this.SpawnBlock();
         }
         this.ScoreLabel.string = this.CurrentScore.toString();
+        GameState.isRevived = false;
+        GameState.isShowingRevive = false;
     }
 
     //#endregion GAMEPLAY
@@ -230,7 +243,7 @@ export default class GameManager extends cc.Component
     //#region REVIVE
     public Revive()
     {
-        
+        GameState.isRevived = true;
     }
     //#endregion REVIVE
 }

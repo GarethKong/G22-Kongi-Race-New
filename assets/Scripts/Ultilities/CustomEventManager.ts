@@ -23,8 +23,8 @@ export default class CustomEventManager extends cc.Component
     GameOverEvent: string = "GameOver";
     ChangeBackgroundEvent: string = "ChangeEvent";
     UpdateCoinEvent: string = "UpdateCoinEvent";
+    UpdateScoreEvent: string = "UpdateScoreEvent";
     UpdateItemEvent: string = "UpdateItemEvent";
-    UpdateLifeEvent: string = "UpdateLifeEvent";
     UpdateShopItemEvent: string = "UpdateShopItemEvent";
     UpdateSkinCharacterEvent: string = "UpdateSkinCharacterEvent";
 
