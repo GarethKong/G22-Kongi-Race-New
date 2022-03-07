@@ -78,27 +78,36 @@ export default class PlayerScript extends cc.Component
         this.node.setScale(cc.v2(0.3, 0.5));
 
         if (Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x) >
-            10 * GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
+            GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
         {
             // DEAD
+            cc.tween(this.node).to(0.17, {position: cc.v3(this.node.x, -1000)})
+                .call(() =>
+                {
+                    this.LandOnBlock();
+                })
+                .start();
         }
         else
         {
             // ALIVE
-            if (Math.abs(this.node.position.y - hitPosition.y) < 50)
-            {
-                this.node.position = hitPosition;
-                this.LandOnBlock();
-            }
-            else
-            {
-                cc.tween(this.node).to(0.04, {position: hitPosition})
-                    .call(() =>
-                    {
-                        this.LandOnBlock();
-                    })
-                    .start();
-            }
+            // if (Math.abs(this.node.position.y - hitPosition.y) < 50)
+            // {
+            //     this.node.position = hitPosition;
+            //     this.LandOnBlock();
+            // }
+            // else
+            // {
+            //     cc.tween(this.node).to(0.04, {position: hitPosition})
+            //         .call(() =>
+            //         {
+            //             this.LandOnBlock();
+            //         })
+            //         .start();
+            // }
+
+            this.node.position = hitPosition;
+            this.LandOnBlock();
         }
     }
 
