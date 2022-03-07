@@ -16,7 +16,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class BlockScript extends cc.Component
 {
-    private BlockWidth: number = 0;
+    public BlockWidth: number = 0;
     @property
     private BlockHeight: number = 0;
     @property(cc.Node)

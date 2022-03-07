@@ -28,9 +28,10 @@ export default class PlayerScript extends cc.Component
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
 
-        
+
 
         // if(GameManager.Instance.IsPauseGame) return;
+        this.node.angle = this.node.angle + this.AngularVelocity * dt;
         this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt));
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
 
@@ -62,6 +63,7 @@ export default class PlayerScript extends cc.Component
         let pushUpAngleInRadian: number = pushUpAngle * Math.PI / 180;
         this.Velocity = cc.v3(pushUpVelocity * -Math.sin(2 * pushUpAngleInRadian), pushUpVelocity * Math.cos(2 * pushUpAngleInRadian));
         this.Gravity = gravity;
+        this.AngularVelocity = pushUpAngle * 5;
     }
 
     /**
@@ -73,7 +75,10 @@ export default class PlayerScript extends cc.Component
 
         let hitPosition: cc.Vec3 = this.GetCollistionPos();
 
-        if(Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x)> 100)
+        this.node.setScale(cc.v2(0.3, 0.5));
+
+        if (Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x) >
+            10 * GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
         {
             // DEAD
         }
@@ -101,6 +106,7 @@ export default class PlayerScript extends cc.Component
     {
         this.IsLanding = false;
         GameManager.Instance.BlockList[0].CheckCollisionOnTopBlock();
+        cc.tween(this.node).to(0.1, {scale: 0.4}).start();
     }
 
     public ResetNewGame(): void

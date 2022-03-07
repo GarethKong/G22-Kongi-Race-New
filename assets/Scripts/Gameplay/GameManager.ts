@@ -228,6 +228,9 @@ export default class GameManager extends cc.Component
 
 
     //#region REVIVE
-    
+    public Revive()
+    {
+        
+    }
     //#endregion REVIVE
 }
