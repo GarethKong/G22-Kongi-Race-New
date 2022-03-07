@@ -234,32 +234,32 @@ export default class FBGlobal extends Component {
     //3. COMMON SECTION
     // createShortcutAsync - Create game shortcut in section after gameover
     // haptic - Haptic function
-    public getFBScore() {
+    public getFBScore(callback) {
         if (typeof FBInstant === "undefined") return;
         FBConfig.fbName = FBInstant.player.getName();
         FBConfig.fbPhoto = FBInstant.player.getPhoto();
         FBInstant.player
-            .getDataAsync(["data"])
-            .then((data: any) => {
-                FBConfig.fbScore = data["maxscore"] || 0;
-                FBConfig.metadata = data["metadata"] || 0;
-                // if (callback) {
-                //     callback(FBConfig.fbScore, FBConfig.metadata);
-                // }
+            .getDataAsync(["metaData"])
+            .then((data) => {
+                let converted = JSON.parse(data['metaData']);
+                FBConfig.fbScore = converted['bestScore'];
+                if (callback) {
+                    callback(data['metaData']);
+                }
             })
             .catch((error: any) => {
+                console.log("Check score fb error" + error);
             });
     }
 
     public saveFBData(dataString) {
         if (typeof FBInstant === "undefined") return;
-        FBInstant.player.setDataAsync({data: dataString})
+        FBInstant.player.setDataAsync({metaData: dataString})
             .then(() => {
-                FBConfig.fbScore = dataString["bestScore"];
-                console.log("save score to fb player successed");
+                console.log("save score to fb player success");
             })
             .catch(error => {
-                console.log(error.message);
+                console.log("Error save fb" + error.message);
             });
         this.saveBestScore(dataString);
     }

@@ -7,6 +7,7 @@
 
 import GameConfig from "../Config/GameConfig";
 import ProgressBarEx from "./ProgressBarEx";
+import WatchAdsReviveDlg from "../Popup/WatchAdsReviveDlg";
 
 const {ccclass, property} = cc._decorator;
 
@@ -50,7 +51,6 @@ export default class LoadingUI extends cc.Component {
     start() {
     }
 
-
     startTimer() {
         // this.unschedule(this.countTimeCb);
         // console.log("Start timer")
@@ -79,10 +79,11 @@ export default class LoadingUI extends cc.Component {
 
     gameOverHandle() {
         //   GameManager._ins.gameOver(TypeOver.GAMEOVER);
+        WatchAdsReviveDlg.Instance.NoThanks();
     }
 
     updateTimeLabel(time) {
         //this.lblTime.string =Common.secondsToDhms(time);
-        this.lblTime.string = time+"";
+        this.lblTime.string = time + "";
     }
 }

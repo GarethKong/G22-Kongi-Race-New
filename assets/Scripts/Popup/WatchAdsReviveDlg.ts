@@ -10,6 +10,7 @@ import DialogManager from "../Common/DialogManager";
 import LoadingUI from "../component/LoadingUI";
 import ScreenManager, {ScreenConfig} from "../Common/ScreenManager";
 import EndGameScript from "../Screen/End/EndGameScript";
+import GameState from "../Common/GameState";
 
 const {ccclass, property} = cc._decorator;
 
@@ -25,13 +26,20 @@ export default class WatchAdsReviveDlg extends cc.Component {
     @property(cc.Button)
     btnContinues: cc.Button = null;
 
+    public static Instance: WatchAdsReviveDlg;
+
+    protected onLoad(): void {
+        WatchAdsReviveDlg.Instance = this;
+    }
+
     start(): void {
         this.btnNoThanks.node.on('click', this.NoThanks, this);
         this.btnContinues.node.on('click', this.Continues, this);
+        this.scoreLabel.string = GameManager.Instance.CurrentScore.toString();
         LoadingUI._ins.startTimer();
     }
 
-    private NoThanks(): void {
+    public NoThanks(): void {
         DialogManager._ins.removeDlg(this.node);
         ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
         EndGameScript.instance.loadData();
@@ -39,11 +47,11 @@ export default class WatchAdsReviveDlg extends cc.Component {
 
     private Continues(): void {
         DialogManager._ins.removeDlg(this.node);
-        GameManager.Instance.StartNewGame();
+        GameManager.Instance.Revive();
     }
 
     public ShowEndGamePopup(): void {
-        this.node.active = true;
-        this.scoreLabel.string = GameManager.Instance.CurrentScore.toString();
+        // this.node.active = true;
+        // this.scoreLabel.string = GameManager.Instance.CurrentScore.toString();
     }
 }

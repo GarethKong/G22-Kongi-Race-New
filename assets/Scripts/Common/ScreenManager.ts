@@ -2,6 +2,7 @@ import DialogManager from "./DialogManager";
 import property = cc._decorator.property;
 import ccclass = cc._decorator.ccclass;
 import DatabaseManager from "./DatabaseManager";
+import HomeScript from "../Screen/Home/HomeScript";
 
 export const DlgConfig = {
     "WatchAdsToRevive": 0,
@@ -33,15 +34,18 @@ export default class ScreenManager extends cc.Component {
     }
 
     onLoad() {
-        DatabaseManager.loadPlayerData(function () {
-            console.log("Loaded facebook name+ avatar");
-        });
+
         //DatabaseManager.addMoreCoin(999);
         ScreenManager._ins = this;
     }
 
     start() {
-        ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
+        let self = this;
+        DatabaseManager.loadPlayerData(function () {
+            console.log("Binh check data 0");
+            ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
+            HomeScript.instance.loadData();
+        });
     }
 
     onShowScreenByName(name: number) {

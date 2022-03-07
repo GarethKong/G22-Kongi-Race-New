@@ -2,6 +2,8 @@ import DatabaseManager from "../../Common/DatabaseManager";
 import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import GameState from "../../Common/GameState";
+import CustomEventManager from "../../Ultilities/CustomEventManager";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -37,12 +39,20 @@ export default class HomeScript extends cc.Component {
         this.btnSound.node.on('click', this.onSoundBtnClick, this);
         this.btnRanking.node.on('click', this.onBtnRanking, this);
         this.btnShop.node.on('click', this.onBtnShop, this);
+        CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateScoreEvent, this.loadData, this);
+        CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateCoinEvent, this.loadData, this);
     }
 
-    onEnable() {
+    loadData(){
+        console.log("Binh check data 1" + DatabaseManager.getBestScore());
         this.lblBestScore.string = "BEST: " + DatabaseManager.getBestScore();
         this.lblTotalStars.string = DatabaseManager.getTotalCoin() + "";
     }
+
+    onEnable(){
+
+    }
+
 
     onDisable() {
     }
@@ -71,8 +81,8 @@ export default class HomeScript extends cc.Component {
         this.soundUpdate();
     }
 
-    soundUpdate () {
-        let sd = GameState.isSoundOn? 0 : 1;
+    soundUpdate() {
+        let sd = GameState.isSoundOn ? 0 : 1;
         this.btnSound.node.getComponent(cc.Sprite).spriteFrame = this.spList[sd];
 
         if (this.isSoundChanged) {
