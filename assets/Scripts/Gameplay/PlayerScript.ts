@@ -24,6 +24,9 @@ export default class PlayerScript extends cc.Component
     private Velocity: cc.Vec3 = cc.Vec3.ZERO;
     private Gravity: number = 0;
     private AngularVelocity: number = 0;
+
+    private punchScale: cc.Vec3 = cc.v3(0.3, 0.5); // scale khi nhân vật nhún hạ đất
+    private normalScale: number = 0.4; // scale lúc trạng thái bình thường
     protected update(dt: number): void
     {
         if (GameManager.Instance.IsStarted == false) return;
@@ -68,7 +71,7 @@ export default class PlayerScript extends cc.Component
 
         let hitPosition: cc.Vec3 = this.GetCollistionPos();
 
-        this.node.setScale(cc.v2(0.3, 0.5));
+        this.node.setScale(this.punchScale);
 
         if (Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x) >
             GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
@@ -111,7 +114,8 @@ export default class PlayerScript extends cc.Component
     {
         this.IsLanding = false;
         GameManager.Instance.BlockList[0].CheckCollisionOnTopBlock();
-        cc.tween(this.node).to(0.1, {scale: 0.4}).start();
+        cc.tween(this.node).to(0.2, {scale: this.normalScale}).start();
+
     }
 
     public ResetNewGame(): void
@@ -124,9 +128,10 @@ export default class PlayerScript extends cc.Component
     public ResetAfterRevive(): void
     {
         this.Velocity = cc.Vec3.ZERO;
-        this.node.position = cc.Vec3.ZERO;
-        this.Gravity = 300;
+        this.node.position = cc.v3(0, 300, 0);
+        this.Gravity = 0;
         this.IsLanding = false;
+        this.node.scale = this.normalScale;
     }
 
     //#region TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK

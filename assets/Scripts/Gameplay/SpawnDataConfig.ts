@@ -12,12 +12,12 @@ export default class GameDataConfig
     /**
      * Offset Y cho các block, dùng để di chuyển khi dịch chuyển index (ví dụ block 1 => block 0 thì dịch xuống 40 pixel)
      */
-    static OffsetYForBlockIndex: number[] = [-40, -30, -24, -20, -16, -12, -8, -8, -8];
+    static OffsetYForBlockIndex: number[] = [-40, -30, -24, -20, -16];
 
     /**
      * Bonus Y cho các block, tính từ OffsetY
      */
-    static BonusYForBlockIndex: number[] = [0, 40, 70, 94, 114, 130, 142, 150, 158, 166];
+    static BonusYForBlockIndex: number[] = [0, 40, 70, 94, 114, 130];
     /**
      * Vị trý của Y cho các block đầu tiên
      */
