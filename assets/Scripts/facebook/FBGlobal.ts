@@ -122,7 +122,10 @@ export default class FBGlobal extends Component {
     // shareGame - Share wall with image
     // postSessionScore - Tournament function
     public inviteAsync(onSuccessCallback: any, onFailedCallBack: any) {
-        if (typeof FBInstant === 'undefined') return;
+        if (typeof FBInstant === 'undefined'){
+            onSuccessCallback();
+            return;
+        }
         let self = this;
         FBInstant.context
             .chooseAsync()
