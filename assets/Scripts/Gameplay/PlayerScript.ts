@@ -19,6 +19,9 @@ export default class PlayerScript extends cc.Component
     private Radius: number = 0;
     @property
     private MaxRotateAngle: number = 0; // player có rotate khi đập xuống các mặt 
+
+    @property(cc.Sprite)
+    public BodySprite: cc.Sprite = null;
     //#region MOVE + ROTATE 
 
     private IsLanding: boolean = false;
@@ -33,9 +36,9 @@ export default class PlayerScript extends cc.Component
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
         // if(GameManager.Instance.IsPauseGame) return;
-        this.node.angle = this.node.angle + this.AngularVelocity * dt;
-        this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt));
-        this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
+        this.node.angle = this.node.angle + this.AngularVelocity * dt * GameManager.Instance.TimeScale;
+        this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt * GameManager.Instance.TimeScale));
+        this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
 
         if (this.node.position.x < -GameManager.Instance.CanvasWidth / 2 + this.Radius || this.node.position.x > GameManager.Instance.CanvasWidth / 2 - this.Radius)
         {
@@ -68,6 +71,7 @@ export default class PlayerScript extends cc.Component
      */
     public Landing(): void
     {
+        GameManager.Instance.TimeScale = 1;
         this.IsLanding = true;
 
         let hitPosition: cc.Vec3 = this.GetCollistionPos();
@@ -103,7 +107,6 @@ export default class PlayerScript extends cc.Component
         this.IsLanding = false;
         GameManager.Instance.BlockList[0].CheckCollisionOnTopBlock();
         cc.tween(this.node).to(0.2, {scale: this.normalScale}).start();
-
     }
 
     public ResetNewGame(): void
@@ -120,6 +123,7 @@ export default class PlayerScript extends cc.Component
         this.Gravity = 0;
         this.IsLanding = false;
         this.node.scale = this.normalScale;
+        this.node.angle = 0;
     }
 
     //#region TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK

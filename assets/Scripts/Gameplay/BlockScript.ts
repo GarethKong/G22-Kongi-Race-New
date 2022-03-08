@@ -36,8 +36,15 @@ export default class BlockScript extends cc.Component
     protected update(dt: number): void
     {
         if (GameManager.Instance.IsPauseGame && this.IsIgnorePauseGame === false) return;
-        this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
-        if (this.node.position.y < -1500) SimplePool.instance.Despawn(this.node);
+        this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
+        if (this.node.position.y < -1500)
+        {
+            this.breakEdgeContainer.active = false;
+            this.blockNode.position = cc.Vec3.ZERO;
+            this.blockNode.color = GameManager.Instance.ColorList[GameManager.Instance.ColorList.length - 1];
+
+            SimplePool.instance.Despawn(this.node);
+        }
 
         if (this.WaitForLanding == false)
         {
@@ -82,6 +89,8 @@ export default class BlockScript extends cc.Component
     //#region INIT BLOCK
     public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean): void
     {
+        console.log(GameManager.Instance.ColorList[blockIndex].toHEX());
+
         this.IsIgnorePauseGame = false;
         this.node.position = position;
         this.BlockWidth = blockWidth;
@@ -135,15 +144,9 @@ export default class BlockScript extends cc.Component
         let sqrDistanceToVerticalAxix = this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node);
         if (sqrDistanceToVerticalAxix <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
         {
-            GameManager.Instance.SetNextBlock();
-            GameManager.Instance.PushUpKongi(this.node.angle);
-            this.MoveDownWhenHitPlayer();
             SoundManager.Instance.PlayHitSound();
-
-
-
             // check hit diamond:
-            let canHitDiamond: boolean = sqrDistanceToVerticalAxix <= GameDataConfig.HitDiamondSqrDistance;
+            let canHitDiamond: boolean = sqrDistanceToVerticalAxix <= GameDataConfig.HitDiamondSqrDistance && this.diamondNode.active;
 
             // check break edge:
             let canBreakEdge: boolean = sqrDistanceToVerticalAxix >= Math.pow(this.BlockWidth / 2 - GameDataConfig.BreakEdgeDistance, 2);
@@ -151,11 +154,19 @@ export default class BlockScript extends cc.Component
             if (canHitDiamond)
             {
                 // ăn diamond
+                SoundManager.Instance.PlayCollectDiamondSound();
+                this.diamondNode.active = false;
+                GameManager.Instance.SpawnDiamondParticle(this.node.position);
             }
             if (canBreakEdge)
             {
-                // vỡ viền
+                // vỡ viền tối thiểu là 50
+                this.BreakEdge(cc.misc.clampf(this.BlockWidth / 2 - Math.sqrt(sqrDistanceToVerticalAxix), 30, GameDataConfig.BreakEdgeDistance), this.node.x < GameManager.Instance.KongiNode.node.x);
             }
+
+            GameManager.Instance.SetNextBlock(canHitDiamond);
+            GameManager.Instance.PushUpKongi(this.node.angle);
+            this.MoveDownWhenHitPlayer();
         }
         else
         {
@@ -206,6 +217,63 @@ export default class BlockScript extends cc.Component
         }
     }
     //#endregion CHECK COLLSION
+    //#region BREAK EDGE
+    @property(cc.Node)
+    private breakEdgeContainer: cc.Node = null;
+    @property(cc.Node)
+    private squareBottom: cc.Node = null;
+    @property(cc.Node)
+    private squareRear: cc.Node = null;
+    @property(cc.Node)
+    private squareRotate: cc.Node = null;
+    @property(cc.Node)
+    private triangleNode: cc.Node = null;
+    /**
+     * 
+     * @param distanceToRear Khoảng cách từ điểm vỡ tới viền phải
+     * @param isRightSide TRUE nếu vỡ bên phải
+     */
+    private BreakEdge(distanceToRear: number, isRightSide: boolean): void
+    {
+        console.log(this.node.name);
+        this.breakEdgeContainer.active = true;
+        this.blockNode.position = cc.v3(0, -200);
+
+        this.squareBottom.setContentSize(this.BlockWidth, 2000);
+        this.squareRear.setContentSize(this.BlockWidth - distanceToRear, 200);
+
+        this.squareRotate.setContentSize(Math.sqrt(distanceToRear * distanceToRear + 40000), SpawnDataConfig.BreakEdgeDistance);
+
+        if (isRightSide)
+        {
+            this.squareRear.position = cc.v3(-distanceToRear / 2, 0);
+            this.triangleNode.setContentSize(distanceToRear, 200);
+            this.triangleNode.position = cc.v3((this.BlockWidth - distanceToRear) / 2, -100);
+            this.triangleNode.angle = 180;
+
+            this.squareRotate.angle = 270 + Math.atan(distanceToRear / 200) * 180 / Math.PI;
+            this.squareRotate.position = this.triangleNode.position.clone();
+
+            this.triangleNode.position = this.triangleNode.position.addSelf(cc.v3(10, -10));
+
+            cc.tween(this.triangleNode).to(0.5, {position: this.triangleNode.position.addSelf(cc.v3(20, -40)), angle: 180 - 5 - Math.random() * 5}).start();
+        }
+        else
+        {
+            this.squareRear.position = cc.v3(distanceToRear / 2, 0);
+            this.triangleNode.setContentSize(200, distanceToRear);
+            this.triangleNode.position = cc.v3(-(this.BlockWidth - distanceToRear) / 2, -100);
+            this.triangleNode.angle = 270;
+
+            this.squareRotate.angle = 90 - Math.atan(distanceToRear / 200) * 180 / Math.PI;
+            this.squareRotate.position = this.triangleNode.position.clone();
+
+            this.triangleNode.position = this.triangleNode.position.addSelf(cc.v3(-10, -10));
+
+            cc.tween(this.triangleNode).to(0.5, {position: this.triangleNode.position.addSelf(cc.v3(-20, -40)), angle: 270 + 5 + Math.random() * 5}).start();
+        }
+    }
+    //#endregion BREAK EDGE
 }
 
 export enum BlockMoveType

@@ -75,6 +75,8 @@ export default class SoundManager extends cc.Component
     private hitSound: cc.AudioClip[] = [];
     @property(cc.AudioClip)
     private gameOverSound: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    private hitDiamondSound: cc.AudioClip = null;
     public PlayButtonSound(): void
     {
         this.PlaySoundEffect(this.buttonSound);
@@ -83,6 +85,11 @@ export default class SoundManager extends cc.Component
     public PlayHitSound(): void
     {
         this.PlaySoundEffect(this.hitSound[NumberUltilities.GetRandomIntNumber(0, this.hitSound.length)]);
+    }
+
+    public PlayCollectDiamondSound(): void
+    {
+        this.PlaySoundEffect(this.hitDiamondSound);
     }
 
     public PlayGameOverSound(): void
@@ -94,11 +101,13 @@ export default class SoundManager extends cc.Component
 
     //TODO Pause sound background
 
-    pauseBGM(){
+    pauseBGM()
+    {
 
     }
 
-    resumeBGM(){
+    resumeBGM()
+    {
 
     }
 }

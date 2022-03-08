@@ -7,6 +7,7 @@ export default class GameDataConfig
 {
     /**
      * Khoảng cách tối đa để vỡ viền
+     * lưu ý khoảng cách này phải <= min của block width
      */
     static BreakEdgeDistance: number = 80;
     /**

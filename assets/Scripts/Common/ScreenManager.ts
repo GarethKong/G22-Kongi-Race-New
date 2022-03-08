@@ -3,6 +3,7 @@ import property = cc._decorator.property;
 import ccclass = cc._decorator.ccclass;
 import DatabaseManager from "./DatabaseManager";
 import HomeScript from "../Screen/Home/HomeScript";
+import GameManager from "../Gameplay/GameManager";
 
 export const DlgConfig = {
     "WatchAdsToRevive": 0,
@@ -45,6 +46,7 @@ export default class ScreenManager extends cc.Component {
         DatabaseManager.loadPlayerData(function () {
             console.log("Binh check data 0");
             HomeScript.instance.loadData();
+            GameManager.Instance.ShowDiamondText();
         });
     }
 

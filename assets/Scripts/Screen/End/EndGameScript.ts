@@ -91,6 +91,8 @@ export default class EndGameScript extends cc.Component {
         this.updateInterval = 0.2;
         this.lastContentPosY = 0; // use this variable to detect if we are scrolling up or down
         this.itemTemplate = cc.instantiate(this.itemPrefab);
+
+        DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
     }
 
     loadData(): void {

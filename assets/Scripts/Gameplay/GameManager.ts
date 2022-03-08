@@ -13,6 +13,9 @@ import ScreenManager, {DlgConfig, ScreenConfig} from "../Common/ScreenManager";
 import SpawnDataConfig, {BlockInfo} from "./SpawnDataConfig";
 import GameState from "../Common/GameState";
 import EndGameScript from "../Screen/End/EndGameScript";
+import DatabaseManager from "../Common/DatabaseManager";
+import CustomEventManager from "../Ultilities/CustomEventManager";
+import GameConfig from "../Config/GameConfig";
 
 const {ccclass, property} = cc._decorator;
 
@@ -49,6 +52,11 @@ export default class GameManager extends cc.Component
         this.TapNode.on(cc.Node.EventType.TOUCH_START, this.Landing, this);
     }
 
+    protected start(): void
+    {
+        CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateCoinEvent, this.ShowDiamondText, this);
+    }
+
     /**
      * Đáp xuống đất
      */
@@ -64,6 +72,7 @@ export default class GameManager extends cc.Component
      */
     public ShowGameOver(): void
     {
+        this.TimeScale = 1;
         this.ScoreLabel.string = "";
         this.showStatusBar(false);
         if (GameState.isRevived != true)
@@ -81,6 +90,7 @@ export default class GameManager extends cc.Component
         {
             this.scheduleOnce(() =>
             {
+                this.CollectDiamondQty = 0;
                 ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
                 EndGameScript.instance.loadData();
             }, this.BlockList.length * 0.05 + 1);
@@ -90,11 +100,20 @@ export default class GameManager extends cc.Component
     /**
      * Chuyển sang block tiếp theo (block trước được đáp xuống an toàn)
      */
-    public SetNextBlock(): void
+    public SetNextBlock(IsHitDiamond: boolean): void
     {
         for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
+        }
+
+        if (IsHitDiamond == false)
+        {
+            this.CurrentDiamondStreak = 0;
+        }
+        else
+        {
+            this.CollectDiamond();
         }
         this.CurrentBlockIndex--;
         this.CurrentScore++;
@@ -203,7 +222,7 @@ export default class GameManager extends cc.Component
         if (SpawnDataConfig.CurrentSpawnIndex === 1 && this.CurrentBlockIndex > 3)
         {
             // xác suất spawn ra kim cương là 1/6
-            if (Math.random() < 0.16)
+            if (Math.random() < 16)
             {
                 this.CurrentDiamondRemain = 5;
             }
@@ -221,13 +240,39 @@ export default class GameManager extends cc.Component
     //#endregion SPAWN BLOCKS
 
     //#region DIAMOND PACING
-    private OwnedDiamond:number = 0;
+    @property(cc.Prefab)
+    private diamondParticlePrefab: cc.Prefab = null;
+    public TimeScale: number = 1;
+    /**
+     * Số diamond thu được trong session
+     */
+    public CollectDiamondQty: number = 0;
     private CurrentDiamondStreak: number = 0;
-    public CollectDiamond()
+    public CollectDiamond(): void
     {
-        this.OwnedDiamond++;
+        this.CollectDiamondQty++;
         this.CurrentDiamondStreak++;
-        
+
+        this.DiamondLabel.string = `${ DatabaseManager.totalCoin + this.CollectDiamondQty }`;
+
+        if (this.CurrentDiamondStreak == 5)
+        {
+            this.TimeScale = 0.3;
+            console.log("zo zoz zo");
+        }
+    }
+
+    public ShowDiamondText(): void
+    {
+        console.log("show diamond text");
+        this.DiamondLabel.string = `${ DatabaseManager.totalCoin + this.CollectDiamondQty }`;
+    }
+
+    public SpawnDiamondParticle(spawnPosition: cc.Vec3): void
+    {
+        var diamondParticle: cc.Node = cc.instantiate(this.diamondParticlePrefab);
+        diamondParticle.parent = this.node;
+        diamondParticle.position = spawnPosition;
     }
     //#endregion DIAMOND PACING
 
@@ -264,9 +309,38 @@ export default class GameManager extends cc.Component
     //#endregion SCALE TỪNG BLOCK THEO INDEX
 
     //#region SHOP REGION
+
+    private positionMap: Map<string, cc.Vec2> = new Map(
+        [
+            ["default", cc.v2(0, 0)],
+            ["aliens", cc.v2(0, 0)],
+            ["bat", cc.v2(-6, -46)],
+            ["cat", cc.v2(0, 0)],
+            ["chef", cc.v2(5, 0)],
+            ["clown", cc.v2(-33, 0)],
+            ["cowboy", cc.v2(0, 0)],
+            ["giraffe", cc.v2(0, 0)],
+            ["hair", cc.v2(0, 0)],
+            ["headphone", cc.v2(0, 0)],
+            ["koala", cc.v2(0, 0)],
+            ["magic_hat", cc.v2(0, 0)],
+            ["monkey", cc.v2(0, 0)],
+            ["mouse", cc.v2(-33, 0)],
+            ["pig", cc.v2(10, -4)],
+            ["pirate", cc.v2(-14, 0)],
+            ["rabbit", cc.v2(0, 0)],
+            ["reindeer", cc.v2(0, 0)],
+            ["sheep", cc.v2(-5, 0)],
+            ["viking", cc.v2(0, 0)],
+            ["witch_hat", cc.v2(-6, 0)],
+        ]);
     public ChangeCharacter(characterIndex: number)
     {
-
+        cc.resources.load("Character/" + (GameConfig.listImageSource[characterIndex]), cc.SpriteFrame, function (err, spriteFrame: cc.SpriteFrame)
+        {
+            GameManager.Instance.KongiNode.BodySprite.spriteFrame = spriteFrame;
+            GameManager.Instance.KongiNode.BodySprite.node.position = GameManager.Instance.positionMap[GameConfig.listImageSource[characterIndex]];
+        });
     }
 
     //#endregion SHOP REGION
