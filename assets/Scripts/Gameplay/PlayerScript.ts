@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import SoundManager from "../Ultilities/SoundManager";
 import BlockScript from "./BlockScript";
 import GameManager from "./GameManager";
 
@@ -27,9 +28,6 @@ export default class PlayerScript extends cc.Component
     {
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
-
-
-
         // if(GameManager.Instance.IsPauseGame) return;
         this.node.angle = this.node.angle + this.AngularVelocity * dt;
         this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt));
@@ -39,11 +37,6 @@ export default class PlayerScript extends cc.Component
         {
             this.BounceWithWall();
         }
-        // if (this.node.position.y < -1000)
-        // {
-        //     GameManager.Instance.ShowGameOver();
-        //     GameManager.Instance.IsStarted = false;
-        // }
     }
 
     private BounceWithWall(): void
@@ -81,10 +74,13 @@ export default class PlayerScript extends cc.Component
             GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
         {
             // DEAD
+            GameManager.Instance.IsPauseGame = true;
+
             cc.tween(this.node).to(0.17, {position: cc.v3(this.node.x, -1000)})
                 .call(() =>
                 {
-                    this.LandOnBlock();
+                    this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
+                    SoundManager.Instance.PlayGameOverSound();
                 })
                 .start();
         }
@@ -123,6 +119,14 @@ export default class PlayerScript extends cc.Component
         this.Velocity = cc.Vec3.ZERO;
         this.node.position = cc.Vec3.ZERO;
         this.Gravity = 0;
+    }
+
+    public ResetAfterRevive(): void
+    {
+        this.Velocity = cc.Vec3.ZERO;
+        this.node.position = cc.Vec3.ZERO;
+        this.Gravity = 300;
+        this.IsLanding = false;
     }
 
     //#region TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK

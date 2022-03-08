@@ -28,11 +28,13 @@ export default class BlockScript extends cc.Component
     @property(cc.Node)
     private diamondNode: cc.Node = null;
     private IsActiveForCollision: boolean = false;
+    private IsIgnorePauseGame: boolean = false;
 
 
 
     protected update(dt: number): void
     {
+        if (GameManager.Instance.IsPauseGame && this.IsIgnorePauseGame === false) return;
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt));
         if (this.node.position.y < -1500) SimplePool.instance.Despawn(this.node);
 
@@ -79,6 +81,7 @@ export default class BlockScript extends cc.Component
     //#region INIT BLOCK
     public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number): void
     {
+        this.IsIgnorePauseGame = false;
         this.node.position = position;
         this.BlockWidth = blockWidth;
         this.blockNode.width = blockWidth;
@@ -102,6 +105,7 @@ export default class BlockScript extends cc.Component
     private MoveDownWhenHitPlayer(): void
     {
         this.Velocity = cc.v3(0, -1000);
+        this.IsIgnorePauseGame = true;
     }
 
     public OnGameOver(): void

@@ -65,15 +65,10 @@ export default class GameManager extends cc.Component
     public ShowGameOver(): void
     {
         this.ScoreLabel.string = "";
-        for (let i = 0; i < this.BlockList.length; i++)
+        if (GameState.isRevived != true)
         {
-            this.scheduleOnce(() =>
+            if (GameState.isShowingRevive)
             {
-                this.BlockList[i].OnGameOver();
-            }, i * 0.05);
-        }
-        if(GameState.isRevived != true){
-            if(GameState.isShowingRevive){
                 return;
             }
             GameState.isShowingRevive = true;
@@ -81,7 +76,8 @@ export default class GameManager extends cc.Component
             {
                 ScreenManager.instance.onShowDlgByName(DlgConfig.WatchAdsToRevive);
             }, this.BlockList.length * 0.05 + 1);
-        }else{
+        } else
+        {
             this.scheduleOnce(() =>
             {
                 ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
@@ -125,6 +121,15 @@ export default class GameManager extends cc.Component
     public StartNewGame(): void
     {
         SpawnDataConfig.ResetForNewGame();
+
+        for (let i = 0; i < this.BlockList.length; i++)
+        {
+            this.scheduleOnce(() =>
+            {
+                this.BlockList[i].OnGameOver();
+            }, i * 0.05);
+        }
+
         this.BlockList = [];
         this.KongiNode.ResetNewGame();
         this.IsPauseGame = true;
@@ -244,6 +249,9 @@ export default class GameManager extends cc.Component
     public Revive()
     {
         GameState.isRevived = true;
+        this.KongiNode.ResetAfterRevive();
+        this.IsPauseGame = true;
+        this.IsStarted = false;
     }
     //#endregion REVIVE
 }
