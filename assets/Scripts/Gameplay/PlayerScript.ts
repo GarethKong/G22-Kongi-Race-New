@@ -29,8 +29,8 @@ export default class PlayerScript extends cc.Component
     private Gravity: number = 0;
     private AngularVelocity: number = 0;
 
-    private punchScale: cc.Vec3 = cc.v3(0.3, 0.5); // scale khi nhân vật nhún hạ đất
-    private normalScale: number = 0.4; // scale lúc trạng thái bình thường
+    private punchScale: cc.Vec3 = cc.v3(0.4, 0.6); // scale khi nhân vật nhún hạ đất
+    private normalScale: number = 0.5; // scale lúc trạng thái bình thường
     protected update(dt: number): void
     {
         if (GameManager.Instance.IsStarted == false) return;
@@ -121,7 +121,7 @@ export default class PlayerScript extends cc.Component
     public ResetAfterRevive(): void
     {
         this.Velocity = cc.Vec3.ZERO;
-        this.node.position = cc.v3(0, 300, 0);
+        this.node.position = cc.v3(GameManager.Instance.BlockList[0].node.x, 300, 0);
         this.Gravity = 0;
         this.IsLanding = false;
         this.node.scale = this.normalScale;
