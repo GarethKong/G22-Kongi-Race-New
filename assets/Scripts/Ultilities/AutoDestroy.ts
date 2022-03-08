@@ -8,7 +8,7 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component
+export default class AutoDestroy extends cc.Component
 {
     @property
     private delayDestroyTime: number = 1;

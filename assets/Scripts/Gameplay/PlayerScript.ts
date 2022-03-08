@@ -86,6 +86,8 @@ export default class PlayerScript extends cc.Component
             // DEAD
             GameManager.Instance.IsPauseGame = true;
 
+            GameManager.Instance.BlockList[0].WaitForLanding = true;
+
             cc.tween(this.node).to(0.17, {position: cc.v3(this.node.x, -1000)})
                 .call(() =>
                 {

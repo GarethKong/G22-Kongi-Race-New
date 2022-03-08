@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import GameManager from "../Gameplay/GameManager";
 import NumberUltilities from "./NumberUltilities";
 
 const {ccclass, property} = cc._decorator;
@@ -30,6 +31,46 @@ export default class SoundManager extends cc.Component
         cc.game.addPersistRootNode(this.node);
     }
     //#region BACKGROUND MUSIC
+    @property(cc.AudioClip)
+    private ambientMusic: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    private introMusic: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    private loopMusic: cc.AudioClip = null;
+
+    private isOnGame: boolean = false;
+    /**
+     * Chạy intro => loop track, gọi khi bắt đầu chơi
+     */
+    public StartNewGameBGMusic()
+    {
+        if (this.isOnGame) return;
+        this.isOnGame = true;
+        this.BackgroundSource.clip = this.introMusic;
+        this.BackgroundSource.loop = false;
+        this.BackgroundSource.play();
+
+        this.scheduleOnce(() =>
+        {
+            this.BackgroundSource.clip = this.loopMusic;
+            this.BackgroundSource.loop = true;
+            this.BackgroundSource.play();
+        }, 20);
+    }
+
+    /**
+     * Chỉ loop Ambient, gọi khi đang ở menu
+     */
+    public MenuBGMusic()
+    {
+        this.isOnGame = false;
+        this.unscheduleAllCallbacks();
+        this.BackgroundSource.clip = this.ambientMusic;
+        this.BackgroundSource.play();
+    }
+
+
+
     public PauseBackgroundMusic(): void
     {
         this.BackgroundSource.pause();
@@ -103,11 +144,11 @@ export default class SoundManager extends cc.Component
 
     pauseBGM()
     {
-
+        this.PauseBackgroundMusic();
     }
 
     resumeBGM()
     {
-
+        this.ResumeBackgroundMusic();
     }
 }

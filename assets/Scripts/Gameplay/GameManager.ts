@@ -16,6 +16,7 @@ import EndGameScript from "../Screen/End/EndGameScript";
 import DatabaseManager from "../Common/DatabaseManager";
 import CustomEventManager from "../Ultilities/CustomEventManager";
 import GameConfig from "../Config/GameConfig";
+import SoundManager from "../Ultilities/SoundManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -57,11 +58,21 @@ export default class GameManager extends cc.Component
         CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateCoinEvent, this.ShowDiamondText, this);
     }
 
+    protected update(dt: number): void
+    {
+        this.FlashFrameCount--;
+        if (this.FlashFrameCount < 0)
+        {
+            this.flashNode.active = false;
+        }
+    }
+
     /**
      * Đáp xuống đất
      */
     private Landing(event: cc.Event.EventTouch): void
     {
+        SoundManager.Instance.StartNewGameBGMusic();
         this.IsPauseGame = false;
         this.IsStarted = true;
         this.KongiNode.Landing();
@@ -88,6 +99,7 @@ export default class GameManager extends cc.Component
             }, this.BlockList.length * 0.05 + 1);
         } else
         {
+            SoundManager.Instance.MenuBGMusic();
             this.scheduleOnce(() =>
             {
                 this.CollectDiamondQty = 0;
@@ -222,7 +234,7 @@ export default class GameManager extends cc.Component
         if (SpawnDataConfig.CurrentSpawnIndex === 1 && this.CurrentBlockIndex > 3)
         {
             // xác suất spawn ra kim cương là 1/6
-            if (Math.random() < 16)
+            if (Math.random() < 0.16)
             {
                 this.CurrentDiamondRemain = 5;
             }
@@ -242,12 +254,15 @@ export default class GameManager extends cc.Component
     //#region DIAMOND PACING
     @property(cc.Prefab)
     private diamondParticlePrefab: cc.Prefab = null;
+    @property(cc.Node)
+    private flashNode: cc.Node = null;
     public TimeScale: number = 1;
     /**
      * Số diamond thu được trong session
      */
     public CollectDiamondQty: number = 0;
     private CurrentDiamondStreak: number = 0;
+    private FlashFrameCount: number = 0;
     public CollectDiamond(): void
     {
         this.CollectDiamondQty++;
@@ -258,7 +273,8 @@ export default class GameManager extends cc.Component
         if (this.CurrentDiamondStreak == 5)
         {
             this.TimeScale = 0.3;
-            console.log("zo zoz zo");
+            this.flashNode.active = true;
+            this.FlashFrameCount = 2;
         }
     }
 
