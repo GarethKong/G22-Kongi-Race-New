@@ -6,9 +6,17 @@ const {ccclass, property} = cc._decorator;
 export default class GameDataConfig
 {
     /**
-     * 
+     * Khoảng cách tối đa để vỡ viền
      */
-    static SpawnConfigCount: number = 2;
+    static BreakEdgeDistance: number = 80;
+    /**
+     * Khoảng cách tối đa vẫn hit được diamond ở tâm
+     */
+    static HitDiamondSqrDistance: number = 2500;
+    /**
+     * số lượng spawn list
+     */
+    static SpawnConfigCount: number = 4;
     /**
      * Offset Y cho các block, dùng để di chuyển khi dịch chuyển index (ví dụ block 1 => block 0 thì dịch xuống 40 pixel)
      */
@@ -30,9 +38,9 @@ export default class GameDataConfig
     /**
      * Index của block trong list đang được lấy, nếu đạt mốc cuối thì random list tiếp theo
      */
-    private static CurrentSpawnIndex: number = 0;
+    public static CurrentSpawnIndex: number = 0;
     private static SpawnList = {
-        // 4 tường nghiêng vào nhau
+        // 6 tường nghiêng vào nhau
         0: {
             BlockInfo: [
                 {
@@ -58,10 +66,22 @@ export default class GameDataConfig
                     PositionX: -200,
                     MinWidth: 200,
                     MaxWidth: 400,
+                },
+                {
+                    Angle: 12.5,
+                    PositionX: 250,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -12.5,
+                    PositionX: -250,
+                    MinWidth: 200,
+                    MaxWidth: 400,
                 }
             ]
         },
-        // đi S ngược
+        // đi S ngược 7 tường
         1: {
             BlockInfo: [
                 {
@@ -115,24 +135,101 @@ export default class GameDataConfig
                     Angle: 5,
                     PositionX: 0,
                     MinWidth: 300,
-                    MaxWidth: 400,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: -7.5,
+                    PositionX: -180,
+                    MinWidth: 300,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: 7.5,
+                    PositionX: 180,
+                    MinWidth: 300,
+                    MaxWidth: 350,
                 },
                 {
                     Angle: -10,
                     PositionX: -200,
                     MinWidth: 300,
-                    MaxWidth: 400,
+                    MaxWidth: 350,
                 },
                 {
                     Angle: 10,
                     PositionX: 200,
                     MinWidth: 300,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: -12.5,
+                    PositionX: -250,
+                    MinWidth: 200,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 12.5,
+                    PositionX: 250,
+                    MinWidth: 200,
+                    MaxWidth: 250,
+                },
+                {
+                    Angle: -15,
+                    PositionX: -250,
+                    MinWidth: 200,
+                    MaxWidth: 250,
+                },
+                {
+                    Angle: 7.5,
+                    PositionX: 250,
+                    MinWidth: 250,
+                    MaxWidth: 400,
+                }
+            ]
+        },
+        // đi S xuôi 7 tường
+        3: {
+            BlockInfo: [
+                {
+                    Angle: 2.5,
+                    PositionX: 0,
+                    MinWidth: 350,
+                    MaxWidth: 450,
+                },
+                {
+                    Angle: 2.5,
+                    PositionX: -80,
+                    MinWidth: 200,
                     MaxWidth: 400,
                 },
                 {
-                    Angle: -10,
-                    PositionX: -200,
-                    MinWidth: 300,
+                    Angle: -2.5,
+                    PositionX: -120,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -5,
+                    PositionX: 0,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: -2.5,
+                    PositionX: 80,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 2.5,
+                    PositionX: 160,
+                    MinWidth: 200,
+                    MaxWidth: 400,
+                },
+                {
+                    Angle: 2.5,
+                    PositionX: 80,
+                    MinWidth: 200,
                     MaxWidth: 400,
                 }
             ]

@@ -9,6 +9,7 @@ import CustomEventManager from "../Ultilities/CustomEventManager";
 import SimplePool from "../Ultilities/SimplePool";
 import SoundManager from "../Ultilities/SoundManager";
 import GameManager from "./GameManager";
+import GameDataConfig from "./SpawnDataConfig";
 import SpawnDataConfig from "./SpawnDataConfig";
 
 const {ccclass, property} = cc._decorator;
@@ -79,7 +80,7 @@ export default class BlockScript extends cc.Component
     }
 
     //#region INIT BLOCK
-    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number): void
+    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean): void
     {
         this.IsIgnorePauseGame = false;
         this.node.position = position;
@@ -96,6 +97,8 @@ export default class BlockScript extends cc.Component
         this.Velocity = cc.Vec3.ZERO; // tùy move type
         this.IsActiveForCollision = false;
         this.WaitForLanding = false;
+
+        this.diamondNode.active = hasDiamond;
 
     }
     //#endregion INIT BLOCK
@@ -136,6 +139,23 @@ export default class BlockScript extends cc.Component
             GameManager.Instance.PushUpKongi(this.node.angle);
             this.MoveDownWhenHitPlayer();
             SoundManager.Instance.PlayHitSound();
+
+
+
+            // check hit diamond:
+            let canHitDiamond: boolean = sqrDistanceToVerticalAxix <= GameDataConfig.HitDiamondSqrDistance;
+
+            // check break edge:
+            let canBreakEdge: boolean = sqrDistanceToVerticalAxix >= Math.pow(this.BlockWidth / 2 - GameDataConfig.BreakEdgeDistance, 2);
+
+            if (canHitDiamond)
+            {
+                // ăn diamond
+            }
+            if (canBreakEdge)
+            {
+                // vỡ viền
+            }
         }
         else
         {

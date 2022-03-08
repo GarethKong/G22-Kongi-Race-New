@@ -8,6 +8,7 @@
 import SoundManager from "../Ultilities/SoundManager";
 import BlockScript from "./BlockScript";
 import GameManager from "./GameManager";
+import GameDataConfig from "./SpawnDataConfig";
 
 const {ccclass, property} = cc._decorator;
 
@@ -73,8 +74,10 @@ export default class PlayerScript extends cc.Component
 
         this.node.setScale(this.punchScale);
 
+        let cosBlockAngle: number = Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180);
+
         if (Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x) >
-            GameManager.Instance.BlockList[0].BlockWidth / 2 * Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180))
+            GameManager.Instance.BlockList[0].BlockWidth / 2 * cosBlockAngle)
         {
             // DEAD
             GameManager.Instance.IsPauseGame = true;
@@ -90,23 +93,8 @@ export default class PlayerScript extends cc.Component
         else
         {
             // ALIVE
-            // if (Math.abs(this.node.position.y - hitPosition.y) < 50)
-            // {
-            //     this.node.position = hitPosition;
-            //     this.LandOnBlock();
-            // }
-            // else
-            // {
-            //     cc.tween(this.node).to(0.04, {position: hitPosition})
-            //         .call(() =>
-            //         {
-            //             this.LandOnBlock();
-            //         })
-            //         .start();
-            // }
-
             this.node.position = hitPosition;
-            this.LandOnBlock();
+            this.LandOnBlock()
         }
     }
 
