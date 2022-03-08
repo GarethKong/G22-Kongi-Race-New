@@ -10,7 +10,6 @@ import DialogManager from "../Common/DialogManager";
 import LoadingUI from "../component/LoadingUI";
 import ScreenManager, {ScreenConfig} from "../Common/ScreenManager";
 import EndGameScript from "../Screen/End/EndGameScript";
-import GameState from "../Common/GameState";
 
 const {ccclass, property} = cc._decorator;
 

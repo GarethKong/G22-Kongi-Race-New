@@ -17,8 +17,7 @@ import EndGameScript from "../Screen/End/EndGameScript";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GameManager extends cc.Component
-{
+export default class GameManager extends cc.Component {
     public static Instance: GameManager;
     @property(PlayerScript)
     public KongiNode: PlayerScript = null;
@@ -37,8 +36,7 @@ export default class GameManager extends cc.Component
     @property
     public CanvasWidth: number = 720;
 
-    protected onLoad(): void
-    {
+    protected onLoad(): void {
         GameManager.Instance = this;
         this.GenerateColorList(this.MaxBlockQty);
         this.GenerateScaleList();
@@ -52,8 +50,7 @@ export default class GameManager extends cc.Component
     /**
      * Đáp xuống đất
      */
-    private Landing(event: cc.Event.EventTouch): void
-    {
+    private Landing(event: cc.Event.EventTouch): void {
         this.IsPauseGame = false;
         this.IsStarted = true;
         this.KongiNode.Landing();
@@ -62,24 +59,19 @@ export default class GameManager extends cc.Component
     /**
      * Rút cọc, GameOver
      */
-    public ShowGameOver(): void
-    {
+    public ShowGameOver(): void {
         this.ScoreLabel.string = "";
-        if (GameState.isRevived != true)
-        {
-            if (GameState.isShowingRevive)
-            {
+        this.showStatusBar(false);
+        if (GameState.isRevived != true) {
+            if (GameState.isShowingRevive) {
                 return;
             }
             GameState.isShowingRevive = true;
-            this.scheduleOnce(() =>
-            {
+            this.scheduleOnce(() => {
                 ScreenManager.instance.onShowDlgByName(DlgConfig.WatchAdsToRevive);
             }, this.BlockList.length * 0.05 + 1);
-        } else
-        {
-            this.scheduleOnce(() =>
-            {
+        } else {
+            this.scheduleOnce(() => {
                 ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
                 EndGameScript.instance.loadData();
             }, this.BlockList.length * 0.05 + 1);
@@ -89,10 +81,8 @@ export default class GameManager extends cc.Component
     /**
      * Chuyển sang block tiếp theo (block trước được đáp xuống an toàn)
      */
-    public SetNextBlock(): void
-    {
-        for (let i = 1; i < this.BlockList.length; i++)
-        {
+    public SetNextBlock(): void {
+        for (let i = 1; i < this.BlockList.length; i++) {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
         }
         this.CurrentBlockIndex--;
@@ -103,8 +93,7 @@ export default class GameManager extends cc.Component
         this.BlockList[0].EnableForCollision(true);
     }
 
-    public PushUpKongi(pushUpAngle: number): void
-    {
+    public PushUpKongi(pushUpAngle: number): void {
         this.KongiNode.Jump(pushUpAngle, this.MaxVelocity, this.Gravity);
     }
 
@@ -112,20 +101,21 @@ export default class GameManager extends cc.Component
     //#region GAMEPLAY
     @property(cc.Label)
     private ScoreLabel: cc.Label = null;
+    @property(cc.Label)
+    private DiamondLabel: cc.Label = null;
+    @property(cc.Sprite)
+    private DiamondSprite: cc.Sprite = null;
     @property(cc.Node)
     private TapNode: cc.Node = null;
     public CurrentScore: number = 0;
     public IsStarted: boolean = false;
     public IsPauseGame: boolean = false;
 
-    public StartNewGame(): void
-    {
+    public StartNewGame(): void {
         SpawnDataConfig.ResetForNewGame();
 
-        for (let i = 0; i < this.BlockList.length; i++)
-        {
-            this.scheduleOnce(() =>
-            {
+        for (let i = 0; i < this.BlockList.length; i++) {
+            this.scheduleOnce(() => {
                 this.BlockList[i].OnGameOver();
             }, i * 0.05);
         }
@@ -137,11 +127,11 @@ export default class GameManager extends cc.Component
         this.CurrentScore = 0;
         this.CurrentBlockIndex = 0;
         this.SpawnFirstBlock();
-        for (let i = 0; i < this.MaxBlockQty - 1; i++)
-        {
+        for (let i = 0; i < this.MaxBlockQty - 1; i++) {
             this.SpawnBlock();
         }
         this.ScoreLabel.string = this.CurrentScore.toString();
+        this.showStatusBar(true);
         GameState.isRevived = false;
         GameState.isShowingRevive = false;
     }
@@ -159,8 +149,7 @@ export default class GameManager extends cc.Component
     private CurrentBlockIndex: number = 0;//index của block được thêm vào danh sách, block càng về sau thì phải càng gần với background color
     public BlockList: BlockScript[] = [];
 
-    private SpawnFirstBlock(): void
-    {
+    private SpawnFirstBlock(): void {
         this.CurrentBlockIndex = 0;
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
         this.CurrentSpawnedBlock.SetBlockInfo(this.CanvasWidth, 0, BlockMoveType.Static,
@@ -173,8 +162,7 @@ export default class GameManager extends cc.Component
     /**
      * Spawn các block (ko phải block đầu tiên)
      */
-    private SpawnBlock(): void
-    {
+    private SpawnBlock(): void {
         this.CalculateNextBlockState();
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
         this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex);
@@ -184,12 +172,10 @@ export default class GameManager extends cc.Component
     }
 
 
-    private CalculateNextBlockState(): void
-    {
+    private CalculateNextBlockState(): void {
         this.CurrentBlockIndex++;
         var nextBlockConfig: BlockInfo = SpawnDataConfig.GetNextSpawnInfo();
-        if (this.CurrentBlockIndex >= SpawnDataConfig.BonusYForBlockIndex.length)
-        {
+        if (this.CurrentBlockIndex >= SpawnDataConfig.BonusYForBlockIndex.length) {
             console.log("ko the xay ra, check bug");
         }
 
@@ -213,10 +199,8 @@ export default class GameManager extends cc.Component
     private backgroundSpriteFrameList: cc.SpriteFrame[] = [];
     public ColorList: cc.Color[] = [];
 
-    private GenerateColorList(numberOfColor: number): void
-    {
-        for (let i = 0; i < numberOfColor; i++)
-        {
+    private GenerateColorList(numberOfColor: number): void {
+        for (let i = 0; i < numberOfColor; i++) {
             this.ColorList.push(NumberUltilities.GetLerpColor(this.BlockColor, this.levelColorList[0], 1 - Math.pow(1 / 3, i)));
         }
     }
@@ -226,10 +210,8 @@ export default class GameManager extends cc.Component
     //#region SCALE TỪNG BLOCK THEO INDEX
     public ScaleList: number[] = [];
     private DistanceToFirstBlock: number = 19; // khoảng cách từ mắt tới block đầu tiên, với quy ước các block sẽ cách nhau 1 đơn vị
-    private GenerateScaleList()
-    {
-        for (let i = 0; i < this.MaxBlockQty; i++)
-        {
+    private GenerateScaleList() {
+        for (let i = 0; i < this.MaxBlockQty; i++) {
             this.ScaleList.push(this.DistanceToFirstBlock / (this.DistanceToFirstBlock + i));
         }
     }
@@ -237,8 +219,7 @@ export default class GameManager extends cc.Component
     //#endregion SCALE TỪNG BLOCK THEO INDEX
 
     //#region SHOP REGION
-    public ChangeCharacter(characterIndex: number)
-    {
+    public ChangeCharacter(characterIndex: number) {
 
     }
 
@@ -246,12 +227,19 @@ export default class GameManager extends cc.Component
 
 
     //#region REVIVE
-    public Revive()
-    {
+    public Revive() {
         GameState.isRevived = true;
         this.KongiNode.ResetAfterRevive();
         this.IsPauseGame = true;
         this.IsStarted = false;
     }
+
     //#endregion REVIVE
+
+
+    public showStatusBar(isShowStatusBar: boolean) {
+        this.DiamondLabel.node.active = isShowStatusBar;
+        this.DiamondSprite.node.active = isShowStatusBar;
+        this.ScoreLabel.node.active = isShowStatusBar;
+    }
 }

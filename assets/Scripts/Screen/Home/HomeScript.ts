@@ -3,6 +3,7 @@ import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import GameState from "../../Common/GameState";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
+import GameManager from "../../Gameplay/GameManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -35,6 +36,7 @@ export default class HomeScript extends cc.Component {
 
     onLoad() {
         HomeScript.instance = this;
+        GameManager.Instance.showStatusBar(false);
         this.btnPlay.node.on('click', this.onBtnPlay, this);
         this.btnSound.node.on('click', this.onSoundBtnClick, this);
         this.btnRanking.node.on('click', this.onBtnRanking, this);
@@ -63,6 +65,7 @@ export default class HomeScript extends cc.Component {
     onBtnPlay(): void {
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
+        GameManager.Instance.showStatusBar(true);
     }
 
     onBtnSetting(): void {
