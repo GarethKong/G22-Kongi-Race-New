@@ -41,9 +41,9 @@ export default class ScreenManager extends cc.Component {
 
     start() {
         let self = this;
+        ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
         DatabaseManager.loadPlayerData(function () {
             console.log("Binh check data 0");
-            ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
             HomeScript.instance.loadData();
         });
     }
