@@ -157,6 +157,7 @@ export default class GameManager extends cc.Component
 
     public StartNewGame(): void
     {
+        this.TotalBlockSpawned = 0;
         SpawnDataConfig.ResetForNewGame();
         this.BlockList = [];
         this.KongiNode.ResetNewGame();
@@ -204,12 +205,16 @@ export default class GameManager extends cc.Component
     private CurrentBlockIndex: number = 0;//index của block được thêm vào danh sách, block càng về sau thì phải càng gần với background color
     public BlockList: BlockScript[] = [];
 
+    private TotalBlockSpawned: number = 0;
+
     private SpawnFirstBlock(): void
     {
+        this.blockCountToSpawnDiamond = Math.random() * 10 + 30;
+        this.TotalBlockSpawned++;
         this.CurrentBlockIndex = 0;
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
         this.CurrentSpawnedBlock.SetBlockInfo(this.CanvasWidth, 0, BlockMoveType.Static,
-            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex, false);
+            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex, false, "");
         this.CurrentSpawnedBlock.EnableForCollision(false)
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.BlockList.push(this.CurrentSpawnedBlock);
@@ -220,9 +225,10 @@ export default class GameManager extends cc.Component
      */
     private SpawnBlock(): void
     {
+        this.TotalBlockSpawned++;
         this.CalculateNextBlockState();
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
-        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1);
+        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1, this.GetTextOnBlock(this.TotalBlockSpawned));
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.CurrentSpawnedBlock.node.setSiblingIndex(0);
         this.BlockList.push(this.CurrentSpawnedBlock);
@@ -238,13 +244,11 @@ export default class GameManager extends cc.Component
             console.log("ko the xay ra, check bug");
         }
 
-        if (SpawnDataConfig.CurrentSpawnIndex === 1 && this.CurrentBlockIndex > 3)
+        this.blockCountToSpawnDiamond--;
+        if (this.blockCountToSpawnDiamond <= 0)
         {
-            // xác suất spawn ra kim cương là 1/6
-            if (Math.random() < 0.16)
-            {
-                this.CurrentDiamondRemain = 5;
-            }
+            this.CurrentDiamondRemain = 5;
+            this.blockCountToSpawnDiamond = Math.random() * 10 + 30;
         }
         this.CurrentDiamondRemain--;
 
@@ -252,17 +256,31 @@ export default class GameManager extends cc.Component
             SpawnDataConfig.PositionYForFirstBlocks[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.PositionYForFirstBlocks.length - 1)] +
             SpawnDataConfig.BonusYForBlockIndex[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.BonusYForBlockIndex.length - 1)]);
 
-        this.CurrentBlockWidth = NumberUltilities.GetRandomFloatNumber(nextBlockConfig.MinWidth, nextBlockConfig.MaxWidth);
+        this.CurrentBlockWidth = cc.misc.clampf(NumberUltilities.GetRandomFloatNumber(nextBlockConfig.MinWidth, nextBlockConfig.MaxWidth) * (1 - cc.misc.clampf(this.TotalBlockSpawned / 200, 0, 0.66)), 200, 720);
         this.CurrentBlockAngle = nextBlockConfig.Angle;
     }
 
+    numberShowOnBlockList: number[] = [20, 50, 100, 150, 200, 300, 500, 750, 1000, 1250, 1500, 2000];
+    private GetTextOnBlock(blockIndex: number): string
+    {
+        if (this.numberShowOnBlockList.indexOf(blockIndex, 0) > -1)
+        {
+            return blockIndex.toString();
+        }
+        if (blockIndex === DatabaseManager.bestScore)
+        {
+            return "BEST";
+        }
+        return "";
+    }
     //#endregion SPAWN BLOCKS
 
-    //#region DIAMOND PACING
+    //#region DIAMOND PACING    
     @property(cc.Prefab)
     private diamondParticlePrefab: cc.Prefab = null;
     @property(cc.Node)
     private flashNode: cc.Node = null;
+    private blockCountToSpawnDiamond: number;
     public TimeScale: number = 1;
     /**
      * Số diamond thu được trong session

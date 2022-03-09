@@ -28,6 +28,8 @@ export default class BlockScript extends cc.Component
     private CenterNode: cc.Node = null;
     @property(cc.Node)
     private diamondNode: cc.Node = null;
+    @property(cc.Label)
+    private blockNumberText: cc.Label = null;
     private IsActiveForCollision: boolean = false;
     public IsIgnorePauseGame: boolean = false;
 
@@ -87,7 +89,7 @@ export default class BlockScript extends cc.Component
     }
 
     //#region INIT BLOCK
-    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean): void
+    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string): void
     {
         this.IsIgnorePauseGame = false;
         this.node.position = position;
@@ -106,7 +108,7 @@ export default class BlockScript extends cc.Component
         this.WaitForLanding = false;
 
         this.diamondNode.active = hasDiamond;
-
+        this.blockNumberText.string = blockText;
     }
     //#endregion INIT BLOCK
 
@@ -165,6 +167,7 @@ export default class BlockScript extends cc.Component
             this.MoveDownWhenHitPlayer();
             GameManager.Instance.SetNextBlock(canHitDiamond);
             GameManager.Instance.PushUpKongi(this.node.angle);
+            this.blockNumberText.string = "";
         }
         else
         {
