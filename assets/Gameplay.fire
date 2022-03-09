@@ -1329,10 +1329,10 @@
       "__uuid__": "0d530b4e-3af1-4678-b9c5-25483323d1c5"
     },
     "introMusic": {
-      "__uuid__": "a3eb2f57-a343-402e-a0cb-abd2e588d5f0"
+      "__uuid__": "39b0c3c9-197b-4c61-b913-89505ec2f82a"
     },
     "loopMusic": {
-      "__uuid__": "900b8d47-94ce-4ce3-8e75-dcf0aceecf4a"
+      "__uuid__": "4cfe623c-0e69-4b7d-8584-ae85a5985412"
     },
     "buttonSound": {
       "__uuid__": "154f2157-526b-492f-b9c5-547ee6dc9250"
@@ -1903,6 +1903,12 @@
         "__uuid__": "2f1b33b0-d675-4d8f-9145-07b217287d22"
       }
     ],
+    "tailPrefab": {
+      "__uuid__": "e3cd90a5-3317-470c-a11d-d69ee04aaecd"
+    },
+    "topEffectPrefab": {
+      "__uuid__": "01248c80-1769-4bbd-b332-55b40bbf974b"
+    },
     "_id": "52F+48mFJB0ojd35FQhqB4"
   },
   {

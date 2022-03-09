@@ -29,7 +29,7 @@ export default class BlockScript extends cc.Component
     @property(cc.Node)
     private diamondNode: cc.Node = null;
     private IsActiveForCollision: boolean = false;
-    private IsIgnorePauseGame: boolean = false;
+    public IsIgnorePauseGame: boolean = false;
 
 
 
@@ -162,9 +162,9 @@ export default class BlockScript extends cc.Component
                 this.BreakEdge(cc.misc.clampf(this.BlockWidth / 2 - Math.sqrt(sqrDistanceToVerticalAxix), 30, GameDataConfig.BreakEdgeDistance), this.node.x < GameManager.Instance.KongiNode.node.x);
             }
 
+            this.MoveDownWhenHitPlayer();
             GameManager.Instance.SetNextBlock(canHitDiamond);
             GameManager.Instance.PushUpKongi(this.node.angle);
-            this.MoveDownWhenHitPlayer();
         }
         else
         {

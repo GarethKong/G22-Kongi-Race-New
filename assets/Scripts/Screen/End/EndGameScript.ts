@@ -96,6 +96,7 @@ export default class EndGameScript extends cc.Component {
     }
 
     loadData(): void {
+        GameManager.Instance.ClearAllBlock();
         SoundManager.Instance.MenuBGMusic();
         let self = this;
         console.log('BINH Goi r nhe hehe');

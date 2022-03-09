@@ -99,8 +99,10 @@ export default class PlayerScript extends cc.Component
         else
         {
             // ALIVE
+            GameManager.Instance.SpawnTailEffect(this.node.position);
+            GameManager.Instance.SpawnTopEffect(GameManager.Instance.BlockList[0].node.position, GameManager.Instance.BlockList[0].node.angle, GameManager.Instance.BlockList[0].BlockWidth);
             this.node.position = hitPosition;
-            this.LandOnBlock()
+            this.LandOnBlock();
         }
     }
 
@@ -116,6 +118,9 @@ export default class PlayerScript extends cc.Component
         this.Velocity = cc.Vec3.ZERO;
         this.node.position = cc.Vec3.ZERO;
         this.Gravity = 0;
+        this.IsLanding = false;
+        this.node.scale = this.normalScale;
+        this.node.angle = 0;
     }
 
     public ResetAfterRevive(): void

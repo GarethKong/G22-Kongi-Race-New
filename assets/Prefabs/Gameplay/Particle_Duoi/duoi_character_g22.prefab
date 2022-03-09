@@ -180,7 +180,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "e3cd90a5-3317-470c-a11d-d69ee04aaecd"
     },
     "fileId": "",
     "sync": false

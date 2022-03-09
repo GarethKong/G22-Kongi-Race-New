@@ -113,6 +113,7 @@ export default class GameManager extends cc.Component
      */
     public SetNextBlock(IsHitDiamond: boolean): void
     {
+        if (GameManager.Instance.IsPauseGame) return;
         console.log("set next block");
         for (let i = 1; i < this.BlockList.length; i++)
         {
@@ -157,15 +158,6 @@ export default class GameManager extends cc.Component
     public StartNewGame(): void
     {
         SpawnDataConfig.ResetForNewGame();
-
-        for (let i = 0; i < this.BlockList.length; i++)
-        {
-            this.scheduleOnce(() =>
-            {
-                this.BlockList[i].OnGameOver();
-            }, i * 0.05);
-        }
-
         this.BlockList = [];
         this.KongiNode.ResetNewGame();
         this.IsPauseGame = true;
@@ -181,6 +173,21 @@ export default class GameManager extends cc.Component
         this.showStatusBar(true);
         GameState.isRevived = false;
         GameState.isShowingRevive = false;
+    }
+
+    /**
+     * 
+     */
+    public ClearAllBlock()
+    {
+        for (let i = 0; i < this.BlockList.length; i++)
+        {
+            this.scheduleOnce(() =>
+            {
+                this.BlockList[i].IsIgnorePauseGame = true;
+                this.BlockList[i].OnGameOver();
+            }, i * 0.05);
+        }
     }
 
     //#endregion GAMEPLAY
@@ -361,6 +368,26 @@ export default class GameManager extends cc.Component
 
     //#endregion SHOP REGION
 
+    //#region COLLISION EFFECT
+    @property(cc.Prefab)
+    private tailPrefab: cc.Prefab = null;
+    @property(cc.Prefab)
+    private topEffectPrefab: cc.Prefab = null;
+    public SpawnTailEffect(spawnPosition: cc.Vec3): void
+    {
+        var tailParticle: cc.Node = cc.instantiate(this.tailPrefab);
+        tailParticle.parent = this.KongiNode.node;
+        // tailParticle.position = spawnPosition;
+    }
+    public SpawnTopEffect(spawnPosition: cc.Vec3, angle: number, width: number): void
+    {
+        var topParticle: cc.Node = cc.instantiate(this.topEffectPrefab);
+        topParticle.parent = this.node;
+        topParticle.position = spawnPosition;
+        topParticle.angle = angle;
+        topParticle.getComponent(cc.ParticleSystem).posVar = cc.v2(width, 0);
+    }
+    //#endregion COLLISION EFFECT
 
     //#region REVIVE
     public Revive()
