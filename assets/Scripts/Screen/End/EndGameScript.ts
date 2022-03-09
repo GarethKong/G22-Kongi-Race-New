@@ -96,6 +96,7 @@ export default class EndGameScript extends cc.Component {
     }
 
     loadData(): void {
+        SoundManager.Instance.MenuBGMusic();
         let self = this;
         console.log('BINH Goi r nhe hehe');
         DatabaseManager.saveScore();

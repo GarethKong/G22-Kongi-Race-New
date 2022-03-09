@@ -99,7 +99,6 @@ export default class GameManager extends cc.Component
             }, this.BlockList.length * 0.05 + 1);
         } else
         {
-            SoundManager.Instance.MenuBGMusic();
             this.scheduleOnce(() =>
             {
                 this.CollectDiamondQty = 0;
@@ -114,6 +113,7 @@ export default class GameManager extends cc.Component
      */
     public SetNextBlock(IsHitDiamond: boolean): void
     {
+        console.log("set next block");
         for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);

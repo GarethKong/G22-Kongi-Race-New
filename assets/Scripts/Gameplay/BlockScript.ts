@@ -89,8 +89,6 @@ export default class BlockScript extends cc.Component
     //#region INIT BLOCK
     public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean): void
     {
-        console.log(GameManager.Instance.ColorList[blockIndex].toHEX());
-
         this.IsIgnorePauseGame = false;
         this.node.position = position;
         this.BlockWidth = blockWidth;
