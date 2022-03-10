@@ -114,7 +114,6 @@ export default class GameManager extends cc.Component
     public SetNextBlock(IsHitDiamond: boolean): void
     {
         if (GameManager.Instance.IsPauseGame) return;
-        console.log("set next block");
         for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
@@ -394,8 +393,10 @@ export default class GameManager extends cc.Component
     public SpawnTailEffect(spawnPosition: cc.Vec3): void
     {
         var tailParticle: cc.Node = cc.instantiate(this.tailPrefab);
-        tailParticle.parent = this.KongiNode.node;
+        // tailParticle.parent = this.KongiNode.node;
         // tailParticle.position = spawnPosition;
+        tailParticle.parent = this.node;
+        tailParticle.position = this.BlockList[0].node.position;
     }
     public SpawnTopEffect(spawnPosition: cc.Vec3, angle: number, width: number): void
     {

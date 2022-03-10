@@ -236,7 +236,6 @@ export default class BlockScript extends cc.Component
      */
     private BreakEdge(distanceToRear: number, isRightSide: boolean): void
     {
-        console.log(this.node.name);
         this.breakEdgeContainer.active = true;
         this.blockNode.position = cc.v3(0, -200);
 
