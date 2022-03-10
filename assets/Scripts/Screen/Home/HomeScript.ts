@@ -4,6 +4,7 @@ import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import GameState from "../../Common/GameState";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import GameManager from "../../Gameplay/GameManager";
+import ShopScript from "../Shop/ShopScript";
 
 const {ccclass, property} = cc._decorator;
 
@@ -65,6 +66,7 @@ export default class HomeScript extends cc.Component {
     onBtnPlay(): void {
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
+        GameManager.Instance.StartNewGame();
         GameManager.Instance.showStatusBar(true);
     }
 
@@ -101,5 +103,6 @@ export default class HomeScript extends cc.Component {
     onBtnShop(): void {
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Shop);
+        ShopScript._ins.loadData();
     }
 }

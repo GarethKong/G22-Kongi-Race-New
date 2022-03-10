@@ -47,6 +47,7 @@ export default class WatchAdsReviveDlg extends cc.Component {
     private Continues(): void {
         DialogManager._ins.removeDlg(this.node);
         GameManager.Instance.Revive();
+        GameManager.Instance.showStatusBar(true);
     }
 
     public ShowEndGamePopup(): void {

@@ -49,7 +49,7 @@ export default class GameManager extends cc.Component
         // THỜI GIAN GIỮA 2 LẦN JUMP LÀ 1.2S (NẾU KO TAP)
         // => GRAVITY * 0.6 = MaxVelocity
         this.Gravity = this.MaxVelocity * 2 / this.MaxFlyingTime;
-        this.StartNewGame();
+        //this.StartNewGame();
         this.TapNode.on(cc.Node.EventType.TOUCH_START, this.Landing, this);
     }
 
@@ -424,5 +424,6 @@ export default class GameManager extends cc.Component
         this.DiamondLabel.node.active = isShowStatusBar;
         this.DiamondSprite.node.active = isShowStatusBar;
         this.ScoreLabel.node.active = isShowStatusBar;
+        this.ScoreLabel.string = this.CurrentScore.toString();
     }
 }
