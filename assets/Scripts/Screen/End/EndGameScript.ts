@@ -6,6 +6,8 @@ import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import GameManager from "../../Gameplay/GameManager";
 import LoadingUI from "../../component/LoadingUI";
+import CustomEventManager from "../../Ultilities/CustomEventManager";
+import ShopScript from "../Shop/ShopScript";
 
 export class PlayerConnectedData {
     playerID: number = 0;
@@ -91,8 +93,13 @@ export default class EndGameScript extends cc.Component {
         this.updateInterval = 0.2;
         this.lastContentPosY = 0; // use this variable to detect if we are scrolling up or down
         this.itemTemplate = cc.instantiate(this.itemPrefab);
+        CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateScoreEvent, this.updateDiamondAndScore, this);
+        CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateCoinEvent, this.updateDiamondAndScore, this);
+    }
 
-        DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
+    updateDiamondAndScore() {
+        this.lblLastScore.string = DatabaseManager.getLastScore() + "";
+        this.lblDiamonds.string = DatabaseManager.getTotalCoin() + "";
     }
 
     loadData(): void {
@@ -100,15 +107,14 @@ export default class EndGameScript extends cc.Component {
         SoundManager.Instance.MenuBGMusic();
         let self = this;
         console.log('BINH Goi r nhe hehe');
-        DatabaseManager.saveScore();
         this.initialize(function (entries: any) {
             self.content.removeAllChildren();
             let listData = self.convertDateToPlayer(entries);
             self.listRankSize = listData.length;
             self.updateRankingUIView(listData);
         });
-        this.lblLastScore.string = DatabaseManager.getLastScore() + "";
-        this.lblDiamonds.string = DatabaseManager.getTotalCoin() + "";
+        DatabaseManager.saveScore();
+        DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
     }
 
     inviteFriend(playerID: number, isSelf: boolean): void {
@@ -207,6 +213,7 @@ export default class EndGameScript extends cc.Component {
         FBGlobal.instance.haptic();
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Shop);
+        ShopScript._ins.loadData();
     }
 
     onPlayWithFriend(): void {

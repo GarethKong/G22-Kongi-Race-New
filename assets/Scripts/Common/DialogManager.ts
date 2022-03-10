@@ -1,6 +1,7 @@
 import ccclass = cc._decorator.ccclass;
 import property = cc._decorator.property;
 import GameState from "./GameState";
+import Vec3 = cc.Vec3;
 
 @ccclass
 export default class DialogManager extends cc.Component {
@@ -48,10 +49,8 @@ export default class DialogManager extends cc.Component {
         dlg.setPosition(newPos);
         this.antiContactLayer.setPosition(newPos);
         dlg.setScale(0.5);
-        dlg.runAction(cc.scaleTo(0.3, 1, 1));
-
+        cc.tween(dlg).to(0.3, {scale: 1}).start();
         this.dlgList.push(dlg);
-
         return dlg;
     }
 

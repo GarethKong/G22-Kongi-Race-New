@@ -1,9 +1,10 @@
 import GameState from "./GameState";
 import FBGlobal from "../facebook/FBGlobal";
-import GameConfig from "../Config/GameConfig";
+import GameConfig, {BuildType} from "../Config/GameConfig";
 import ccclass = cc._decorator.ccclass;
 import GameManager from "../Gameplay/GameManager";
 import CustomEventManager from "../Ultilities/CustomEventManager";
+import HomeScript from "../Screen/Home/HomeScript";
 
 @ccclass
 export default class DatabaseManager {
@@ -36,11 +37,16 @@ export default class DatabaseManager {
         let self = this;
         // let dataString = null;
         // dataString = cc.sys.localStorage.getItem("KongiRace_PlayerData");
-        FBGlobal.instance.getFBScore(function (objectJson) {
-            console.log("Parse local data" + objectJson);
-            self.initPlayerData(objectJson);
+        if (GameConfig.BUILD_TYPE == BuildType.LOCAL) {
+            this.resetPlayerData();
             callback();
-        });
+        } else {
+            FBGlobal.instance.getFBScore(function (objectJson) {
+                console.log("Parse local data" + objectJson);
+                self.initPlayerData(objectJson);
+                callback();
+            });
+        }
     }
 
     static initPlayerData(dataString) {

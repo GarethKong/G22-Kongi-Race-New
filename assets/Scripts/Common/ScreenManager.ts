@@ -1,9 +1,9 @@
 import DialogManager from "./DialogManager";
-import property = cc._decorator.property;
-import ccclass = cc._decorator.ccclass;
 import DatabaseManager from "./DatabaseManager";
 import HomeScript from "../Screen/Home/HomeScript";
 import GameManager from "../Gameplay/GameManager";
+import property = cc._decorator.property;
+import ccclass = cc._decorator.ccclass;
 
 export const DlgConfig = {
     "WatchAdsToRevive": 0,
@@ -35,7 +35,6 @@ export default class ScreenManager extends cc.Component {
     }
 
     onLoad() {
-
         //DatabaseManager.addMoreCoin(999);
         ScreenManager._ins = this;
     }
@@ -44,7 +43,6 @@ export default class ScreenManager extends cc.Component {
         let self = this;
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Home);
         DatabaseManager.loadPlayerData(function () {
-            console.log("Binh check data 0");
             HomeScript.instance.loadData();
             GameManager.Instance.ShowDiamondText();
         });

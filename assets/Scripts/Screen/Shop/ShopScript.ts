@@ -5,7 +5,6 @@ import DatabaseManager from "../../Common/DatabaseManager";
 import GameConfig from "../../Config/GameConfig";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import GameManager from "../../Gameplay/GameManager";
-
 const {ccclass, property} = cc._decorator;
 
 
@@ -33,19 +32,13 @@ export default class ShopScript extends cc.Component {
 
     static _ins: ShopScript;
 
-    static get instance(): ShopScript {
-        return this._ins || new ShopScript;
-    }
-
     onLoad() {
         ShopScript._ins = this;
         let _this = this;
         this.btnBack.node.on('click', this.onBackBtnClick, this);
-        GameConfig.SKINS = DatabaseManager.getSkin();
         this.scheduleOnce(() => {
             CustomEventManager.Instance.node.on(CustomEventManager.Instance.UpdateShopItemEvent, _this.updateShopItem, _this);
         }, 0.01);
-        this.loadData();
     }
 
     onBackBtnClick() {
@@ -54,6 +47,7 @@ export default class ShopScript extends cc.Component {
     }
 
     loadData(): void {
+        GameConfig.SKINS = DatabaseManager.getSkin();
         this.chosenItem = DatabaseManager.getSkin()[0];
         this.content.removeAllChildren();
         this.itemTemplate = cc.instantiate(this.itemPrefab);
@@ -79,6 +73,7 @@ export default class ShopScript extends cc.Component {
         this.lblUnlockStatus.string = this.getNumberItemUnlock() + "/" + GameConfig.TOTAL_ITEM_SHOP;
         GameManager.Instance.ChangeCharacter(itemId);
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
+        GameManager.Instance.StartNewGame();
     }
 
     getNumberItemUnlock(): number {
