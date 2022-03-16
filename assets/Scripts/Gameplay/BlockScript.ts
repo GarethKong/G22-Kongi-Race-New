@@ -34,6 +34,8 @@ export default class BlockScript extends cc.Component
     public IsIgnorePauseGame: boolean = false;
 
 
+    private estimateTimeToCollision: number = 0; // thời gian còn lại tính cho va chạm (ước lượng)
+    private remainOffsetY: number = 0; // khoảng cách còn lại để đến mốc Y cuối cùng
 
     protected update(dt: number): void
     {
@@ -84,12 +86,14 @@ export default class BlockScript extends cc.Component
                 color: GameManager.Instance.ColorList[this.BlockIndex]
             }).start();
 
-            cc.tween(this.node).by(changeDuration, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
+            // cc.tween(this.node).by(changeDuration, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
         }
     }
 
     //#region INIT BLOCK
-    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string): void
+    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, 
+        position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string,
+        ): void
     {
         this.IsIgnorePauseGame = false;
         this.node.position = position;
@@ -109,6 +113,10 @@ export default class BlockScript extends cc.Component
 
         this.diamondNode.active = hasDiamond;
         this.blockNumberText.string = blockText;
+
+        this.estimateTimeToCollision = 0;
+        this.remainOffsetY = SpawnDataConfig.BonusYForBlockIndex[this.BlockIndex];
+
     }
     //#endregion INIT BLOCK
 

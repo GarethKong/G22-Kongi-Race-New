@@ -34,7 +34,9 @@ export default class GameManager extends cc.Component
     @property
     private MaxBlockQty: number = 10;
     @property
-    private MaxVelocity: number = 0;
+    public JumpUpVelocity: number = 0;
+    @property
+    public MaxFallingVelocity: number = 0; // chỉ tính cho Y
     @property
     private MaxFlyingTime: number = 1.2;
     private Gravity: number = 0;
@@ -48,7 +50,7 @@ export default class GameManager extends cc.Component
         this.GenerateScaleList();
         // THỜI GIAN GIỮA 2 LẦN JUMP LÀ 1.2S (NẾU KO TAP)
         // => GRAVITY * 0.6 = MaxVelocity
-        this.Gravity = this.MaxVelocity * 2 / this.MaxFlyingTime;
+        this.Gravity = this.JumpUpVelocity * 2 / this.MaxFlyingTime; // gần đúng, vì còn có góc bắn lên ko thẳng + vận tốc xuống bị giới hạn
         //this.StartNewGame();
         this.TapNode.on(cc.Node.EventType.TOUCH_START, this.Landing, this);
     }
@@ -137,7 +139,7 @@ export default class GameManager extends cc.Component
 
     public PushUpKongi(pushUpAngle: number): void
     {
-        this.KongiNode.Jump(pushUpAngle, this.MaxVelocity, this.Gravity);
+        this.KongiNode.Jump(pushUpAngle, this.JumpUpVelocity, this.Gravity);
     }
 
 

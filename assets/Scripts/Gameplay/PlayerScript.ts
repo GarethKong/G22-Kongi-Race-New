@@ -36,8 +36,9 @@ export default class PlayerScript extends cc.Component
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
         // if(GameManager.Instance.IsPauseGame) return;
-        this.node.angle = this.node.angle + this.AngularVelocity * dt * GameManager.Instance.TimeScale;
-        this.Velocity = this.Velocity.addSelf(cc.v3(0, -this.Gravity * dt * GameManager.Instance.TimeScale));
+        this.node.angle = cc.misc.clampf(this.node.angle + this.AngularVelocity * dt * GameManager.Instance.TimeScale, -30, 30);
+        this.Velocity.y = cc.misc.clampf(this.Velocity.y - this.Gravity * dt * GameManager.Instance.TimeScale,
+            -GameManager.Instance.MaxFallingVelocity, GameManager.Instance.JumpUpVelocity);
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
 
         if (this.node.position.x < -GameManager.Instance.CanvasWidth / 2 + this.Radius || this.node.position.x > GameManager.Instance.CanvasWidth / 2 - this.Radius)
