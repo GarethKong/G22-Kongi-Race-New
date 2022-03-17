@@ -438,8 +438,10 @@ export default class GameManager extends cc.Component
     {
         cc.resources.load("Character/" + (GameConfig.listImageSource[characterIndex]), cc.SpriteFrame, function (err, spriteFrame: cc.SpriteFrame)
         {
+            console.log("BINH"+  GameConfig.listImageSource[characterIndex]);
+            console.log("BINH1"+  GameManager.Instance.positionMap.get(GameConfig.listImageSource[characterIndex]));
             GameManager.Instance.KongiNode.BodySprite.spriteFrame = spriteFrame;
-            GameManager.Instance.KongiNode.BodySprite.node.position = GameManager.Instance.positionMap[GameConfig.listImageSource[characterIndex]];
+            GameManager.Instance.KongiNode.BodySprite.node.position = cc.v3(GameManager.Instance.positionMap.get(GameConfig.listImageSource[characterIndex]));
         });
 
         this.KongiNode.SetCharacter(characterIndex === 1);
