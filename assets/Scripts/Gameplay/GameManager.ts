@@ -365,7 +365,7 @@ export default class GameManager extends cc.Component
     public ShowDiamondText(): void
     {
         console.log("show diamond text");
-        this.DiamondLabel.string = `${ DatabaseManager.totalCoin + this.CollectDiamondQty }`;
+        this.DiamondLabel.string = `${ DatabaseManager.totalCoin}`;
     }
 
     public SpawnDiamondParticle(spawnPosition: cc.Vec3): void

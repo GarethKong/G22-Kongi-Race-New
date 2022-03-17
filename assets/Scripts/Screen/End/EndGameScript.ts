@@ -114,6 +114,7 @@ export default class EndGameScript extends cc.Component {
             self.updateRankingUIView(listData);
         });
         DatabaseManager.saveScore();
+        console.log("Collect diamond " + GameManager.Instance.CollectDiamondQty);
         DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
     }
 
