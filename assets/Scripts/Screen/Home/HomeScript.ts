@@ -64,6 +64,7 @@ export default class HomeScript extends cc.Component {
     }
 
     onBtnPlay(): void {
+        if(GameManager.Instance.ReadyForPlaying == false) return;
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
         GameManager.Instance.StartNewGame();

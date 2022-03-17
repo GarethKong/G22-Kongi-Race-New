@@ -230,6 +230,7 @@ export default class EndGameScript extends cc.Component {
     }
 
     playTheGame() {
+        if(GameManager.Instance.ReadyForPlaying == false) return;
         FBGlobal.instance.haptic();
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);

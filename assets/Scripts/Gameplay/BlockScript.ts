@@ -237,6 +237,7 @@ export default class BlockScript extends cc.Component
 
     public OnGameOver(): void
     {
+        this.IsIgnorePauseGame = true;
         this.currentMoveType = BlockMoveType.Static;
         let angleInRadian = this.node.angle * Math.PI / 180;
         this.Velocity = cc.v3(4000 * Math.sin(angleInRadian), -4000 * Math.cos(angleInRadian));

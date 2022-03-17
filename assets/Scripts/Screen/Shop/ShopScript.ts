@@ -66,6 +66,7 @@ export default class ShopScript extends cc.Component {
     }
 
     updateShopItem(itemId: number): void {
+        if(GameManager.Instance.ReadyForPlaying == false) return;
         console.log("Receive event done");
         GameConfig.SKINS = DatabaseManager.getSkin();
         this.shopItemList[itemId - 1].reloadItem();

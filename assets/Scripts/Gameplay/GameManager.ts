@@ -157,6 +157,7 @@ export default class GameManager extends cc.Component
     public CurrentScore: number = 0;
     public IsStarted: boolean = false;
     public IsPauseGame: boolean = false;
+    public ReadyForPlaying: boolean = true;
 
     public StartNewGame(): void
     {
@@ -184,14 +185,16 @@ export default class GameManager extends cc.Component
      */
     public ClearAllBlock()
     {
-        for (let i = 0; i < this.BlockList.length; i++)
+        for (let i = 0; i < this.BlockContainer.childrenCount; i++)
         {
             this.scheduleOnce(() =>
             {
-                this.BlockList[i].IsIgnorePauseGame = true;
-                this.BlockList[i].OnGameOver();
+                this.BlockContainer.children[i].getComponent(BlockScript).OnGameOver();
             }, i * 0.05);
         }
+
+        this.ReadyForPlaying = false;
+        this.scheduleOnce(() => {this.ReadyForPlaying = true;}, 0.5);
     }
 
     //#endregion GAMEPLAY
@@ -365,7 +368,7 @@ export default class GameManager extends cc.Component
     public ShowDiamondText(): void
     {
         console.log("show diamond text");
-        this.DiamondLabel.string = `${ DatabaseManager.totalCoin}`;
+        this.DiamondLabel.string = `${ DatabaseManager.totalCoin }`;
     }
 
     public SpawnDiamondParticle(spawnPosition: cc.Vec3): void
