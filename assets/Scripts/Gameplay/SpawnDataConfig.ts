@@ -21,12 +21,12 @@ export default class GameDataConfig
     /**
      * Offset Y cho các block, dùng để di chuyển khi dịch chuyển index (ví dụ block 1 => block 0 thì dịch xuống 40 pixel)
      */
-    static OffsetYForBlockIndex: number[] = [-40, -30, -24, -20, -16];
+    static OffsetYForBlockIndex: number[] = [-40, -30, -30, -30, -30]; // [-40, -30, -24, -20, -16]
 
     /**
      * Bonus Y cho các block, tính từ OffsetY
      */
-    static BonusYForBlockIndex: number[] = [0, 40, 70, 94, 114, 130];
+    static BonusYForBlockIndex: number[] = [0, 40, 70, 100, 130, 160];
     /**
      * Vị trý của Y cho các block đầu tiên
      */
@@ -52,187 +52,247 @@ export default class GameDataConfig
                 },
                 {
                     Angle: -10,
-                    PositionX: -200,
-                    MinWidth: 200,
-                    MaxWidth: 400,
-                },
-                {
-                    Angle: 10,
-                    PositionX: 200,
-                    MinWidth: 200,
-                    MaxWidth: 400,
-                },
-                {
-                    Angle: -11.5,
-                    PositionX: -200,
-                    MinWidth: 200,
+                    PositionX: -110,
+                    MinWidth: 300,
                     MaxWidth: 400,
                 },
                 {
                     Angle: 12.5,
-                    PositionX: 250,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    PositionX: 110,
+                    MinWidth: 300,
+                    MaxWidth: 350,
                 },
                 {
-                    Angle: -6,
-                    PositionX: -250,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: -17.5,
+                    PositionX: -160,
+                    MinWidth: 280,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: 15,
+                    PositionX: 210,
+                    MinWidth: 250,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: -3,
+                    PositionX: -110,
+                    MinWidth: 250,
+                    MaxWidth: 320,
                 }
             ]
         },
-        // đi S ngược 7 tường
+        // đi S ngược 12 tường
         1: {
             BlockInfo: [
                 {
-                    Angle: -2.5,
+                    Angle: -3.5,
                     PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 450,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: -2.5,
-                    PositionX: 80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: -3.5,
+                    PositionX: 70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: 5,
-                    PositionX: 160,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: -3.5,
+                    PositionX: 140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: 2.5,
+                    Angle: 3.5,
+                    PositionX: 210,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
+                    PositionX: 140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
+                    PositionX: 70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
                     PositionX: 0,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: 2.5,
-                    PositionX: -80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: 3.5,
+                    PositionX: -70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
+                    PositionX: -140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
+                    PositionX: -210,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
+                    PositionX: -140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
                     Angle: -2.5,
-                    PositionX: -160,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    PositionX: -70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
-                {
-                    Angle: -2.5,
-                    PositionX: -80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
-                }
             ]
         },
         // 9 tường nghiêng vào nhau
         2: {
             BlockInfo: [
                 {
-                    Angle: 3.6,
+                    Angle: 5.4,
                     PositionX: 0,
-                    MinWidth: 300,
-                    MaxWidth: 350,
-                },
-                {
-                    Angle: -7.3,
-                    PositionX: -120,
-                    MinWidth: 300,
-                    MaxWidth: 350,
-                },
-                {
-                    Angle: 9.1,
-                    PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
                     Angle: -11,
+                    PositionX: -120,
+                    MinWidth: 300,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: 14,
+                    PositionX: 120,
+                    MinWidth: 300,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: -17,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: 12.3,
+                    Angle: 18,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: -13.6,
-                    PositionX: -220,
+                    Angle: -18,
+                    PositionX: -200,
                     MinWidth: 200,
                     MaxWidth: 300,
                 },
                 {
-                    Angle: 14.6,
-                    PositionX: 220,
+                    Angle: 15.5,
+                    PositionX: 180,
                     MinWidth: 200,
                     MaxWidth: 250,
                 },
                 {
-                    Angle: -15.8,
-                    PositionX: -250,
+                    Angle: -12.5,
+                    PositionX: -150,
                     MinWidth: 200,
                     MaxWidth: 250,
                 },
                 {
-                    Angle: 7.5,
-                    PositionX: 250,
+                    Angle: 3,
+                    PositionX: 120,
                     MinWidth: 250,
                     MaxWidth: 400,
                 }
             ]
         },
-        // đi S xuôi 7 tường
+        // đi S xuôi 12 tường
         3: {
             BlockInfo: [
                 {
-                    Angle: 2.5,
+                    Angle: 3.5,
                     PositionX: 0,
-                    MinWidth: 350,
-                    MaxWidth: 450,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: 2.5,
-                    PositionX: -80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: 3.5,
+                    PositionX: -70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: -5,
-                    PositionX: -160,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: 3.5,
+                    PositionX: -140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: -2.5,
+                    Angle: -3.5,
+                    PositionX: -210,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
+                    PositionX: -140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
+                    PositionX: -70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
                     PositionX: 0,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
-                    Angle: -2.5,
-                    PositionX: 80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    Angle: -3.5,
+                    PositionX: 70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: -3.5,
+                    PositionX: 140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
+                    PositionX: 210,
+                    MinWidth: 250,
+                    MaxWidth: 300,
+                },
+                {
+                    Angle: 3.5,
+                    PositionX: 140,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
                 {
                     Angle: 2.5,
-                    PositionX: 160,
-                    MinWidth: 200,
-                    MaxWidth: 400,
+                    PositionX: 70,
+                    MinWidth: 250,
+                    MaxWidth: 300,
                 },
-                {
-                    Angle: 2.5,
-                    PositionX: 80,
-                    MinWidth: 200,
-                    MaxWidth: 400,
-                }
             ]
         },
         // 6 tường nghiêng vào nhau, sang phải trước, đảo ngược 0
@@ -241,38 +301,38 @@ export default class GameDataConfig
                 {
                     Angle: -5,
                     PositionX: 0,
+                    MinWidth: 350,
+                    MaxWidth: 450,
+                },
+                {
+                    Angle: 10,
+                    PositionX: 110,
                     MinWidth: 300,
                     MaxWidth: 400,
                 },
                 {
-                    Angle: 10,
-                    PositionX: 200,
-                    MinWidth: 250,
-                    MaxWidth: 350,
-                },
-                {
-                    Angle: -10,
-                    PositionX: -200,
-                    MinWidth: 250,
-                    MaxWidth: 350,
-                },
-                {
-                    Angle: 11.5,
-                    PositionX: 200,
-                    MinWidth: 250,
-                    MaxWidth: 350,
-                },
-                {
                     Angle: -12.5,
-                    PositionX: -250,
+                    PositionX: -110,
+                    MinWidth: 300,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: 17.5,
+                    PositionX: 160,
+                    MinWidth: 280,
+                    MaxWidth: 350,
+                },
+                {
+                    Angle: -15,
+                    PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: 6,
-                    PositionX: 250,
+                    Angle: 3,
+                    PositionX: 110,
                     MinWidth: 250,
-                    MaxWidth: 350,
+                    MaxWidth: 320,
                 }
             ]
         },
@@ -280,61 +340,61 @@ export default class GameDataConfig
         5: {
             BlockInfo: [
                 {
-                    Angle: -3.6,
+                    Angle: -5.4,
                     PositionX: 0,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: 7.3,
+                    Angle: 11,
                     PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: -9.1,
+                    Angle: -14,
                     PositionX: -120,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: 11,
+                    Angle: 17,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: -12.3,
+                    Angle: -18,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
                 },
                 {
-                    Angle: 13.6,
-                    PositionX: 220,
+                    Angle: 18,
+                    PositionX: 200,
                     MinWidth: 200,
                     MaxWidth: 300,
                 },
                 {
-                    Angle: -14.6,
-                    PositionX: -220,
+                    Angle: -15.5,
+                    PositionX: -180,
                     MinWidth: 200,
                     MaxWidth: 250,
                 },
                 {
-                    Angle: 15.8,
-                    PositionX: 250,
+                    Angle: 12.5,
+                    PositionX: 150,
                     MinWidth: 200,
                     MaxWidth: 250,
                 },
                 {
-                    Angle: -7.5,
-                    PositionX: -250,
+                    Angle: -3,
+                    PositionX: -120,
                     MinWidth: 250,
                     MaxWidth: 400,
                 }
             ]
-        },
+        }
     }
 
     static GetNextSpawnInfo(): BlockInfo

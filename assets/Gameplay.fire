@@ -2155,6 +2155,15 @@
     "BodySprite": {
       "__id__": 43
     },
+    "selfSprite": {
+      "__id__": 43
+    },
+    "handUpSpriteFrame": {
+      "__uuid__": "00c13d15-2794-498b-ba81-164ebc3eb30f"
+    },
+    "handDownSpriteFrame": {
+      "__uuid__": "344496a7-e617-4f52-a6b5-51f2cec622fd"
+    },
     "_id": "92BqA8D/FF0Z0uW5IPFp8J"
   },
   {

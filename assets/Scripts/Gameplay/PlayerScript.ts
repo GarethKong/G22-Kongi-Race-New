@@ -36,9 +36,18 @@ export default class PlayerScript extends cc.Component
         if (GameManager.Instance.IsStarted == false) return;
         if (this.IsLanding) return;
         // if(GameManager.Instance.IsPauseGame) return;
-        this.node.angle = cc.misc.clampf(this.node.angle + this.AngularVelocity * dt * GameManager.Instance.TimeScale, -30, 30);
+        this.node.angle = cc.misc.clampf(this.node.angle + this.AngularVelocity * dt * GameManager.Instance.TimeScale, -10, 10);
         this.Velocity.y = cc.misc.clampf(this.Velocity.y - this.Gravity * dt * GameManager.Instance.TimeScale,
             -GameManager.Instance.MaxFallingVelocity, GameManager.Instance.JumpUpVelocity);
+
+        if (this.Velocity.y < -0.5 * GameManager.Instance.MaxFallingVelocity)
+        {
+            if (this.isDefaultCharacter)
+            {
+                this.selfSprite.spriteFrame = this.handUpSpriteFrame;
+            }
+        }
+
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
 
         if (this.node.position.x < -GameManager.Instance.CanvasWidth / 2 + this.Radius || this.node.position.x > GameManager.Instance.CanvasWidth / 2 - this.Radius)
@@ -64,7 +73,15 @@ export default class PlayerScript extends cc.Component
         let pushUpAngleInRadian: number = pushUpAngle * Math.PI / 180;
         this.Velocity = cc.v3(pushUpVelocity * -Math.sin(2 * pushUpAngleInRadian), pushUpVelocity * Math.cos(2 * pushUpAngleInRadian));
         this.Gravity = gravity;
-        this.AngularVelocity = pushUpAngle * 5;
+        this.AngularVelocity = pushUpAngle * 3;
+
+        this.scheduleOnce(() =>
+        {
+            if (this.isDefaultCharacter)
+            {
+                this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+            }
+        }, 0.1);
     }
 
     /**
@@ -78,6 +95,11 @@ export default class PlayerScript extends cc.Component
         let hitPosition: cc.Vec3 = this.GetCollistionPos();
 
         this.node.setScale(this.punchScale);
+
+        if (this.isDefaultCharacter)
+        {
+            this.selfSprite.spriteFrame = this.handUpSpriteFrame;
+        }
 
         let cosBlockAngle: number = Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180);
 
@@ -122,6 +144,11 @@ export default class PlayerScript extends cc.Component
         this.IsLanding = false;
         this.node.scale = this.normalScale;
         this.node.angle = 0;
+
+        if (this.isDefaultCharacter)
+        {
+            this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+        }
     }
 
     public ResetAfterRevive(): void
@@ -132,6 +159,11 @@ export default class PlayerScript extends cc.Component
         this.IsLanding = false;
         this.node.scale = this.normalScale;
         this.node.angle = 0;
+
+        if (this.isDefaultCharacter)
+        {
+            this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+        }
     }
 
     //#region TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK
@@ -147,4 +179,18 @@ export default class PlayerScript extends cc.Component
         return cc.v3(this.node.x, collistionY);
     }
     //#endregion TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK
+
+    //#region ANIMATION KONGI
+    private isDefaultCharacter: boolean = true;
+    @property(cc.Sprite)
+    private selfSprite: cc.Sprite = null;
+    @property(cc.SpriteFrame)
+    private handUpSpriteFrame: cc.SpriteFrame = null;
+    @property(cc.SpriteFrame)
+    private handDownSpriteFrame: cc.SpriteFrame = null;
+    public SetCharacter(isDefaultCharacter: boolean): void
+    {
+        this.isDefaultCharacter = isDefaultCharacter;
+    }
+    //#endregion ANIMATION KONGI
 }
