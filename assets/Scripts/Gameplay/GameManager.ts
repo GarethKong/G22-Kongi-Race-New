@@ -34,7 +34,9 @@ export default class GameManager extends cc.Component
     @property
     private MaxBlockQty: number = 10;
     @property
-    private MaxVelocity: number = 0;
+    public JumpUpVelocity: number = 0;
+    @property
+    public MaxFallingVelocity: number = 0; // chỉ tính cho Y
     @property
     private MaxFlyingTime: number = 1.2;
     private Gravity: number = 0;
@@ -48,7 +50,7 @@ export default class GameManager extends cc.Component
         this.GenerateScaleList();
         // THỜI GIAN GIỮA 2 LẦN JUMP LÀ 1.2S (NẾU KO TAP)
         // => GRAVITY * 0.6 = MaxVelocity
-        this.Gravity = this.MaxVelocity * 2 / this.MaxFlyingTime;
+        this.Gravity = this.JumpUpVelocity * 2 / this.MaxFlyingTime; // gần đúng, vì còn có góc bắn lên ko thẳng + vận tốc xuống bị giới hạn
         //this.StartNewGame();
         this.TapNode.on(cc.Node.EventType.TOUCH_START, this.Landing, this);
     }
@@ -114,7 +116,6 @@ export default class GameManager extends cc.Component
     public SetNextBlock(IsHitDiamond: boolean): void
     {
         if (GameManager.Instance.IsPauseGame) return;
-        console.log("set next block");
         for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
@@ -134,11 +135,13 @@ export default class GameManager extends cc.Component
         this.BlockList.splice(0, 1);
         this.SpawnBlock();
         this.BlockList[0].EnableForCollision(true);
+
+        this.EstimateLandingTimeList.splice(0, 1);
     }
 
     public PushUpKongi(pushUpAngle: number): void
     {
-        this.KongiNode.Jump(pushUpAngle, this.MaxVelocity, this.Gravity);
+        this.KongiNode.Jump(pushUpAngle, this.JumpUpVelocity, this.Gravity);
     }
 
 
@@ -198,28 +201,35 @@ export default class GameManager extends cc.Component
 
 
     private CurrentSpawnedBlock: BlockScript = null;
-    private CurrentBlockAngle: number;
+    private CurrentBlockAngle: number = 0;
     private CurrentDiamondRemain: number = 0;
     private CurrentBlockWidth: number;
-    private CurrentBlockPosition: cc.Vec3;
+    private CurrentBlockPosition: cc.Vec3 = cc.Vec3.ZERO;
     private CurrentBlockIndex: number = 0;//index của block được thêm vào danh sách, block càng về sau thì phải càng gần với background color
     public BlockList: BlockScript[] = [];
+    public EstimateLandingTimeList: number[] = [];
 
     private TotalBlockSpawned: number = 0;
 
     private SpawnFirstBlock(): void
     {
+        this.EstimateLandingTimeList = [0];
         this.blockCountToSpawnDiamond = Math.random() * 10 + 30;
         this.TotalBlockSpawned++;
         this.CurrentBlockIndex = 0;
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
         this.CurrentSpawnedBlock.SetBlockInfo(this.CanvasWidth, 0, BlockMoveType.Static,
-            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex, false, "");
+            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex, false, "", this.EstimateLandingTimeList);
         this.CurrentSpawnedBlock.EnableForCollision(false)
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.BlockList.push(this.CurrentSpawnedBlock);
+
+        this.RandomMoveType();
     }
 
+    private CurrentMoveType: BlockMoveType = BlockMoveType.Static;
+    private CurrentMoveBlockRemain: number = 0;
+    adads
     /**
      * Spawn các block (ko phải block đầu tiên)
      */
@@ -228,7 +238,9 @@ export default class GameManager extends cc.Component
         this.TotalBlockSpawned++;
         this.CalculateNextBlockState();
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
-        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, BlockMoveType.Static, this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1, this.GetTextOnBlock(this.TotalBlockSpawned));
+        this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, this.CurrentMoveType,
+            this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1,
+            this.GetTextOnBlock(this.TotalBlockSpawned), this.EstimateLandingTimeList);
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.CurrentSpawnedBlock.node.setSiblingIndex(0);
         this.BlockList.push(this.CurrentSpawnedBlock);
@@ -244,6 +256,12 @@ export default class GameManager extends cc.Component
             console.log("ko the xay ra, check bug");
         }
 
+        this.CurrentMoveBlockRemain--;
+        if (this.CurrentMoveBlockRemain <= 0)
+        {
+            this.RandomMoveType();
+        }
+
         this.blockCountToSpawnDiamond--;
         if (this.blockCountToSpawnDiamond <= 0)
         {
@@ -252,11 +270,23 @@ export default class GameManager extends cc.Component
         }
         this.CurrentDiamondRemain--;
 
+        let lastBlockPositionX: number = this.CurrentBlockPosition.x;
+
         this.CurrentBlockPosition = cc.v3(nextBlockConfig.PositionX,
             SpawnDataConfig.PositionYForFirstBlocks[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.PositionYForFirstBlocks.length - 1)] +
             SpawnDataConfig.BonusYForBlockIndex[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.BonusYForBlockIndex.length - 1)]);
 
-        this.CurrentBlockWidth = cc.misc.clampf(NumberUltilities.GetRandomFloatNumber(nextBlockConfig.MinWidth, nextBlockConfig.MaxWidth) * (1 - cc.misc.clampf(this.TotalBlockSpawned / 200, 0, 0.66)), 200, 720);
+        if (this.CurrentBlockAngle < 1)
+        {
+            this.EstimateLandingTimeList.push(0.4);
+        }
+        else
+        {
+            this.EstimateLandingTimeList.push(-(this.CurrentBlockPosition.x - lastBlockPositionX) / this.JumpUpVelocity / Math.sin(cc.misc.degreesToRadians(2 * this.CurrentBlockAngle)));
+        }
+
+        this.CurrentBlockWidth = cc.misc.clampf(NumberUltilities.GetRandomFloatNumber(nextBlockConfig.MinWidth, nextBlockConfig.MaxWidth) * (1 - cc.misc.clampf(this.TotalBlockSpawned / 200, 0, 0.5)), 135, 720);
+
         this.CurrentBlockAngle = nextBlockConfig.Angle;
     }
 
@@ -272,6 +302,35 @@ export default class GameManager extends cc.Component
             return "BEST";
         }
         return "";
+    }
+
+    private RandomMoveType(): void
+    {
+        // this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 10));//Object.keys(BlockMoveType).length / 2));
+        this.CurrentMoveType = BlockMoveType.Static;
+        this.CurrentMoveBlockRemain = Math.round(Math.random() * 6) + 3;
+    }
+    private GetBlockMoveType(index: number): BlockMoveType
+    {
+        // 0 => 9
+        switch (index)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                return BlockMoveType.Static;
+            case 5:
+                return BlockMoveType.Rotate_Right;
+            case 6:
+                return BlockMoveType.Rotate_Left;
+            case 7:
+            case 8:
+                return BlockMoveType.Move_Right;
+            default:
+                return BlockMoveType.Move_Left;
+        }
     }
     //#endregion SPAWN BLOCKS
 
@@ -297,7 +356,7 @@ export default class GameManager extends cc.Component
 
         if (this.CurrentDiamondStreak == 5)
         {
-            this.TimeScale = 0.3;
+            this.TimeScale = 0.5;
             this.flashNode.active = true;
             this.FlashFrameCount = 2;
         }
@@ -379,9 +438,13 @@ export default class GameManager extends cc.Component
     {
         cc.resources.load("Character/" + (GameConfig.listImageSource[characterIndex]), cc.SpriteFrame, function (err, spriteFrame: cc.SpriteFrame)
         {
+            console.log("BINH"+  GameConfig.listImageSource[characterIndex]);
+            console.log("BINH1"+  GameManager.Instance.positionMap.get(GameConfig.listImageSource[characterIndex]));
             GameManager.Instance.KongiNode.BodySprite.spriteFrame = spriteFrame;
-            GameManager.Instance.KongiNode.BodySprite.node.position = GameManager.Instance.positionMap[GameConfig.listImageSource[characterIndex]];
+            GameManager.Instance.KongiNode.BodySprite.node.position = cc.v3(GameManager.Instance.positionMap.get(GameConfig.listImageSource[characterIndex]));
         });
+
+        this.KongiNode.SetCharacter(characterIndex === 1);
     }
 
     //#endregion SHOP REGION
@@ -394,8 +457,10 @@ export default class GameManager extends cc.Component
     public SpawnTailEffect(spawnPosition: cc.Vec3): void
     {
         var tailParticle: cc.Node = cc.instantiate(this.tailPrefab);
-        tailParticle.parent = this.KongiNode.node;
+        // tailParticle.parent = this.KongiNode.node;
         // tailParticle.position = spawnPosition;
+        tailParticle.parent = this.node;
+        tailParticle.position = this.BlockList[0].node.position;
     }
     public SpawnTopEffect(spawnPosition: cc.Vec3, angle: number, width: number): void
     {

@@ -34,11 +34,72 @@ export default class BlockScript extends cc.Component
     public IsIgnorePauseGame: boolean = false;
 
 
+    private estimateTimeList: number[] = []; // list thời gian va chạm giữa các block phía trước nó (nếu tính va chạm các trung điểm)
+    private estimateTimeToCollision: number = 0; // thời gian còn lại tính cho va chạm (ước lượng)
+    private remainOffsetY: number = 0; // khoảng cách còn lại để đến mốc Y cuối cùng
+
+    private currentMoveType: BlockMoveType;
+    private moveVelocityX: number = 100; // tốc độ di chuyển ngang
+    private targetPosX: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
+    private maxOffsetTargetPosX: number = 50; // khoảng cách tối đa block có thể lệch với target
+
+    private totalRotateAngle: number; // góc cần quay cho rotate
+    private rotateAngle: number; // góc lệch cho quay rotate
+    private rotateSpeed: number = 12; // tốc độ quay mỗi giây
+    private rotateSpeedInRadian: number;
+    private rotateRadius: number = 640; // bán kính quay
+
 
     protected update(dt: number): void
     {
         if (GameManager.Instance.IsPauseGame && this.IsIgnorePauseGame === false) return;
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
+        let angleInRadian = cc.misc.degreesToRadians(-this.rotateAngle);
+
+        switch (this.currentMoveType)
+        {
+            case BlockMoveType.Move_Left:
+                this.node.position.x -= this.moveVelocityX * dt * GameManager.Instance.TimeScale;
+                if (this.node.position.x < this.targetPosX - this.maxOffsetTargetPosX)
+                {
+                    this.currentMoveType = BlockMoveType.Move_Right;
+                }
+                break;
+            case BlockMoveType.Move_Right:
+                this.node.position.x += this.moveVelocityX * dt * GameManager.Instance.TimeScale;
+                if (this.node.position.x > this.targetPosX + this.maxOffsetTargetPosX)
+                {
+                    this.currentMoveType = BlockMoveType.Move_Left;
+                }
+                break;
+            case BlockMoveType.Rotate_Right:
+                this.node.angle += this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.rotateAngle += this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
+                    this.rotateRadius * Math.sin(-angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
+                break;
+            case BlockMoveType.Rotate_Left:
+                this.node.angle -= this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.rotateAngle -= this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.node.position = this.node.position.addSelf(cc.v3(-this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
+                    this.rotateRadius * Math.sin(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
+                break;
+        }
+
+        this.estimateTimeToCollision -= dt * GameManager.Instance.TimeScale;
+
+        let velocityY = 0;
+        if (this.estimateTimeToCollision <= 0)
+        {
+            velocityY = 0;
+        }
+        else
+        {
+            velocityY = this.remainOffsetY / this.estimateTimeToCollision;
+        }
+
+        // this.node.position.y -= this.remainOffsetY * dt * GameManager.Instance.TimeScale * velocityY;
+
         if (this.node.position.y < -1500)
         {
             this.breakEdgeContainer.active = false;
@@ -84,12 +145,21 @@ export default class BlockScript extends cc.Component
                 color: GameManager.Instance.ColorList[this.BlockIndex]
             }).start();
 
-            cc.tween(this.node).by(changeDuration, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
+            // cc.tween(this.node).by(changeDuration * 1.5, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
+
+            // this.estimateTimeToCollision = 0;
+            // this.estimateTimeList.splice(0, 1);
+            // for (let i = 0; i < this.estimateTimeList.length; i++)
+            // {
+            //     this.estimateTimeToCollision += this.estimateTimeList[i];
+            // }
         }
     }
 
     //#region INIT BLOCK
-    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType, position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string): void
+    public SetBlockInfo(blockWidth: number, startAngle: number, moveType: BlockMoveType,
+        position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string,
+        estimateTimeList: number[]): void
     {
         this.IsIgnorePauseGame = false;
         this.node.position = position;
@@ -109,10 +179,55 @@ export default class BlockScript extends cc.Component
 
         this.diamondNode.active = hasDiamond;
         this.blockNumberText.string = blockText;
+
+        this.estimateTimeList = Object.assign([], estimateTimeList);
+
+        this.estimateTimeToCollision = 0;
+        for (let i = 0; i < estimateTimeList.length; i++)
+        {
+            this.estimateTimeToCollision += estimateTimeList[i];
+        }
+
+        // console.log("block: " + blockIndex + ", time: " + this.estimateTimeToCollision);
+
+        this.remainOffsetY = SpawnDataConfig.BonusYForBlockIndex[this.BlockIndex];
+        this.currentMoveType = moveType;
+
+        this.targetPosX = position.x;
+
+        switch (moveType)
+        {
+            case BlockMoveType.Move_Left:
+
+                break;
+            case BlockMoveType.Move_Right:
+
+                break;
+            case BlockMoveType.Rotate_Left:
+                this.rotateAngle = cc.misc.radiansToDegrees(Math.asin(this.node.position.x / this.rotateRadius));
+                this.totalRotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
+                this.node.angle += this.totalRotateAngle;
+
+                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * (Math.sin(cc.misc.degreesToRadians(this.rotateAngle + this.totalRotateAngle)) - Math.sin(cc.misc.degreesToRadians(this.rotateAngle))),
+                    -this.rotateRadius * (Math.cos(cc.misc.degreesToRadians(this.rotateAngle + this.totalRotateAngle)) - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
+                this.rotateAngle += this.totalRotateAngle;
+                break;
+            case BlockMoveType.Rotate_Right:
+                this.rotateAngle = cc.misc.radiansToDegrees(Math.asin(this.node.position.x / this.rotateRadius));
+                this.totalRotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
+                this.node.angle -= this.totalRotateAngle;
+
+                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * (Math.sin(cc.misc.degreesToRadians(this.rotateAngle - this.totalRotateAngle)) - Math.sin(cc.misc.degreesToRadians(this.rotateAngle))),
+                    -this.rotateRadius * (Math.cos(cc.misc.degreesToRadians(this.rotateAngle - this.totalRotateAngle)) - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
+                this.rotateAngle -= this.totalRotateAngle;
+                break;
+        }
+
+        this.rotateSpeedInRadian = cc.misc.degreesToRadians(this.rotateSpeed);
     }
     //#endregion INIT BLOCK
 
-    //#region MOVE BLOCK
+    //#region MOVE BLOCK KHI HIT
     private Velocity: cc.Vec3 = cc.Vec3.ZERO;
     private MoveDownWhenHitPlayer(): void
     {
@@ -122,10 +237,11 @@ export default class BlockScript extends cc.Component
 
     public OnGameOver(): void
     {
+        this.currentMoveType = BlockMoveType.Static;
         let angleInRadian = this.node.angle * Math.PI / 180;
         this.Velocity = cc.v3(4000 * Math.sin(angleInRadian), -4000 * Math.cos(angleInRadian));
     }
-    //#endregion  MOVE BLOCK
+    //#endregion  MOVE BLOCK KHI HIT
 
     //#region CHECK COLLSION
     public WaitForLanding: boolean = false; // TRUE nếu như người chơi đang tap vào màn hình => block ở update để chờ ở đây
@@ -141,6 +257,7 @@ export default class BlockScript extends cc.Component
 
     public CheckCollisionOnTopBlock()
     {
+        this.currentMoveType = BlockMoveType.Static;
         let sqrDistanceToVerticalAxix = this.SqrDistanceFromTargetToVerticalLine(GameManager.Instance.KongiNode.node);
         if (sqrDistanceToVerticalAxix <= Math.pow(GameManager.Instance.KongiRadius + this.BlockWidth * 0.5 + 30, 2))
         {
@@ -236,7 +353,6 @@ export default class BlockScript extends cc.Component
      */
     private BreakEdge(distanceToRear: number, isRightSide: boolean): void
     {
-        console.log(this.node.name);
         this.breakEdgeContainer.active = true;
         this.blockNode.position = cc.v3(0, -200);
 
@@ -280,7 +396,8 @@ export default class BlockScript extends cc.Component
 export enum BlockMoveType
 {
     Static = 0,
-    Rotate = 1,
-    MoveHorizontal = 2,
-    MoveFollowEdge = 3,
+    Rotate_Right = 1,
+    Rotate_Left = 2,
+    Move_Right = 3,
+    Move_Left = 4,
 }
