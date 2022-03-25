@@ -43,11 +43,10 @@ export default class BlockScript extends cc.Component
     private targetPosX: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
     private maxOffsetTargetPosX: number = 50; // khoảng cách tối đa block có thể lệch với target
 
-    private totalRotateAngle: number; // góc cần quay cho rotate
     private rotateAngle: number; // góc lệch cho quay rotate
-    private rotateSpeed: number = 12; // tốc độ quay mỗi giây
+    private rotateSpeed: number = 15; // tốc độ quay mỗi giây
     private rotateSpeedInRadian: number;
-    private rotateRadius: number = 640; // bán kính quay
+    private rotateRadius: number = 1280; // bán kính quay
 
 
     protected update(dt: number): void
@@ -74,17 +73,19 @@ export default class BlockScript extends cc.Component
                 break;
             case BlockMoveType.Rotate_Right:
                 this.node.angle += this.rotateSpeed * GameManager.Instance.TimeScale * dt;
-                this.rotateAngle += this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.rotateAngle = this.node.angle;
                 this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
                     this.rotateRadius * Math.sin(-angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
                 break;
             case BlockMoveType.Rotate_Left:
                 this.node.angle -= this.rotateSpeed * GameManager.Instance.TimeScale * dt;
-                this.rotateAngle -= this.rotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.rotateAngle = this.node.angle;
                 this.node.position = this.node.position.addSelf(cc.v3(-this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
                     this.rotateRadius * Math.sin(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
                 break;
         }
+
+        this.node.position = this.node.position.addSelf(cc.v3(0, this.MoveDownVelocityOnChangeBlockIndex * GameManager.Instance.TimeScale * dt));
 
         this.estimateTimeToCollision -= dt * GameManager.Instance.TimeScale;
 
@@ -129,6 +130,7 @@ export default class BlockScript extends cc.Component
         }
     }
 
+    private MoveDownVelocityOnChangeBlockIndex: number = 0; // vận tốc di chuyển xuống khi có sự thay đổi blockIndex
     private BlockIndex: number = 0;
     public ChangeStateToNextIndex(changeDuration: number): void
     {
@@ -145,6 +147,7 @@ export default class BlockScript extends cc.Component
                 color: GameManager.Instance.ColorList[this.BlockIndex]
             }).start();
 
+            this.MoveDownVelocityOnChangeBlockIndex = SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex] / (changeDuration * 1.2);
             // cc.tween(this.node).by(changeDuration * 1.5, {position: cc.v3(0, SpawnDataConfig.OffsetYForBlockIndex[this.BlockIndex], 0)}).start();
 
             // this.estimateTimeToCollision = 0;
@@ -154,6 +157,16 @@ export default class BlockScript extends cc.Component
             //     this.estimateTimeToCollision += this.estimateTimeList[i];
             // }
         }
+    }
+
+    public ChangeColorWhenChangeMilestone()
+    {
+        this.blockNode.color = GameManager.Instance.ColorList[this.BlockIndex];
+
+        this.squareBottom.color = GameManager.Instance.ColorList[0];
+        this.squareRear.color = GameManager.Instance.ColorList[0];
+        this.squareRotate.color = GameManager.Instance.ColorList[0];
+        this.triangleNode.color = GameManager.Instance.ColorList[0];
     }
 
     //#region INIT BLOCK
@@ -172,6 +185,10 @@ export default class BlockScript extends cc.Component
         this.BlockIndex = blockIndex;
         this.blockNode.color = GameManager.Instance.ColorList[this.BlockIndex];
         this.node.scale = GameManager.Instance.ScaleList[this.BlockIndex];
+        this.squareBottom.color = GameManager.Instance.ColorList[0];
+        this.squareRear.color = GameManager.Instance.ColorList[0];
+        this.squareRotate.color = GameManager.Instance.ColorList[0];
+        this.triangleNode.color = GameManager.Instance.ColorList[0];
 
         this.Velocity = cc.Vec3.ZERO; // tùy move type
         this.IsActiveForCollision = false;
@@ -188,38 +205,34 @@ export default class BlockScript extends cc.Component
             this.estimateTimeToCollision += estimateTimeList[i];
         }
 
-        // console.log("block: " + blockIndex + ", time: " + this.estimateTimeToCollision);
-
         this.remainOffsetY = SpawnDataConfig.BonusYForBlockIndex[this.BlockIndex];
         this.currentMoveType = moveType;
 
         this.targetPosX = position.x;
 
+        // đối với các block có di chuyển thì phải tính lại vị trí các thứ của block để đến đúng thời điểm user có thể nhảy xuống được tại tâm của mặt trên block
         switch (moveType)
         {
             case BlockMoveType.Move_Left:
-
+                // TOAN TOAN TOAN
                 break;
             case BlockMoveType.Move_Right:
 
                 break;
             case BlockMoveType.Rotate_Left:
-                this.rotateAngle = cc.misc.radiansToDegrees(Math.asin(this.node.position.x / this.rotateRadius));
-                this.totalRotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
-                this.node.angle += this.totalRotateAngle;
+                this.rotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
+                this.node.angle = this.rotateAngle;
+                this.node.position = this.node.position.addSelf(cc.v3(
+                    this.rotateRadius * Math.sin(cc.misc.degreesToRadians(this.rotateAngle)),
+                    this.rotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
 
-                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * (Math.sin(cc.misc.degreesToRadians(this.rotateAngle + this.totalRotateAngle)) - Math.sin(cc.misc.degreesToRadians(this.rotateAngle))),
-                    -this.rotateRadius * (Math.cos(cc.misc.degreesToRadians(this.rotateAngle + this.totalRotateAngle)) - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
-                this.rotateAngle += this.totalRotateAngle;
                 break;
             case BlockMoveType.Rotate_Right:
-                this.rotateAngle = cc.misc.radiansToDegrees(Math.asin(this.node.position.x / this.rotateRadius));
-                this.totalRotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
-                this.node.angle -= this.totalRotateAngle;
-
-                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * (Math.sin(cc.misc.degreesToRadians(this.rotateAngle - this.totalRotateAngle)) - Math.sin(cc.misc.degreesToRadians(this.rotateAngle))),
-                    -this.rotateRadius * (Math.cos(cc.misc.degreesToRadians(this.rotateAngle - this.totalRotateAngle)) - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
-                this.rotateAngle -= this.totalRotateAngle;
+                this.rotateAngle = -this.rotateSpeed * this.estimateTimeToCollision;
+                this.node.angle = this.rotateAngle;
+                this.node.position = this.node.position.addSelf(cc.v3(
+                    this.rotateRadius * Math.sin(cc.misc.degreesToRadians(this.rotateAngle)),
+                    this.rotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
                 break;
         }
 
@@ -401,4 +414,5 @@ export enum BlockMoveType
     Rotate_Left = 2,
     Move_Right = 3,
     Move_Left = 4,
+    Swing = 5, // lắc, đung đưa
 }

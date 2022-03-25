@@ -44,7 +44,7 @@ export default class PlayerScript extends cc.Component
         {
             if (this.isDefaultCharacter)
             {
-                this.selfSprite.spriteFrame = this.handUpSpriteFrame;
+                this.BodySprite.spriteFrame = this.handUpSpriteFrame;
             }
         }
 
@@ -79,7 +79,7 @@ export default class PlayerScript extends cc.Component
         {
             if (this.isDefaultCharacter)
             {
-                this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+                this.BodySprite.spriteFrame = this.handDownSpriteFrame;
             }
         }, 0.1);
     }
@@ -98,7 +98,7 @@ export default class PlayerScript extends cc.Component
 
         if (this.isDefaultCharacter)
         {
-            this.selfSprite.spriteFrame = this.handUpSpriteFrame;
+            this.BodySprite.spriteFrame = this.handUpSpriteFrame;
         }
 
         let cosBlockAngle: number = Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180);
@@ -147,7 +147,7 @@ export default class PlayerScript extends cc.Component
 
         if (this.isDefaultCharacter)
         {
-            this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+            this.BodySprite.spriteFrame = this.handDownSpriteFrame;
         }
     }
 
@@ -162,7 +162,7 @@ export default class PlayerScript extends cc.Component
 
         if (this.isDefaultCharacter)
         {
-            this.selfSprite.spriteFrame = this.handDownSpriteFrame;
+            this.BodySprite.spriteFrame = this.handDownSpriteFrame;
         }
     }
 
@@ -182,8 +182,6 @@ export default class PlayerScript extends cc.Component
 
     //#region ANIMATION KONGI
     private isDefaultCharacter: boolean = true;
-    @property(cc.Sprite)
-    private selfSprite: cc.Sprite = null;
     @property(cc.SpriteFrame)
     private handUpSpriteFrame: cc.SpriteFrame = null;
     @property(cc.SpriteFrame)

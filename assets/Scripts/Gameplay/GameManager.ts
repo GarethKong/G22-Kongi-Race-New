@@ -17,6 +17,7 @@ import DatabaseManager from "../Common/DatabaseManager";
 import CustomEventManager from "../Ultilities/CustomEventManager";
 import GameConfig from "../Config/GameConfig";
 import SoundManager from "../Ultilities/SoundManager";
+import BackgroundController from "./BackgroundController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -46,7 +47,6 @@ export default class GameManager extends cc.Component
     protected onLoad(): void
     {
         GameManager.Instance = this;
-        this.GenerateColorList(this.MaxBlockQty);
         this.GenerateScaleList();
         // THỜI GIAN GIỮA 2 LẦN JUMP LÀ 1.2S (NẾU KO TAP)
         // => GRAVITY * 0.6 = MaxVelocity
@@ -116,11 +116,14 @@ export default class GameManager extends cc.Component
     public SetNextBlock(IsHitDiamond: boolean): void
     {
         if (GameManager.Instance.IsPauseGame) return;
+        this.CurrentScore++;
+        this.ScoreLabel.string = this.CurrentScore.toString();
+
+        this.CheckMilestoneWhenHitBlock(this.CurrentScore);
         for (let i = 1; i < this.BlockList.length; i++)
         {
             this.BlockList[i].ChangeStateToNextIndex(this.MaxFlyingTime / 3);
         }
-
         if (IsHitDiamond == false)
         {
             this.CurrentDiamondStreak = 0;
@@ -130,8 +133,7 @@ export default class GameManager extends cc.Component
             this.CollectDiamond();
         }
         this.CurrentBlockIndex--;
-        this.CurrentScore++;
-        this.ScoreLabel.string = this.CurrentScore.toString();
+
         this.BlockList.splice(0, 1);
         this.SpawnBlock();
         this.BlockList[0].EnableForCollision(true);
@@ -161,6 +163,7 @@ export default class GameManager extends cc.Component
 
     public StartNewGame(): void
     {
+        this.ChangeBackgroundTheme(0);
         this.TotalBlockSpawned = 0;
         SpawnDataConfig.ResetForNewGame();
         this.BlockList = [];
@@ -185,6 +188,7 @@ export default class GameManager extends cc.Component
      */
     public ClearAllBlock()
     {
+        console.log("CLEAR ALL BLOCK");
         for (let i = 0; i < this.BlockContainer.childrenCount; i++)
         {
             this.scheduleOnce(() =>
@@ -205,7 +209,7 @@ export default class GameManager extends cc.Component
 
     private CurrentSpawnedBlock: BlockScript = null;
     private CurrentBlockAngle: number = 0;
-    private CurrentDiamondRemain: number = 0;
+    private CurrentDiamondRemain: number = -3; // < 0 là dc
     private CurrentBlockWidth: number;
     private CurrentBlockPosition: cc.Vec3 = cc.Vec3.ZERO;
     private CurrentBlockIndex: number = 0;//index của block được thêm vào danh sách, block càng về sau thì phải càng gần với background color
@@ -231,7 +235,7 @@ export default class GameManager extends cc.Component
     }
 
     private CurrentMoveType: BlockMoveType = BlockMoveType.Static;
-    private CurrentMoveBlockRemain: number = 0;
+    private CurrentMoveBlockRemain: number = 0; // số block còn lại cho move type
     adads
     /**
      * Spawn các block (ko phải block đầu tiên)
@@ -241,9 +245,12 @@ export default class GameManager extends cc.Component
         this.TotalBlockSpawned++;
         this.CalculateNextBlockState();
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
+
         this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, this.CurrentMoveType,
             this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1,
             this.GetTextOnBlock(this.TotalBlockSpawned), this.EstimateLandingTimeList);
+
+
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.CurrentSpawnedBlock.node.setSiblingIndex(0);
         this.BlockList.push(this.CurrentSpawnedBlock);
@@ -253,24 +260,49 @@ export default class GameManager extends cc.Component
     private CalculateNextBlockState(): void
     {
         this.CurrentBlockIndex++;
-        var nextBlockConfig: BlockInfo = SpawnDataConfig.GetNextSpawnInfo();
+
+
+        var nextBlockConfig: BlockInfo;
+        if (this.CurrentMoveType === BlockMoveType.Rotate_Left || this.CurrentMoveType === BlockMoveType.Rotate_Right)
+        {
+            console.log("ROTATE CALCULATE");
+            nextBlockConfig =
+            {
+                Angle: 0,
+                PositionX: 0,
+                MinWidth: 200,
+                MaxWidth: 320,
+            }
+        }
+        else
+        {
+
+            nextBlockConfig = SpawnDataConfig.GetNextSpawnInfo();
+
+        }
+
         if (this.CurrentBlockIndex >= SpawnDataConfig.BonusYForBlockIndex.length)
         {
             console.log("ko the xay ra, check bug");
         }
 
+        // diamond logic
+        this.blockCountToSpawnDiamond--;
+
         this.CurrentMoveBlockRemain--;
-        if (this.CurrentMoveBlockRemain <= 0)
+        if (Math.abs(nextBlockConfig.PositionX) < 10 && this.CurrentMoveBlockRemain <= 0)
         {
+            // block cuối cùng của wave
+            // random sang move type mới với wave mới
             this.RandomMoveType();
+
+            if (this.blockCountToSpawnDiamond <= 0 && this.CurrentMoveType === BlockMoveType.Static)
+            {
+                this.CurrentDiamondRemain = 5;
+                this.blockCountToSpawnDiamond = Math.random() * 10 + 15;
+            }
         }
 
-        this.blockCountToSpawnDiamond--;
-        if (this.blockCountToSpawnDiamond <= 0)
-        {
-            this.CurrentDiamondRemain = 5;
-            this.blockCountToSpawnDiamond = Math.random() * 10 + 30;
-        }
         this.CurrentDiamondRemain--;
 
         let lastBlockPositionX: number = this.CurrentBlockPosition.x;
@@ -309,13 +341,28 @@ export default class GameManager extends cc.Component
 
     private RandomMoveType(): void
     {
-        // this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 10));//Object.keys(BlockMoveType).length / 2));
+        console.log("RANDOM MOVE TYPE");
+        this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 11));
+        switch (this.CurrentMoveType)
+        {
+            case BlockMoveType.Move_Left:
+            case BlockMoveType.Move_Right:
+                this.CurrentMoveBlockRemain = Math.round(Math.random() * 6) + 3;
+                break;
+            default:
+                this.CurrentMoveBlockRemain = 1;
+                break;
+        }
+
+
+        // TOAN TOAN TOAN
+        // force cho rotate left
         this.CurrentMoveType = BlockMoveType.Static;
-        this.CurrentMoveBlockRemain = Math.round(Math.random() * 6) + 3;
+        this.CurrentMoveBlockRemain = 1;//Math.round(Math.random() * 6) + 3;
     }
     private GetBlockMoveType(index: number): BlockMoveType
     {
-        // 0 => 9
+        // 0 => 10
         switch (index)
         {
             case 0:
@@ -331,8 +378,10 @@ export default class GameManager extends cc.Component
             case 7:
             case 8:
                 return BlockMoveType.Move_Right;
-            default:
+            case 9:
                 return BlockMoveType.Move_Left;
+            default:
+                return BlockMoveType.Swing;
         }
     }
     //#endregion SPAWN BLOCKS
@@ -383,16 +432,19 @@ export default class GameManager extends cc.Component
     @property(cc.Color)
     private BlockColor: cc.Color = null;
     @property([cc.Color])
+    private blockColorList: cc.Color[] = []; // các color cho block index 0 theo mốc
+    @property([cc.Color])
     private levelColorList: cc.Color[] = [];
-    @property([cc.SpriteFrame])
-    private backgroundSpriteFrameList: cc.SpriteFrame[] = [];
+
     public ColorList: cc.Color[] = [];
 
-    private GenerateColorList(numberOfColor: number): void
+    private GenerateColorList(numberOfColor: number, milestoneIndex: number): void
     {
+        this.ColorList = [];
         for (let i = 0; i < numberOfColor; i++)
         {
-            this.ColorList.push(NumberUltilities.GetLerpColor(this.BlockColor, this.levelColorList[0], 1 - Math.pow(1 / 3, i)));
+            this.ColorList.push(NumberUltilities.GetLerpColor(this.blockColorList[milestoneIndex], this.levelColorList[milestoneIndex], 1 - Math.pow(1 / 3, i)));
+            console.log(this.ColorList[this.ColorList.length - 1]);
         }
     }
 
@@ -485,6 +537,31 @@ export default class GameManager extends cc.Component
     //#endregion REVIVE
 
 
+    //#region CHANGE COLOR WHEN REACH MILESTONE
+    @property(BackgroundController)
+    private backgroundController: BackgroundController = null;
+    private currentMilestone: number = 0;
+
+    private CheckMilestoneWhenHitBlock(currentScore: number)
+    {
+        if (this.numberShowOnBlockList.indexOf(currentScore, 0) > -1)
+        {
+            this.ChangeBackgroundTheme(cc.misc.clampf(this.currentMilestone + 1, 0, this.levelColorList.length - 1));
+        }
+    }
+    private ChangeBackgroundTheme(milestoneIndex: number): void
+    {
+        this.currentMilestone = milestoneIndex;
+        this.GenerateColorList(this.MaxBlockQty, milestoneIndex);
+        this.backgroundController.ChangeBackgroundTheme(milestoneIndex, this.levelColorList[milestoneIndex]);
+
+        for (let i = 0; i < this.BlockList.length; i++)
+        {
+            this.BlockList[i].ChangeColorWhenChangeMilestone();
+        }
+
+    }
+    //#endregion CHANGE COLOR WHEN REACH MILESTONE
     public showStatusBar(isShowStatusBar: boolean)
     {
         this.DiamondLabel.node.active = isShowStatusBar;

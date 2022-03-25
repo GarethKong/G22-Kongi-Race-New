@@ -96,7 +96,7 @@
       "__uuid__": "f972c699-08ce-4145-9fa8-196fe5653d6b"
     },
     "_texture": null,
-    "_stopped": true,
+    "_stopped": false,
     "playOnLoad": true,
     "autoRemoveOnFinish": false,
     "totalParticles": 15,
