@@ -101,6 +101,11 @@ export default class GameManager extends cc.Component
             }, this.BlockList.length * 0.05 + 1);
         } else
         {
+            if (GameState.isShowingRevive)
+            {
+                return;
+            }
+            GameState.isShowingRevive = true;
             this.scheduleOnce(() =>
             {
                 this.CollectDiamondQty = 0;
@@ -183,22 +188,29 @@ export default class GameManager extends cc.Component
         GameState.isShowingRevive = false;
     }
 
+    private isOnClearAllBlockSchedule: boolean = false;
     /**
-     * 
+     * RÚT CỌC KHI GAMEOVER
      */
     public ClearAllBlock()
     {
-        console.log("CLEAR ALL BLOCK");
+        if (this.isOnClearAllBlockSchedule) return;
+        this.isOnClearAllBlockSchedule = true;
         for (let i = 0; i < this.BlockContainer.childrenCount; i++)
         {
             this.scheduleOnce(() =>
             {
                 this.BlockContainer.children[i].getComponent(BlockScript).OnGameOver();
             }, i * 0.05);
+
         }
 
         this.ReadyForPlaying = false;
-        this.scheduleOnce(() => {this.ReadyForPlaying = true;}, 0.5);
+        this.scheduleOnce(() =>
+        {
+            this.ReadyForPlaying = true;
+            this.isOnClearAllBlockSchedule = false;
+        }, 0.5);
     }
 
     //#endregion GAMEPLAY
@@ -444,7 +456,6 @@ export default class GameManager extends cc.Component
         for (let i = 0; i < numberOfColor; i++)
         {
             this.ColorList.push(NumberUltilities.GetLerpColor(this.blockColorList[milestoneIndex], this.levelColorList[milestoneIndex], 1 - Math.pow(1 / 3, i)));
-            console.log(this.ColorList[this.ColorList.length - 1]);
         }
     }
 
@@ -528,6 +539,7 @@ export default class GameManager extends cc.Component
     //#region REVIVE
     public Revive()
     {
+        GameState.isShowingRevive = false;
         GameState.isRevived = true;
         this.KongiNode.ResetAfterRevive();
         this.IsPauseGame = true;
