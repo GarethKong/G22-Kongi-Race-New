@@ -2418,13 +2418,6 @@
     "flashNode": {
       "__id__": 42
     },
-    "BlockColor": {
-      "__type__": "cc.Color",
-      "r": 0,
-      "g": 39,
-      "b": 82,
-      "a": 255
-    },
     "blockColorList": [
       {
         "__type__": "cc.Color",

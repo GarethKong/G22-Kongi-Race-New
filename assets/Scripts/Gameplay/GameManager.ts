@@ -353,28 +353,21 @@ export default class GameManager extends cc.Component
 
     private RandomMoveType(): void
     {
-        console.log("RANDOM MOVE TYPE");
-        this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 11));
+        this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 9));
         switch (this.CurrentMoveType)
         {
-            case BlockMoveType.Move_Left:
-            case BlockMoveType.Move_Right:
-                this.CurrentMoveBlockRemain = Math.round(Math.random() * 6) + 3;
+            case BlockMoveType.Rotate_Left:
+            case BlockMoveType.Rotate_Right:
+                this.CurrentMoveBlockRemain = Math.round(Math.random() * 3) + 6;
                 break;
             default:
                 this.CurrentMoveBlockRemain = 1;
                 break;
         }
-
-
-        // TOAN TOAN TOAN
-        // force cho rotate left
-        this.CurrentMoveType = BlockMoveType.Static;
-        this.CurrentMoveBlockRemain = 1;//Math.round(Math.random() * 6) + 3;
     }
     private GetBlockMoveType(index: number): BlockMoveType
     {
-        // 0 => 10
+        // 0 => 9
         switch (index)
         {
             case 0:
@@ -387,11 +380,8 @@ export default class GameManager extends cc.Component
                 return BlockMoveType.Rotate_Right;
             case 6:
                 return BlockMoveType.Rotate_Left;
-            case 7:
             case 8:
-                return BlockMoveType.Move_Right;
-            case 9:
-                return BlockMoveType.Move_Left;
+                return BlockMoveType.Move;
             default:
                 return BlockMoveType.Swing;
         }
@@ -441,8 +431,6 @@ export default class GameManager extends cc.Component
     //#endregion DIAMOND PACING
 
     //#region MÀU TỪNG ĐOẠN SCORE
-    @property(cc.Color)
-    private BlockColor: cc.Color = null;
     @property([cc.Color])
     private blockColorList: cc.Color[] = []; // các color cho block index 0 theo mốc
     @property([cc.Color])

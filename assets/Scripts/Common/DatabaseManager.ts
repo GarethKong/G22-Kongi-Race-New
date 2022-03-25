@@ -165,18 +165,10 @@ export default class DatabaseManager
         }
     }
 
-    static setBestScore(score: number)
+    private static setBestScore(score: number)
     {
-        if (score > cc.sys.localStorage.getItem('lastScore'))
-        {
-            this.bestScore = score;
-            cc.sys.localStorage.setItem('bestScore', score);
-            this.savePlayerData();
-        }
-        else
-        {
-            this.bestScore = cc.sys.localStorage.getItem('lastScore');
-        }
+        this.bestScore = score;
+        this.savePlayerData();
     }
 
     static getBestScore(): number

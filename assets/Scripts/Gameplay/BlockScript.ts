@@ -38,50 +38,93 @@ export default class BlockScript extends cc.Component
     private estimateTimeToCollision: number = 0; // thời gian còn lại tính cho va chạm (ước lượng)
     private remainOffsetY: number = 0; // khoảng cách còn lại để đến mốc Y cuối cùng
 
-    private currentMoveType: BlockMoveType;
-    private moveVelocityX: number = 100; // tốc độ di chuyển ngang
-    private targetPosX: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
-    private maxOffsetTargetPosX: number = 50; // khoảng cách tối đa block có thể lệch với target
 
-    private rotateAngle: number; // góc lệch cho quay rotate
-    private rotateSpeed: number = 15; // tốc độ quay mỗi giây
-    private rotateSpeedInRadian: number;
-    private rotateRadius: number = 1280; // bán kính quay
+    private currentMoveType: BlockMoveType;
+
+    // TOAN TOAN TOAN
+    private BlockSwing_IsSwingRight: boolean = false; // true nếu như di chuyển sang phải, false nếu di chuyển sang trái
+    private BlockSwing_RotationSpeed: number = 6; // tốc độ swing
+    private BlockSwing_TargetAngle: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
+    private BlockSwing_MaxOffsetAngle: number = 6; // khoảng cách tối đa block có thể lệch với target
+
+
+    private BlockMove_IsMovingRight: boolean = false; // true nếu như di chuyển sang phải, false nếu di chuyển sang trái
+    private BlockMove_VelocityX: number = 200; // tốc độ di chuyển ngang
+    private BlockMove_TargetPosX: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
+    private BlockMove_MaxOffsetX: number = 200; // khoảng cách tối đa block có thể lệch với target
+
+    private BlockRotate_RotateAngle: number; // góc lệch cho quay rotate
+    private BlockRotate_RotateSpeed: number = 15; // tốc độ quay mỗi giây
+    private BlockRotate_RotateSpeedInRadian: number;
+    private BlockRotate_RotateRadius: number = 1280; // bán kính quay
 
 
     protected update(dt: number): void
     {
         if (GameManager.Instance.IsPauseGame && this.IsIgnorePauseGame === false) return;
         this.node.position = this.node.position.addSelf(this.Velocity.mul(dt * GameManager.Instance.TimeScale));
-        let angleInRadian = cc.misc.degreesToRadians(-this.rotateAngle);
+        let angleInRadian = cc.misc.degreesToRadians(-this.BlockRotate_RotateAngle);
 
         switch (this.currentMoveType)
         {
-            case BlockMoveType.Move_Left:
-                this.node.position.x -= this.moveVelocityX * dt * GameManager.Instance.TimeScale;
-                if (this.node.position.x < this.targetPosX - this.maxOffsetTargetPosX)
+            case BlockMoveType.Move:
+                if (this.BlockMove_IsMovingRight)
                 {
-                    this.currentMoveType = BlockMoveType.Move_Right;
+                    this.node.position = this.node.position.addSelf(cc.v3(this.BlockMove_VelocityX * dt * GameManager.Instance.TimeScale, 0));
+                    if (this.node.position.x > this.BlockMove_TargetPosX + this.BlockMove_MaxOffsetX)
+                    {
+                        this.BlockMove_IsMovingRight = false;
+                        this.node.position = cc.v3(this.BlockMove_TargetPosX + this.BlockMove_MaxOffsetX, this.node.position.y, this.node.position.z);
+                    }
+                }
+                else
+                {
+                    this.node.position = this.node.position.addSelf(cc.v3(-this.BlockMove_VelocityX * dt * GameManager.Instance.TimeScale, 0));
+                    if (this.node.position.x < this.BlockMove_TargetPosX - this.BlockMove_MaxOffsetX)
+                    {
+                        this.BlockMove_IsMovingRight = true;
+                        this.node.position = cc.v3(this.BlockMove_TargetPosX - this.BlockMove_MaxOffsetX, this.node.position.y, this.node.position.z);
+                    }
                 }
                 break;
-            case BlockMoveType.Move_Right:
-                this.node.position.x += this.moveVelocityX * dt * GameManager.Instance.TimeScale;
-                if (this.node.position.x > this.targetPosX + this.maxOffsetTargetPosX)
+            case BlockMoveType.Swing:
+                if (this.BlockSwing_IsSwingRight)
                 {
-                    this.currentMoveType = BlockMoveType.Move_Left;
+                    let rotateAngle = this.BlockSwing_RotationSpeed * dt * GameManager.Instance.TimeScale;
+                    this.node.position = this.node.position.addSelf(cc.v3(1000 * (Math.sin(cc.misc.degreesToRadians(this.node.angle)) - Math.sin(cc.misc.degreesToRadians(this.node.angle + rotateAngle))),
+                        1000 * (Math.cos(cc.misc.degreesToRadians(this.node.angle)) - Math.cos(cc.misc.degreesToRadians(this.node.angle + rotateAngle)))));
+
+                    this.node.angle += rotateAngle;
+                    if (this.node.angle > this.BlockSwing_TargetAngle + this.BlockSwing_MaxOffsetAngle)
+                    {
+                        this.BlockSwing_IsSwingRight = false;
+                    }
+                }
+                else
+                {
+                    let rotateAngle = this.BlockSwing_RotationSpeed * dt * GameManager.Instance.TimeScale;
+
+                    this.node.position = this.node.position.addSelf(cc.v3(1000 * (Math.sin(cc.misc.degreesToRadians(this.node.angle)) - Math.sin(cc.misc.degreesToRadians(this.node.angle - rotateAngle))),
+                        1000 * (Math.cos(cc.misc.degreesToRadians(this.node.angle)) - Math.cos(cc.misc.degreesToRadians(this.node.angle - rotateAngle)))));
+
+                    this.node.angle -= rotateAngle;
+                    if (this.node.angle < this.BlockSwing_TargetAngle - this.BlockSwing_MaxOffsetAngle)
+                    {
+                        this.BlockSwing_IsSwingRight = true;
+                    }
                 }
                 break;
             case BlockMoveType.Rotate_Right:
-                this.node.angle += this.rotateSpeed * GameManager.Instance.TimeScale * dt;
-                this.rotateAngle = this.node.angle;
-                this.node.position = this.node.position.addSelf(cc.v3(this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
-                    this.rotateRadius * Math.sin(-angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
+                this.node.angle += this.BlockRotate_RotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.BlockRotate_RotateAngle = this.node.angle;
+                this.node.position = this.node.position.addSelf(cc.v3(this.BlockRotate_RotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.BlockRotate_RotateSpeedInRadian,
+                    this.BlockRotate_RotateRadius * Math.sin(-angleInRadian) * GameManager.Instance.TimeScale * dt * this.BlockRotate_RotateSpeedInRadian));
                 break;
             case BlockMoveType.Rotate_Left:
-                this.node.angle -= this.rotateSpeed * GameManager.Instance.TimeScale * dt;
-                this.rotateAngle = this.node.angle;
-                this.node.position = this.node.position.addSelf(cc.v3(-this.rotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian,
-                    this.rotateRadius * Math.sin(angleInRadian) * GameManager.Instance.TimeScale * dt * this.rotateSpeedInRadian));
+                this.node.angle -= this.BlockRotate_RotateSpeed * GameManager.Instance.TimeScale * dt;
+                this.BlockRotate_RotateAngle = this.node.angle;
+                this.node.position = this.node.position.addSelf(cc.v3(-this.BlockRotate_RotateRadius * Math.cos(angleInRadian) * GameManager.Instance.TimeScale * dt * this.BlockRotate_RotateSpeedInRadian,
+                    this.BlockRotate_RotateRadius * Math.sin(angleInRadian) * GameManager.Instance.TimeScale * dt * this.BlockRotate_RotateSpeedInRadian));
                 break;
         }
 
@@ -208,35 +251,109 @@ export default class BlockScript extends cc.Component
         this.remainOffsetY = SpawnDataConfig.BonusYForBlockIndex[this.BlockIndex];
         this.currentMoveType = moveType;
 
-        this.targetPosX = position.x;
+        this.BlockMove_TargetPosX = position.x;
+        this.BlockSwing_TargetAngle = startAngle;
 
         // đối với các block có di chuyển thì phải tính lại vị trí các thứ của block để đến đúng thời điểm user có thể nhảy xuống được tại tâm của mặt trên block
         switch (moveType)
         {
-            case BlockMoveType.Move_Left:
-                // TOAN TOAN TOAN
+            case BlockMoveType.Move:
+                // tính khoảng cách mà block di chuyển được trong khoảng thời gian từ khi sinh ra đến khi được hit trong đúng pacing
+                var totalMoveDistance = this.BlockMove_VelocityX * this.estimateTimeToCollision;
+                // tính số lần đảo chiều di chuyển
+                var flipTime = Math.floor((totalMoveDistance - this.BlockMove_MaxOffsetX) / 2 / this.BlockMove_MaxOffsetX);
+                if (position.x < 0)
+                {
+                    if (flipTime % 2 == 1)
+                    {
+                        this.BlockMove_IsMovingRight = true;
+                        this.node.position = this.node.position.addSelf(cc.v3(-totalMoveDistance + this.BlockMove_MaxOffsetX * 2 * (flipTime + 1), 0));
+                    }
+                    else
+                    {
+                        this.BlockMove_IsMovingRight = false;
+                        this.node.position = this.node.position.subSelf(cc.v3(-totalMoveDistance + this.BlockMove_MaxOffsetX * 2 * (flipTime + 1), 0));
+                    }
+                }
+                else
+                {
+                    if (flipTime % 2 == 1)
+                    {
+                        this.BlockMove_IsMovingRight = false;
+                        this.node.position = this.node.position.subSelf(cc.v3(-totalMoveDistance + this.BlockMove_MaxOffsetX * 2 * (flipTime + 1), 0));
+                    }
+                    else
+                    {
+                        this.BlockMove_IsMovingRight = true;
+                        this.node.position = this.node.position.addSelf(cc.v3(-totalMoveDistance + this.BlockMove_MaxOffsetX * 2 * (flipTime + 1), 0));
+                    }
+                }
                 break;
-            case BlockMoveType.Move_Right:
+            case BlockMoveType.Swing:
+                // tính góc mà block quay được trong khoảng thời gian từ khi sinh ra đến khi được hit trong đúng pacing
+                var totalSwingAngle = this.BlockSwing_RotationSpeed * this.estimateTimeToCollision;
+                // tính số lần đảo chiều di chuyển
+                var flipTime = Math.floor((totalSwingAngle - this.BlockSwing_MaxOffsetAngle) / 2 / this.BlockSwing_MaxOffsetAngle);
+                if (position.x < 0)
+                {
+                    if (flipTime % 2 == 1)
+                    {
+                        this.BlockSwing_IsSwingRight = true;
+                        this.node.position = this.node.position.subSelf(cc.v3(-totalSwingAngle + this.BlockSwing_MaxOffsetAngle * 2 * (flipTime + 1), 0));
+                    }
+                    else
+                    {
+                        this.BlockSwing_IsSwingRight = false;
+                        this.node.position = this.node.position.addSelf(cc.v3(-totalSwingAngle + this.BlockSwing_MaxOffsetAngle * 2 * (flipTime + 1), 0));
+                    }
+                }
+                else
+                {
+                    if (flipTime % 2 == 1)
+                    {
+                        this.BlockSwing_IsSwingRight = false;
+                        this.node.position = this.node.position.addSelf(cc.v3(-totalSwingAngle + this.BlockSwing_MaxOffsetAngle * 2 * (flipTime + 1), 0));
+                    }
+                    else
+                    {
+                        this.BlockSwing_IsSwingRight = true;
+                        this.node.position = this.node.position.subSelf(cc.v3(-totalSwingAngle + this.BlockSwing_MaxOffsetAngle * 2 * (flipTime + 1), 0));
+                    }
+                }
 
+                let offSetAngle = totalSwingAngle - this.BlockSwing_MaxOffsetAngle * 2 * (flipTime + 1);
+                if (this.BlockSwing_IsSwingRight)
+                {
+                    this.node.position = this.node.position.addSelf(cc.v3(1000 * (Math.sin(cc.misc.degreesToRadians(this.node.angle)) - Math.sin(cc.misc.degreesToRadians(this.node.angle + offSetAngle))),
+                        1000 * (Math.cos(cc.misc.degreesToRadians(this.node.angle)) - Math.cos(cc.misc.degreesToRadians(this.node.angle + offSetAngle)))));
+                    this.node.angle += offSetAngle;
+                }
+                else
+                {
+                    this.node.position = this.node.position.addSelf(cc.v3(1000 * (Math.sin(cc.misc.degreesToRadians(this.node.angle)) - Math.sin(cc.misc.degreesToRadians(this.node.angle - offSetAngle))),
+                        1000 * (Math.cos(cc.misc.degreesToRadians(this.node.angle)) - Math.cos(cc.misc.degreesToRadians(this.node.angle - offSetAngle)))));
+                    this.node.angle -= offSetAngle;
+                }
                 break;
             case BlockMoveType.Rotate_Left:
-                this.rotateAngle = this.rotateSpeed * this.estimateTimeToCollision;
-                this.node.angle = this.rotateAngle;
+                // tính góc mà block quay được trong khoảng thời gian từ khi sinh ra đến khi được hit trong đúng pacing
+                this.BlockRotate_RotateAngle = this.BlockRotate_RotateSpeed * this.estimateTimeToCollision;
+                this.node.angle = this.BlockRotate_RotateAngle;
                 this.node.position = this.node.position.addSelf(cc.v3(
-                    this.rotateRadius * Math.sin(cc.misc.degreesToRadians(this.rotateAngle)),
-                    this.rotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
-
+                    this.BlockRotate_RotateRadius * Math.sin(cc.misc.degreesToRadians(this.BlockRotate_RotateAngle)),
+                    this.BlockRotate_RotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.BlockRotate_RotateAngle)))));
                 break;
             case BlockMoveType.Rotate_Right:
-                this.rotateAngle = -this.rotateSpeed * this.estimateTimeToCollision;
-                this.node.angle = this.rotateAngle;
+                this.BlockRotate_RotateAngle = -this.BlockRotate_RotateSpeed * this.estimateTimeToCollision;
+                this.node.angle = this.BlockRotate_RotateAngle;
                 this.node.position = this.node.position.addSelf(cc.v3(
-                    this.rotateRadius * Math.sin(cc.misc.degreesToRadians(this.rotateAngle)),
-                    this.rotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.rotateAngle)))));
+                    this.BlockRotate_RotateRadius * Math.sin(cc.misc.degreesToRadians(this.BlockRotate_RotateAngle)),
+                    this.BlockRotate_RotateRadius * (1 - Math.cos(cc.misc.degreesToRadians(this.BlockRotate_RotateAngle)))));
                 break;
+
         }
 
-        this.rotateSpeedInRadian = cc.misc.degreesToRadians(this.rotateSpeed);
+        this.BlockRotate_RotateSpeedInRadian = cc.misc.degreesToRadians(this.BlockRotate_RotateSpeed);
     }
     //#endregion INIT BLOCK
 
@@ -412,7 +529,6 @@ export enum BlockMoveType
     Static = 0,
     Rotate_Right = 1,
     Rotate_Left = 2,
-    Move_Right = 3,
-    Move_Left = 4,
+    Move = 3,
     Swing = 5, // lắc, đung đưa
 }
