@@ -329,7 +329,7 @@ export default class GameManager extends cc.Component
 
         if (this.CurrentBlockAngle < 1)
         {
-            this.EstimateLandingTimeList.push(0.4);
+            this.EstimateLandingTimeList.push(0.6);
         }
         else
         {
