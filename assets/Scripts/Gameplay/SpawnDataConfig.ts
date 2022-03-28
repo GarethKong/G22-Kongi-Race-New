@@ -49,36 +49,42 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 350,
                     MaxWidth: 450,
+                    PacingTimeFromPreviousBlock: 0.66
                 },
                 {
                     Angle: -10,
                     PositionX: -110,
                     MinWidth: 300,
                     MaxWidth: 400,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 12.5,
                     PositionX: 110,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -17.5,
                     PositionX: -160,
                     MinWidth: 280,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 15,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3,
                     PositionX: -110,
                     MinWidth: 250,
                     MaxWidth: 320,
+                    PacingTimeFromPreviousBlock: 0.4
                 }
             ]
         },
@@ -90,72 +96,84 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -2.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
             ]
         },
@@ -167,54 +185,63 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -11,
                     PositionX: -120,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 14,
                     PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -17,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 18,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -18,
                     PositionX: -200,
                     MinWidth: 200,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 15.5,
                     PositionX: 180,
                     MinWidth: 200,
                     MaxWidth: 250,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -12.5,
                     PositionX: -150,
                     MinWidth: 200,
                     MaxWidth: 250,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3,
                     PositionX: 120,
                     MinWidth: 250,
                     MaxWidth: 400,
+                    PacingTimeFromPreviousBlock: 0.4
                 }
             ]
         },
@@ -226,72 +253,84 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 2.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
             ]
         },
@@ -303,36 +342,42 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 350,
                     MaxWidth: 450,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 10,
                     PositionX: 110,
                     MinWidth: 300,
                     MaxWidth: 400,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -12.5,
                     PositionX: -110,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 17.5,
                     PositionX: 160,
                     MinWidth: 280,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -15,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 3,
                     PositionX: 110,
                     MinWidth: 250,
                     MaxWidth: 320,
+                    PacingTimeFromPreviousBlock: 0.4
                 }
             ]
         },
@@ -344,54 +389,63 @@ export default class GameDataConfig
                     PositionX: 0,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 11,
                     PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -14,
                     PositionX: -120,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 17,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -18,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 18,
                     PositionX: 200,
                     MinWidth: 200,
                     MaxWidth: 300,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -15.5,
                     PositionX: -180,
                     MinWidth: 200,
                     MaxWidth: 250,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: 12.5,
                     PositionX: 150,
                     MinWidth: 200,
                     MaxWidth: 250,
+                    PacingTimeFromPreviousBlock: 0.4
                 },
                 {
                     Angle: -3,
                     PositionX: -120,
                     MinWidth: 250,
                     MaxWidth: 400,
+                    PacingTimeFromPreviousBlock: 0.4
                 }
             ]
         }
@@ -420,4 +474,5 @@ export class BlockInfo
     PositionX: number;
     MinWidth: number;
     MaxWidth: number;
+    PacingTimeFromPreviousBlock: number;
 }

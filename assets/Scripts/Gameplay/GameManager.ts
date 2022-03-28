@@ -238,7 +238,8 @@ export default class GameManager extends cc.Component
         this.CurrentBlockIndex = 0;
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
         this.CurrentSpawnedBlock.SetBlockInfo(this.CanvasWidth, 0, BlockMoveType.Static,
-            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]), this.CurrentBlockIndex, false, "", this.EstimateLandingTimeList);
+            cc.v3(0, SpawnDataConfig.PositionYForFirstBlocks[this.CurrentBlockIndex]),
+            this.CurrentBlockIndex, false, "", this.EstimateLandingTimeList, 0, 0);
         this.CurrentSpawnedBlock.EnableForCollision(false)
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.BlockList.push(this.CurrentSpawnedBlock);
@@ -254,14 +255,18 @@ export default class GameManager extends cc.Component
      */
     private SpawnBlock(): void
     {
+        let angleLastBlock = this.CurrentSpawnedBlock.node.angle;
+        let posXLastBlock = this.CurrentSpawnedBlock.node.position.x;
         this.TotalBlockSpawned++;
         this.CalculateNextBlockState();
+
         this.CurrentSpawnedBlock = SimplePool.instance.Spawn(this.BlockPrefab, this.BlockContainer).getComponent(BlockScript);
 
         this.CurrentSpawnedBlock.SetBlockInfo(this.CurrentBlockWidth, this.CurrentBlockAngle, this.CurrentMoveType,
             this.CurrentBlockPosition, this.CurrentBlockIndex, this.CurrentDiamondRemain > -1,
-            this.GetTextOnBlock(this.TotalBlockSpawned), this.EstimateLandingTimeList);
-
+            this.GetTextOnBlock(this.TotalBlockSpawned), this.EstimateLandingTimeList,
+            angleLastBlock, posXLastBlock);
+        //this.BlockList[this.BlockList.length - 1].node.angle, this.BlockList[this.BlockList.length - 1].node.position.x);
 
         this.CurrentSpawnedBlock.node.parent = this.BlockContainer;
         this.CurrentSpawnedBlock.node.setSiblingIndex(0);
@@ -275,7 +280,7 @@ export default class GameManager extends cc.Component
 
 
         var nextBlockConfig: BlockInfo;
-        if (this.CurrentMoveType === BlockMoveType.Rotate_Left || this.CurrentMoveType === BlockMoveType.Rotate_Right)
+        if (this.CurrentMoveType === BlockMoveType.Rotate)
         {
             console.log("ROTATE CALCULATE");
             nextBlockConfig =
@@ -284,13 +289,12 @@ export default class GameManager extends cc.Component
                 PositionX: 0,
                 MinWidth: 200,
                 MaxWidth: 320,
+                PacingTimeFromPreviousBlock: 0.36,
             }
         }
         else
         {
-
             nextBlockConfig = SpawnDataConfig.GetNextSpawnInfo();
-
         }
 
         if (this.CurrentBlockIndex >= SpawnDataConfig.BonusYForBlockIndex.length)
@@ -353,11 +357,17 @@ export default class GameManager extends cc.Component
 
     private RandomMoveType(): void
     {
-        this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 9));
+        if (this.CurrentScore > 3)
+        {
+            this.CurrentMoveType = this.GetBlockMoveType(Math.round(Math.random() * 7));
+        }
+        else
+        {
+            this.CurrentMoveType = BlockMoveType.Static;
+        }
         switch (this.CurrentMoveType)
         {
-            case BlockMoveType.Rotate_Left:
-            case BlockMoveType.Rotate_Right:
+            case BlockMoveType.Rotate:
                 this.CurrentMoveBlockRemain = Math.round(Math.random() * 3) + 6;
                 break;
             default:
@@ -367,7 +377,8 @@ export default class GameManager extends cc.Component
     }
     private GetBlockMoveType(index: number): BlockMoveType
     {
-        // 0 => 9
+        // return BlockMoveType.Rotate;
+        // 0 => 6
         switch (index)
         {
             case 0:
@@ -377,13 +388,12 @@ export default class GameManager extends cc.Component
             case 4:
                 return BlockMoveType.Static;
             case 5:
-                return BlockMoveType.Rotate_Right;
+                return BlockMoveType.Rotate;
             case 6:
-                return BlockMoveType.Rotate_Left;
-            case 8:
                 return BlockMoveType.Move;
             default:
-                return BlockMoveType.Swing;
+                return BlockMoveType.Rotate;
+            //return BlockMoveType.Swing;
         }
     }
     //#endregion SPAWN BLOCKS
