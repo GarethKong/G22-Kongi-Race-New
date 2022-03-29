@@ -4,6 +4,7 @@ import HomeScript from "../Screen/Home/HomeScript";
 import GameManager from "../Gameplay/GameManager";
 import property = cc._decorator.property;
 import ccclass = cc._decorator.ccclass;
+import FBGlobal from "../facebook/FBGlobal";
 
 export const DlgConfig = {
     "WatchAdsToRevive": 0,
@@ -37,6 +38,9 @@ export default class ScreenManager extends cc.Component {
     onLoad() {
         //DatabaseManager.addMoreCoin(999);
         ScreenManager._ins = this;
+        this.scheduleOnce(() => {
+            FBGlobal.instance.loadBannerAds();
+        }, 0.5);
     }
 
     start() {

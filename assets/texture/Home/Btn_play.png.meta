@@ -12,7 +12,7 @@
   "height": 50,
   "platformSettings": {},
   "subMetas": {
-    "Btn_play_small": {
+    "Btn_play": {
       "ver": "1.0.6",
       "uuid": "5ea6c41e-6da1-4670-aed9-b1898927e0b2",
       "importer": "sprite-frame",

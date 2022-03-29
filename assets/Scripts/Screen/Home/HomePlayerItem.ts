@@ -1,6 +1,8 @@
 import player = FBInstant.player;
 import assetManager = cc.assetManager;
 import HomePlayerScript from "./HomePlayerScript";
+import resources = cc.resources;
+import SpriteFrame = cc.SpriteFrame;
 
 const {ccclass, property} = cc._decorator;
 
@@ -30,9 +32,11 @@ export default class HomePlayerItem extends cc.Component {
     @property(cc.Button)
     private btnPlayWithFriend: cc.Button = null;
 
+    @property(cc.Sprite)
+    private btnSprite: cc.Sprite = null;
+
     currentCallback: any;
     currentPlayer: PlayerConnectedData;
-
 
     playerIndex: number;
 
@@ -43,6 +47,7 @@ export default class HomePlayerItem extends cc.Component {
     init(index: number, data: PlayerConnectedData, inviteFriendCb: any): void {
         this.playerIndex = index;
         this.currentPlayer = data;
+        this.currentCallback = inviteFriendCb;
         this.updateItem(this.currentPlayer);
     }
 
@@ -60,14 +65,22 @@ export default class HomePlayerItem extends cc.Component {
                 }
             });
         }
-    }
 
+        if (data.isSelf == false) {
+            console.log("Khong phai minh"+ data.isSelf);
+            cc.loader.loadRes("EndGame/btnPlay", cc.SpriteFrame, function (err, spriteFrame) {
+                that.btnSprite.spriteFrame = spriteFrame;
+            });
+        } else {
+            console.log(" phai minh"+ data.isSelf);
+            cc.loader.loadRes("EndGame/btnShare", cc.SpriteFrame, function (err, spriteFrame) {
+                that.btnSprite.spriteFrame = spriteFrame;
+            });
+        }
+        this.btnPlayWithFriend.node.on('click', this.handleButtonClick, this);
+    }
 
     handleButtonClick() {
         this.currentCallback(this.currentPlayer.playerID, this.currentPlayer.isSelf);
-    }
-
-    onButtonPlayClick(): void {
-
     }
 }

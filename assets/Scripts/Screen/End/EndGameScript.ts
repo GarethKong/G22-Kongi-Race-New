@@ -8,6 +8,7 @@ import GameManager from "../../Gameplay/GameManager";
 import LoadingUI from "../../component/LoadingUI";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import ShopScript from "../Shop/ShopScript";
+import GameConfig from "../../Config/GameConfig";
 
 export class PlayerConnectedData {
     playerID: number = 0;
@@ -106,7 +107,7 @@ export default class EndGameScript extends cc.Component {
         GameManager.Instance.ClearAllBlock();
         SoundManager.Instance.MenuBGMusic();
         let self = this;
-        console.log('BINH Goi r nhe hehe');
+        console.log('BINH Goi r nhe loadData =loadDataloadData');
         this.initialize(function (entries: any) {
             self.content.removeAllChildren();
             let listData = self.convertDateToPlayer(entries);
@@ -128,7 +129,7 @@ export default class EndGameScript extends cc.Component {
                 self.playTheGame();
             };
             // Here `this` is referring to the component
-            FBGlobal.instance.shareGame(AVSuccessCb);
+            FBGlobal.instance.shareGame(AVSuccessCb,AVFailedCb);
         } else {
             let AVSuccessCb = function () {
                 self.playTheGame();
@@ -226,7 +227,7 @@ export default class EndGameScript extends cc.Component {
             self.playTheGame();
         };
         // Here `this` is referring to the component
-        FBGlobal.instance.inviteAsync(AVSuccessCb, AVFailedCb)
+        FBGlobal.instance.inviteAsync(AVSuccessCb, AVFailedCb);
     }
 
     playTheGame() {
@@ -286,5 +287,13 @@ export default class EndGameScript extends cc.Component {
 
     scrollToFixedPosition(): void {
         this.listConnectedPlayer.scrollToOffset(cc.v2(0, (this.indexPlayer - 2) * (this.itemTemplate.height + this.spacing)), 2, false);
+    }
+
+    showAds() {
+        if (GameConfig.sessionNumber == 1) {
+            FBGlobal.instance.showAdsInterestial();
+        } else if (GameConfig.sessionNumber % 3 == 0) {
+            FBGlobal.instance.showAdsInterestial();
+        }
     }
 }

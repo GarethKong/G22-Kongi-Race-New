@@ -498,6 +498,7 @@ export default class BlockScript extends cc.Component
         }
         else
         {
+            console.log("BLOCK ShowGameOver");
             this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
             SoundManager.Instance.PlayGameOverSound();
         }

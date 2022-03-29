@@ -100,10 +100,12 @@ export default class SoundManager extends cc.Component
     public MuteSoundEffect(): void
     {
         this.EffectSource.mute = true;
+        this.BackgroundSource.mute = true;
     }
     public UnmuteSoundEffect(): void
     {
         this.EffectSource.mute = false;
+        this.BackgroundSource.mute = false;
     }
     //#endregion SOUND EFFECT
 

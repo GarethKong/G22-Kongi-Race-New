@@ -114,6 +114,7 @@ export default class PlayerScript extends cc.Component
             cc.tween(this.node).to(0.17, {position: cc.v3(this.node.x, -1000)})
                 .call(() =>
                 {
+                    console.log("SHOW GAMEOVER PLAYERSCRIPT")
                     this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
                     SoundManager.Instance.PlayGameOverSound();
                 })

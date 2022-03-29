@@ -10,6 +10,8 @@ import DialogManager from "../Common/DialogManager";
 import LoadingUI from "../component/LoadingUI";
 import ScreenManager, {ScreenConfig} from "../Common/ScreenManager";
 import EndGameScript from "../Screen/End/EndGameScript";
+import SoundManager from "../Ultilities/SoundManager";
+import FBGlobal from "../facebook/FBGlobal";
 
 const {ccclass, property} = cc._decorator;
 
@@ -45,9 +47,17 @@ export default class WatchAdsReviveDlg extends cc.Component {
     }
 
     private Continues(): void {
-        DialogManager._ins.removeDlg(this.node);
-        GameManager.Instance.Revive();
-        GameManager.Instance.showStatusBar(true);
+        SoundManager.Instance.PlayButtonSound();
+        let _this = this;
+        let AVSuccessCb = function (arg) {
+            DialogManager._ins.removeDlg(this.node);
+            GameManager.Instance.Revive();
+            GameManager.Instance.showStatusBar(true);
+        };
+        let AVFailedCb = function (arg) {
+            _this.NoThanks();
+        };
+        FBGlobal.instance.showAdsVideo(AVSuccessCb.bind(this), AVFailedCb.bind(this), null);
     }
 
     public ShowEndGamePopup(): void {
