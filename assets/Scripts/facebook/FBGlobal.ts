@@ -183,7 +183,7 @@ export default class FBGlobal extends Component {
             });
     }
 
-    public shareGame(callbackSuccess ?: any) {
+    public shareGame(callbackSuccess ?: any, onFailedCallBack ?: any) {
         if (typeof FBInstant === 'undefined') return;
         console.log('Share game already');
         let self = this;
@@ -199,6 +199,7 @@ export default class FBGlobal extends Component {
             callbackSuccess();
             console.log('Share game already1');
         }).catch((error: any) => {
+            onFailedCallBack();
             console.log('Share game already fail' + error);
         });
     }

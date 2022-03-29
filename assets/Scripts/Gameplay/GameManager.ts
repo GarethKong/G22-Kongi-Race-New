@@ -18,6 +18,7 @@ import CustomEventManager from "../Ultilities/CustomEventManager";
 import GameConfig from "../Config/GameConfig";
 import SoundManager from "../Ultilities/SoundManager";
 import BackgroundController from "./BackgroundController";
+import FBGlobal from "../facebook/FBGlobal";
 
 const {ccclass, property} = cc._decorator;
 
@@ -47,6 +48,8 @@ export default class GameManager extends cc.Component
     protected onLoad(): void
     {
         GameManager.Instance = this;
+        FBGlobal.instance.loadAdsInterestial();
+        FBGlobal.instance.loadVideoAdsFirst();
         this.GenerateScaleList();
         // THỜI GIAN GIỮA 2 LẦN JUMP LÀ 1.2S (NẾU KO TAP)
         // => GRAVITY * 0.6 = MaxVelocity
@@ -85,6 +88,7 @@ export default class GameManager extends cc.Component
      */
     public ShowGameOver(): void
     {
+        console.log("ShowGameOver ");
         this.TimeScale = 1;
         this.ScoreLabel.string = "";
         this.showStatusBar(false);
@@ -177,6 +181,7 @@ export default class GameManager extends cc.Component
         this.IsStarted = false;
         this.CurrentScore = 0;
         this.CurrentBlockIndex = 0;
+        GameConfig.sessionNumber += 1;
         this.SpawnFirstBlock();
         for (let i = 0; i < this.MaxBlockQty - 1; i++)
         {

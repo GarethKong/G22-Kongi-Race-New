@@ -5,6 +5,7 @@ import GameState from "../../Common/GameState";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import GameManager from "../../Gameplay/GameManager";
 import ShopScript from "../Shop/ShopScript";
+import FBGlobal from "../../facebook/FBGlobal";
 
 const {ccclass, property} = cc._decorator;
 
@@ -64,11 +65,23 @@ export default class HomeScript extends cc.Component {
     }
 
     onBtnPlay(): void {
-        if(GameManager.Instance.ReadyForPlaying == false) return;
-        SoundManager.Instance.PlayButtonSound();
-        ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
-        GameManager.Instance.StartNewGame();
-        GameManager.Instance.showStatusBar(true);
+        let self = this;
+        let AVSuccessCb = function () {
+            if(GameManager.Instance.ReadyForPlaying == false) return;
+            SoundManager.Instance.PlayButtonSound();
+            ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
+            GameManager.Instance.StartNewGame();
+            GameManager.Instance.showStatusBar(true);
+        };
+        let AVFailedCb = function () {
+            if(GameManager.Instance.ReadyForPlaying == false) return;
+            SoundManager.Instance.PlayButtonSound();
+            ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
+            GameManager.Instance.StartNewGame();
+            GameManager.Instance.showStatusBar(true);
+        };
+        // Here `this` is referring to the component
+        FBGlobal.instance.inviteAsync(AVSuccessCb, AVFailedCb);
     }
 
     onBtnSetting(): void {
@@ -94,8 +107,10 @@ export default class HomeScript extends cc.Component {
         if (this.isSoundChanged) {
             if (GameState.isSoundOn) {
                 SoundManager.Instance.PlayBackgroundMusic();
+                SoundManager.Instance.UnmuteSoundEffect();
             } else {
                 SoundManager.Instance.PauseBackgroundMusic();
+                SoundManager.Instance.MuteSoundEffect();
             }
             this.isSoundChanged = false;
         }

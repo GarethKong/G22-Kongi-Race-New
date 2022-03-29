@@ -5,6 +5,7 @@ import FBGlobal from "../../facebook/FBGlobal";
 import SoundManager from "../../Ultilities/SoundManager";
 import ScreenManager, {ScreenConfig} from "../../Common/ScreenManager";
 import FBConfig from "../../Config/FBConfig";
+import GameManager from "../../Gameplay/GameManager";
 
 
 export class PlayerConnectedData {
@@ -207,10 +208,11 @@ export default class HomePlayerScript extends cc.Component {
     }
 
     playTheGame(): void {
-        FBGlobal.instance.haptic();
-        SoundManager.Instance.PlayButtonSound()
+        if(GameManager.Instance.ReadyForPlaying == false) return;
+        SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
-        this.node.active = false;
+        GameManager.Instance.StartNewGame();
+        GameManager.Instance.showStatusBar(true);
     }
 
 
