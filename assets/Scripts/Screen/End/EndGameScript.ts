@@ -117,6 +117,7 @@ export default class EndGameScript extends cc.Component {
         DatabaseManager.saveScore();
         console.log("Collect diamond " + GameManager.Instance.CollectDiamondQty);
         DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
+        this.showAds();
     }
 
     inviteFriend(playerID: number, isSelf: boolean): void {
@@ -129,7 +130,7 @@ export default class EndGameScript extends cc.Component {
                 self.playTheGame();
             };
             // Here `this` is referring to the component
-            FBGlobal.instance.shareGame(AVSuccessCb,AVFailedCb);
+            FBGlobal.instance.shareGame(AVSuccessCb, AVFailedCb);
         } else {
             let AVSuccessCb = function () {
                 self.playTheGame();
@@ -231,7 +232,7 @@ export default class EndGameScript extends cc.Component {
     }
 
     playTheGame() {
-        if(GameManager.Instance.ReadyForPlaying == false) return;
+        if (GameManager.Instance.ReadyForPlaying == false) return;
         FBGlobal.instance.haptic();
         SoundManager.Instance.PlayButtonSound();
         ScreenManager.instance.onShowScreenByName(ScreenConfig.Game);
