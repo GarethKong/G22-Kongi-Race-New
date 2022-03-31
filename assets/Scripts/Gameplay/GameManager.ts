@@ -117,6 +117,7 @@ export default class GameManager extends cc.Component
                 EndGameScript.instance.loadData();
             }, this.BlockList.length * 0.05 + 1);
         }
+        FBGlobal.instance.createShortcutAsync();
     }
 
     /**
