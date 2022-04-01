@@ -50,7 +50,7 @@ export default class WatchAdsReviveDlg extends cc.Component {
         SoundManager.Instance.PlayButtonSound();
         let _this = this;
         let AVSuccessCb = function (arg) {
-            DialogManager._ins.removeDlg(this.node);
+            DialogManager._ins.removeDlg(_this.node);
             GameManager.Instance.Revive();
             GameManager.Instance.showStatusBar(true);
         };

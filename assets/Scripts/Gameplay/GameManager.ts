@@ -204,11 +204,11 @@ export default class GameManager extends cc.Component
         this.isOnClearAllBlockSchedule = true;
         for (let i = 0; i < this.BlockContainer.childrenCount; i++)
         {
-            this.scheduleOnce(() =>
-            {
-                this.BlockContainer.children[i].getComponent(BlockScript).OnGameOver();
-            }, i * 0.05);
-
+            // this.scheduleOnce(() =>
+            // {
+            //     this.BlockContainer.children[i].getComponent(BlockScript).OnGameOver();
+            // }, i * 0.05);
+            this.BlockContainer.children[i].getComponent(BlockScript).OnGameOver();
         }
 
         this.ReadyForPlaying = false;
