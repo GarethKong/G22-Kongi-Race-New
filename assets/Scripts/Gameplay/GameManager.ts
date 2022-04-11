@@ -174,6 +174,7 @@ export default class GameManager extends cc.Component
     public StartNewGame(): void
     {
         this.ChangeBackgroundTheme(0);
+        this.ChangeDeepEffect(0);
         this.TotalBlockSpawned = 0;
         SpawnDataConfig.ResetForNewGame();
         this.BlockList = [];
@@ -330,7 +331,7 @@ export default class GameManager extends cc.Component
         this.CurrentBlockPosition = cc.v3(nextBlockConfig.PositionX,
             SpawnDataConfig.PositionYForFirstBlocks[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.PositionYForFirstBlocks.length - 1)] +
             SpawnDataConfig.BonusYForBlockIndex[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.BonusYForBlockIndex.length - 1)]);
-        
+
         if (this.CurrentBlockAngle < 1)
         {
             this.EstimateLandingTimeList.push(0.6);
@@ -582,15 +583,9 @@ export default class GameManager extends cc.Component
     private ChangeDeepEffect(milestoneIndex: number): void
     {
         milestoneIndex = milestoneIndex % this.deepEffectList.length;
-        if (milestoneIndex === 0)
+        for (let i = 0; i < this.deepEffectList.length; i++)
         {
-            this.deepEffectList[this.deepEffectList.length - 1].active = false;
-            this.deepEffectList[milestoneIndex].active = true;
-        }
-        else
-        {
-            this.deepEffectList[milestoneIndex - 1].active = false;
-            this.deepEffectList[milestoneIndex].active = true;
+            this.deepEffectList[i].active = (i === milestoneIndex);
         }
     }
     //#endregion CHANGE COLOR + DEEP EFFECT WHEN REACH MILESTONE
