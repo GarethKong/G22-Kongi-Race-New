@@ -10,33 +10,38 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class DeepEffectSpawner_HorizontalLine extends cc.Component
 {
-    @property([cc.Node])
-    private effectNodeList: cc.Node[] = [];
-    private tweenList: cc.Tween[] = [];
+    @property
+    private lineIndex: number = 0;
 
+    private timeBetweenLine: number = 0.25;
+    private intialVelocity: number = 250;
+    private accelerator: number = 120;
+
+    private currentVelocity: number = 0;
+    private currentTimer: number = 0;
     protected onEnable(): void
     {
-        for (let i = 0; i < this.effectNodeList.length; i++)
-        {
-            this.effectNodeList[i].position = cc.v3(0, 80 * i);
-
-            let tempTween: cc.Tween = cc.tween(this.effectNodeList[i])
-                .repeatForever(
-                    cc.tween(this.effectNodeList[i]).to(0.25, {position: cc.v3(0, 80 * (i + 1))}, {easing: 'linear'})
-                        .call(() => 
-                        {
-                            this.effectNodeList[i].position = cc.v3(0, 80 * i);
-                        })
-                ).start();
-            this.tweenList.push(tempTween);
-        }
+        this.node.opacity = 20;
+        this.currentTimer = this.lineIndex * this.timeBetweenLine;
+        this.currentVelocity = this.intialVelocity + this.currentTimer * this.accelerator;
+        this.node.position = cc.v3(0, this.intialVelocity * this.currentTimer + this.accelerator * 0.5 * this.currentTimer * this.currentTimer, 0);
     }
 
-    protected onDisable(): void
+    protected update(dt: number): void
     {
-        for (let i = 0; i < this.effectNodeList.length; i++)
+        this.currentTimer += dt;
+        if (this.currentTimer >= 6 * this.timeBetweenLine)
         {
-            this.tweenList[i].stop();
+            this.node.opacity = 20;
+            this.currentTimer = 0;
+            this.currentVelocity = this.intialVelocity;
+            this.node.position = cc.v3(0, 0, 0);
+        }
+        else
+        {
+            this.node.opacity += 20 * dt;
+            this.currentVelocity += this.accelerator * dt;
+            this.node.position = this.node.position.addSelf(cc.v3(0, this.currentVelocity * dt, 0));
         }
     }
 }
