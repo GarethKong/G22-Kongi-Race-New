@@ -325,14 +325,12 @@ export default class GameManager extends cc.Component
             }
         }
 
-        this.CurrentDiamondRemain--;
-
         let lastBlockPositionX: number = this.CurrentBlockPosition.x;
-
+        this.CurrentDiamondRemain--;
         this.CurrentBlockPosition = cc.v3(nextBlockConfig.PositionX,
             SpawnDataConfig.PositionYForFirstBlocks[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.PositionYForFirstBlocks.length - 1)] +
             SpawnDataConfig.BonusYForBlockIndex[cc.misc.clampf(this.CurrentBlockIndex, 0, SpawnDataConfig.BonusYForBlockIndex.length - 1)]);
-
+        
         if (this.CurrentBlockAngle < 1)
         {
             this.EstimateLandingTimeList.push(0.6);

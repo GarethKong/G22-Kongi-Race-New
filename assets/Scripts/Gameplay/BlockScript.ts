@@ -50,9 +50,9 @@ export default class BlockScript extends cc.Component
     private BlockSwing_IntialOffsetAngle: number;
 
     private BlockMove_IsMovingRight: boolean = false; // true nếu như di chuyển sang phải, false nếu di chuyển sang trái
-    private BlockMove_VelocityX: number = 200; // tốc độ di chuyển ngang
+    private BlockMove_VelocityX: number = 120; // tốc độ di chuyển ngang
     public BlockMove_TargetPosX: number; // vị trí ước tính đến đúng pacing thì block sẽ nằm ở đó
-    private BlockMove_MaxOffsetX: number = 200; // khoảng cách tối đa block có thể lệch với target
+    private BlockMove_MaxOffsetX: number = 120; // khoảng cách tối đa block có thể lệch với target
     private BlockMove_IntialOffsetMove: number; // khoảng cách tới targetX tại thời điểm block được sinh ra
 
     public BlockRotate_IsRotateRight: boolean = false; // true neu nhu dang quay sang phai
@@ -240,6 +240,12 @@ export default class BlockScript extends cc.Component
         position: cc.Vec3, blockIndex: number, hasDiamond: boolean, blockText: string,
         estimateTimeList: number[], previousBlockAngle: number, previousBlockPositionX: number): void
     {
+        // TOAN TOAN TOAN
+        // TEST CHO CÁC BLOCK DI CHUYỂN THÌ ĐƯA VỀ GẦN TÂM HƠN
+        if (moveType === BlockMoveType.Move)
+        {
+            position = cc.v3(position.x * 0.9, position.y, position.z);
+        }
         this.IsIgnorePauseGame = false;
         this.node.position = position;
         this.BlockWidth = blockWidth;
