@@ -553,7 +553,7 @@ export default class GameManager extends cc.Component
     //#endregion REVIVE
 
 
-    //#region CHANGE COLOR WHEN REACH MILESTONE
+    //#region CHANGE COLOR + DEEP EFFECT WHEN REACH MILESTONE
     @property(BackgroundController)
     private backgroundController: BackgroundController = null;
     private currentMilestone: number = 0;
@@ -563,6 +563,8 @@ export default class GameManager extends cc.Component
         if (this.numberShowOnBlockList.indexOf(currentScore, 0) > -1)
         {
             this.ChangeBackgroundTheme(cc.misc.clampf(this.currentMilestone + 1, 0, this.levelColorList.length - 1));
+
+            this.ChangeDeepEffect(this.currentMilestone);
         }
     }
     private ChangeBackgroundTheme(milestoneIndex: number): void
@@ -575,9 +577,26 @@ export default class GameManager extends cc.Component
         {
             this.BlockList[i].ChangeColorWhenChangeMilestone();
         }
-
     }
-    //#endregion CHANGE COLOR WHEN REACH MILESTONE
+
+    @property([cc.Node])
+    private deepEffectList: cc.Node[] = [];
+    private ChangeDeepEffect(milestoneIndex: number): void
+    {
+        milestoneIndex = milestoneIndex % this.deepEffectList.length;
+        if (milestoneIndex === 0)
+        {
+            this.deepEffectList[this.deepEffectList.length - 1].active = false;
+            this.deepEffectList[milestoneIndex].active = true;
+        }
+        else
+        {
+            this.deepEffectList[milestoneIndex - 1].active = false;
+            this.deepEffectList[milestoneIndex].active = true;
+        }
+    }
+    //#endregion CHANGE COLOR + DEEP EFFECT WHEN REACH MILESTONE
+
     public showStatusBar(isShowStatusBar: boolean)
     {
         this.DiamondLabel.node.active = isShowStatusBar;

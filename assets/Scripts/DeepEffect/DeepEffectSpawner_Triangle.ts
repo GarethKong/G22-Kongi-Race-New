@@ -12,11 +12,9 @@ export default class DeepEffectSpawner_Triangle extends cc.Component
 {
     @property([cc.Node])
     private effectNodeList: cc.Node[] = [];
-
-    @property([cc.Tween])
     private tweenList: cc.Tween[] = [];
 
-    protected start(): void
+    protected onEnable(): void
     {
         for (let i = 0; i < this.effectNodeList.length; i++)
         {
@@ -38,11 +36,6 @@ export default class DeepEffectSpawner_Triangle extends cc.Component
             }, 3 * i / this.effectNodeList.length);
         }
     }
-
-    // protected onEnable(): void
-    // {
-
-    // }
 
     protected onDisable(): void
     {
