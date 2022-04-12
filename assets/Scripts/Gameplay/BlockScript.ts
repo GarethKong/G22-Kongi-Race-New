@@ -400,7 +400,6 @@ export default class BlockScript extends cc.Component
                     }
                     else
                     {
-                        console.log("quay trai");
                         if (this.BlockFlipTime % 2 == 0)
                         {
                             this.BlockRotate_IsRotateRight = false;
@@ -415,7 +414,6 @@ export default class BlockScript extends cc.Component
                 }
                 else
                 {
-                    console.log(previousBlockAngle);
                     // cac' block rotate bam' theo
                     if (GameManager.Instance.BlockList[GameManager.Instance.BlockList.length - 1].BlockRotate_IsRotateRight)
                     {
@@ -429,7 +427,6 @@ export default class BlockScript extends cc.Component
                         this.node.angle = previousBlockAngle
                             + estimateTimeList[estimateTimeList.length - 1] * this.BlockRotate_RotateSpeed;
                     }
-                    console.log(this.node.angle + "......." + previousBlockAngle + "......" + this.BlockRotate_RotateSpeed);
                 }
                 this.node.position = this.node.position.addSelf(cc.v3(
                     this.BlockRotate_RotateRadius * Math.sin(cc.misc.degreesToRadians(this.node.angle)),
@@ -507,6 +504,7 @@ export default class BlockScript extends cc.Component
             console.log("BLOCK ShowGameOver");
             this.scheduleOnce(() => {GameManager.Instance.ShowGameOver();}, 0.5);
             SoundManager.Instance.PlayGameOverSound();
+            GameManager.Instance.DisableTapNode();
         }
         this.IsActiveForCollision = false;
     }

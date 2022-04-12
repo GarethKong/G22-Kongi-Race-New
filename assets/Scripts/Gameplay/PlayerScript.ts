@@ -91,9 +91,6 @@ export default class PlayerScript extends cc.Component
     {
         GameManager.Instance.TimeScale = 1;
         this.IsLanding = true;
-
-        let hitPosition: cc.Vec3 = this.GetCollistionPos();
-
         this.node.setScale(this.punchScale);
 
         if (this.isDefaultCharacter)
@@ -103,10 +100,12 @@ export default class PlayerScript extends cc.Component
 
         let cosBlockAngle: number = Math.cos(GameManager.Instance.BlockList[0].node.angle * Math.PI / 180);
 
-        if (Math.abs(hitPosition.x - GameManager.Instance.BlockList[0].node.x) >
-            GameManager.Instance.BlockList[0].BlockWidth / 2 * cosBlockAngle)
+        if (Math.abs(this.node.x - GameManager.Instance.BlockList[0].node.x) >
+            (GameManager.Instance.BlockList[0].BlockWidth / 2 + 30) * cosBlockAngle)
         {
             // DEAD
+            GameManager.Instance.DisableTapNode();
+
             GameManager.Instance.IsPauseGame = true;
 
             GameManager.Instance.BlockList[0].WaitForLanding = true;
@@ -123,9 +122,28 @@ export default class PlayerScript extends cc.Component
         else
         {
             // ALIVE
+            let hitPosition: cc.Vec3;
+            if (Math.abs(this.node.x - GameManager.Instance.BlockList[0].node.x) >
+                (GameManager.Instance.BlockList[0].BlockWidth / 2) * cosBlockAngle)
+            {
+                if (this.node.x > GameManager.Instance.BlockList[0].node.x)
+                {
+                    hitPosition = this.GetCollistionPos((GameManager.Instance.BlockList[0].BlockWidth / 2) * cosBlockAngle + GameManager.Instance.BlockList[0].node.x - 5);
+                }
+                else
+                {
+                    hitPosition = this.GetCollistionPos(-(GameManager.Instance.BlockList[0].BlockWidth / 2) * cosBlockAngle + GameManager.Instance.BlockList[0].node.x + 5);
+                }
+            }
+            else
+            {
+                hitPosition = this.GetCollistionPos(this.node.x);
+            }
+
             GameManager.Instance.SpawnTailEffect(this.node.position);
             GameManager.Instance.SpawnTopEffect(GameManager.Instance.BlockList[0].node.position, GameManager.Instance.BlockList[0].node.angle, GameManager.Instance.BlockList[0].BlockWidth);
             this.node.position = hitPosition;
+
             this.LandOnBlock();
         }
     }
@@ -168,7 +186,7 @@ export default class PlayerScript extends cc.Component
     }
 
     //#region TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK
-    private GetCollistionPos(): cc.Vec3
+    private GetCollistionPos(playerPosX: number): cc.Vec3
     {
         let collistionY: number;
         // phương trình đường thẳng của mặt trên block là: y = ax + c
@@ -176,8 +194,8 @@ export default class PlayerScript extends cc.Component
         // let b: number = -1;
         let c: number = -Math.tan(Math.PI / 180 * (GameManager.Instance.BlockList[0].node.angle)) * GameManager.Instance.BlockList[0].node.x + GameManager.Instance.BlockList[0].node.y;
 
-        collistionY = a * this.node.x + c;
-        return cc.v3(this.node.x, collistionY);
+        collistionY = a * playerPosX + c;
+        return cc.v3(playerPosX, collistionY);
     }
     //#endregion TÍNH GIAO ĐIỂM CỦA PLAYER VÀ CURRENT BLOCK
 

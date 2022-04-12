@@ -79,7 +79,7 @@ export default class GameManager extends cc.Component
     {
         SoundManager.Instance.StartNewGameBGMusic();
         this.IsPauseGame = false;
-        if(this.IsStarted === false)
+        if (this.IsStarted === false)
         {
             CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.StartGameEvent);
         }
@@ -122,6 +122,16 @@ export default class GameManager extends cc.Component
             }, this.BlockList.length * 0.05 + 1);
         }
         FBGlobal.instance.createShortcutAsync();
+    }
+
+    public DisableTapNode(): void
+    {
+        this.TapNode.active = false;
+    }
+
+    public EnableTapNode(): void
+    {
+        this.TapNode.active = true;
     }
 
     /**
@@ -198,6 +208,7 @@ export default class GameManager extends cc.Component
         GameState.isRevived = false;
         GameState.isShowingRevive = false;
         CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.NewGameEvent);
+        this.EnableTapNode();
     }
 
     private isOnClearAllBlockSchedule: boolean = false;
@@ -294,7 +305,6 @@ export default class GameManager extends cc.Component
         var nextBlockConfig: BlockInfo;
         if (this.CurrentMoveType === BlockMoveType.Rotate)
         {
-            console.log("ROTATE CALCULATE");
             nextBlockConfig =
             {
                 Angle: 0,
@@ -552,6 +562,7 @@ export default class GameManager extends cc.Component
         this.KongiNode.ResetAfterRevive();
         this.IsPauseGame = true;
         this.IsStarted = false;
+        this.EnableTapNode();
     }
 
     //#endregion REVIVE
