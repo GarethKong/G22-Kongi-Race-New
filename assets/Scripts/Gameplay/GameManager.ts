@@ -79,6 +79,10 @@ export default class GameManager extends cc.Component
     {
         SoundManager.Instance.StartNewGameBGMusic();
         this.IsPauseGame = false;
+        if(this.IsStarted === false)
+        {
+            CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.StartGameEvent);
+        }
         this.IsStarted = true;
         this.KongiNode.Landing();
     }
@@ -193,6 +197,7 @@ export default class GameManager extends cc.Component
         this.showStatusBar(true);
         GameState.isRevived = false;
         GameState.isShowingRevive = false;
+        CustomEventManager.Instance.PostEvent(CustomEventManager.Instance.NewGameEvent);
     }
 
     private isOnClearAllBlockSchedule: boolean = false;
