@@ -76,6 +76,10 @@ export default class LoadingUI extends cc.Component {
         this.progressBar.getComponent(ProgressBarEx).setToFull();
     }
 
+    setToDone(){
+        this.progressBar.getComponent(ProgressBarEx).setToDone();
+    }
+
 
     gameOverHandle() {
         //   GameManager._ins.gameOver(TypeOver.GAMEOVER);
