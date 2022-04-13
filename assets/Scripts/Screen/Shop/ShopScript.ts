@@ -5,6 +5,7 @@ import DatabaseManager from "../../Common/DatabaseManager";
 import GameConfig from "../../Config/GameConfig";
 import CustomEventManager from "../../Ultilities/CustomEventManager";
 import GameManager from "../../Gameplay/GameManager";
+
 const {ccclass, property} = cc._decorator;
 
 
@@ -66,7 +67,7 @@ export default class ShopScript extends cc.Component {
     }
 
     updateShopItem(itemId: number): void {
-        if(GameManager.Instance.ReadyForPlaying == false) return;
+        if (GameManager.Instance.ReadyForPlaying == false) return;
         console.log("Receive event done");
         GameConfig.SKINS = DatabaseManager.getSkin();
         this.shopItemList[itemId - 1].reloadItem();
@@ -81,7 +82,7 @@ export default class ShopScript extends cc.Component {
         let skins = DatabaseManager.getSkin();
         let count = 0;
         for (let i = 1; i < skins.length; i++) {
-            if (skins[i] != 0) {
+            if (skins[i] != 0 && skins[i] != null) {
                 count += 1;
             }
         }
