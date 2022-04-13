@@ -99,7 +99,7 @@ export default class EndGameScript extends cc.Component {
     }
 
     updateDiamondAndScore() {
-        this.lblLastScore.string = DatabaseManager.getLastScore() + "";
+        this.lblLastScore.string = GameManager.Instance.CurrentScore + "";
         this.lblDiamonds.string = DatabaseManager.getTotalCoin() + "";
     }
 
