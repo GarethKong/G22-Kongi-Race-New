@@ -41,20 +41,25 @@ export default class WatchAdsReviveDlg extends cc.Component {
     }
 
     public NoThanks(): void {
+        console.log("Load ads revive fail1");
         DialogManager._ins.removeDlg(this.node);
         ScreenManager.instance.onShowScreenByName(ScreenConfig.EndGame);
         EndGameScript.instance.loadData();
+        console.log("Load ads revive fail2");
     }
 
     private Continues(): void {
         SoundManager.Instance.PlayButtonSound();
+        LoadingUI._ins.setToDone();
         let _this = this;
         let AVSuccessCb = function (arg) {
+            console.log("Load ads revive success" + _this.node);
             DialogManager._ins.removeDlg(_this.node);
             GameManager.Instance.Revive();
             GameManager.Instance.showStatusBar(true);
         };
         let AVFailedCb = function (arg) {
+            console.log("Load ads revive fail");
             _this.NoThanks();
         };
         FBGlobal.instance.showAdsVideo(AVSuccessCb.bind(this), AVFailedCb.bind(this), null);

@@ -43,6 +43,10 @@ export default class ProgressBarEx extends cc.Component {
         return this._elapsed >= this._duration;
     }
 
+    setToDone() {
+        this._elapsed = 100000;
+    }
+
     progressTo(duration: number, percent: number) {
         if (percent < 0 || percent > 1.0) {
             return;
