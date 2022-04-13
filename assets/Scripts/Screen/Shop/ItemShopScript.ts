@@ -32,7 +32,7 @@ export default class ItemShopScript extends cc.Component {
     initItem(id) {
         let that = this;
         this.id = id;
-        this.isLocked = GameConfig.SKINS[id] == 0;
+        this.isLocked = GameConfig.SKINS[id] == 0 || GameConfig.SKINS[id] == null;
         this.lockNode.active = this.isLocked;
         cc.resources.load("Character/" + (GameConfig.listImageSource[id]), cc.SpriteFrame, function (err, spriteFrame: SpriteFrame) {
             that.itemSprite.spriteFrame = spriteFrame;
@@ -64,7 +64,7 @@ export default class ItemShopScript extends cc.Component {
     }
 
     reloadItem() {
-        this.isLocked = GameConfig.SKINS[this.id] == 0;
+        this.isLocked = GameConfig.SKINS[this.id] == 0 ||  GameConfig.SKINS[this.id] == null;
         this.lockNode.active = this.isLocked;
     }
 }

@@ -118,6 +118,7 @@ export default class EndGameScript extends cc.Component {
         console.log("Collect diamond " + GameManager.Instance.CollectDiamondQty);
         DatabaseManager.addMoreCoin(GameManager.Instance.CollectDiamondQty);
         this.showAds();
+        this.updateDiamondAndScore();
     }
 
     inviteFriend(playerID: number, isSelf: boolean): void {
