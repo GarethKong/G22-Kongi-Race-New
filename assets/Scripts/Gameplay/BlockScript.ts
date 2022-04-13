@@ -248,6 +248,10 @@ export default class BlockScript extends cc.Component
         }
         this.IsIgnorePauseGame = false;
         this.node.position = position;
+        if (blockText !== "")
+        {
+            blockWidth = Math.max(250, blockWidth);
+        }
         this.BlockWidth = blockWidth;
         this.blockNode.width = blockWidth;
         this.mistBefore.width = blockWidth;
@@ -268,6 +272,7 @@ export default class BlockScript extends cc.Component
 
         this.diamondNode.active = hasDiamond;
         this.blockNumberText.string = blockText;
+
 
         this.estimateTimeList = Object.assign([], estimateTimeList);
 

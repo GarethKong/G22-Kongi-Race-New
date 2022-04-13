@@ -45,46 +45,58 @@ export default class GameDataConfig
         0: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: 5,
                     PositionX: 0,
                     MinWidth: 350,
                     MaxWidth: 450,
-                    PacingTimeFromPreviousBlock: 0.66
+                    PacingTimeFromPreviousBlock: 0.66,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: -10,
                     PositionX: -110,
                     MinWidth: 300,
                     MaxWidth: 400,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: 12.5,
                     PositionX: 110,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: -17.5,
                     PositionX: -160,
                     MinWidth: 280,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: 15,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: -3,
                     PositionX: -110,
                     MinWidth: 250,
                     MaxWidth: 320,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 }
             ]
         },
@@ -92,88 +104,112 @@ export default class GameDataConfig
         1: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: -3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: -3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: -3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: 3.5,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: 3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: 3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 6,
                     Angle: 3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 7,
                     Angle: 3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 8,
                     Angle: 3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 9,
                     Angle: -3.5,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 10,
                     Angle: -3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 11,
                     Angle: -2.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 },
             ]
         },
@@ -181,67 +217,85 @@ export default class GameDataConfig
         2: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: 5.4,
                     PositionX: 0,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: -11,
                     PositionX: -120,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: 14,
                     PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: -17,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: 18,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: -18,
                     PositionX: -200,
                     MinWidth: 200,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 6,
                     Angle: 15.5,
                     PositionX: 180,
                     MinWidth: 200,
                     MaxWidth: 250,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 7,
                     Angle: -12.5,
                     PositionX: -150,
                     MinWidth: 200,
                     MaxWidth: 250,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 8,
                     Angle: 3,
                     PositionX: 120,
                     MinWidth: 250,
                     MaxWidth: 400,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 }
             ]
         },
@@ -249,88 +303,112 @@ export default class GameDataConfig
         3: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: 3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: 3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: 3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: -3.5,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: -3.5,
                     PositionX: -140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: -3.5,
                     PositionX: -70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 6,
                     Angle: -3.5,
                     PositionX: 0,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 7,
                     Angle: -3.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 8,
                     Angle: -3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 9,
                     Angle: 3.5,
                     PositionX: 210,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 10,
                     Angle: 3.5,
                     PositionX: 140,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 11,
                     Angle: 2.5,
                     PositionX: 70,
                     MinWidth: 250,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 },
             ]
         },
@@ -338,46 +416,58 @@ export default class GameDataConfig
         4: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: -5,
                     PositionX: 0,
                     MinWidth: 350,
                     MaxWidth: 450,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: 10,
                     PositionX: 110,
                     MinWidth: 300,
                     MaxWidth: 400,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: -12.5,
                     PositionX: -110,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: 17.5,
                     PositionX: 160,
                     MinWidth: 280,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: -15,
                     PositionX: -210,
                     MinWidth: 250,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: 3,
                     PositionX: 110,
                     MinWidth: 250,
                     MaxWidth: 320,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 }
             ]
         },
@@ -385,67 +475,85 @@ export default class GameDataConfig
         5: {
             BlockInfo: [
                 {
+                    BlockIndexInWave: 0,
                     Angle: -5.4,
                     PositionX: 0,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 1,
                     Angle: 11,
                     PositionX: 120,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 2,
                     Angle: -14,
                     PositionX: -120,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 3,
                     Angle: 17,
                     PositionX: 180,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 4,
                     Angle: -18,
                     PositionX: -180,
                     MinWidth: 300,
                     MaxWidth: 350,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 5,
                     Angle: 18,
                     PositionX: 200,
                     MinWidth: 200,
                     MaxWidth: 300,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 6,
                     Angle: -15.5,
                     PositionX: -180,
                     MinWidth: 200,
                     MaxWidth: 250,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 7,
                     Angle: 12.5,
                     PositionX: 150,
                     MinWidth: 200,
                     MaxWidth: 250,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: false
                 },
                 {
+                    BlockIndexInWave: 8,
                     Angle: -3,
                     PositionX: -120,
                     MinWidth: 250,
                     MaxWidth: 400,
-                    PacingTimeFromPreviousBlock: 0.4
+                    PacingTimeFromPreviousBlock: 0.4,
+                    IsLastBlock: true
                 }
             ]
         }
@@ -470,9 +578,11 @@ export default class GameDataConfig
 
 export class BlockInfo
 {
+    BlockIndexInWave: number;
     Angle: number;
     PositionX: number;
     MinWidth: number;
     MaxWidth: number;
     PacingTimeFromPreviousBlock: number;
+    IsLastBlock: boolean;
 }
