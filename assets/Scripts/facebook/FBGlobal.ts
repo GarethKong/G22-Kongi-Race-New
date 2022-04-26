@@ -302,4 +302,11 @@ export default class FBGlobal extends Component {
                 onSuccessCallback(players);
             });
     }
+
+    public switchAppAsync(appId: string) {
+        FBInstant.switchGameAsync(appId).catch(function (e) {
+            // Handle game change failure
+            console.log("Game change failure");
+        });
+    }
 }

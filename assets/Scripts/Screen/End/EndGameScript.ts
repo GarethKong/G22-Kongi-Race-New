@@ -76,11 +76,32 @@ export default class EndGameScript extends cc.Component {
     private itemTemplate: cc.Node = null!;
     private indexPlayer: number = 1;
 
+    private isMoreGameActive: boolean = false;
+
+    @property(cc.Node)
+    private moreGameNode: cc.Node = null;
+
+    @property(cc.Node)
+    private hiddenModeGameNode: cc.Node = null;
+
+    @property(cc.Node)
+    private moreGameButton: cc.Node = null;
 
     static _ins: EndGameScript;
 
     static get instance(): EndGameScript {
         return this._ins || new EndGameScript;
+    }
+
+    start() {
+        let self = this;
+        this.moreGameButton.on('click', this.MoreGameButton, this);
+        this.hiddenModeGameNode.on('touchstart', function () {
+            if (self.isMoreGameActive) {
+                this.isMoreGameActive = false;
+                this.moreGameNode.active = false;
+            }
+        }, this);
     }
 
     onLoad() {
@@ -296,6 +317,13 @@ export default class EndGameScript extends cc.Component {
             FBGlobal.instance.showAdsInterestial();
         } else if (GameConfig.sessionNumber % 3 == 0) {
             FBGlobal.instance.showAdsInterestial();
+        }
+    }
+
+    private MoreGameButton() {
+        if (this.isMoreGameActive == false) {
+            this.isMoreGameActive = true;
+            this.moreGameNode.active = true;
         }
     }
 }
